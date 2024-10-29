@@ -1,5 +1,5 @@
 
-export default (given, { max }) => {
+module.exports = (given, { max }) => {
   const result = [];
   if (given === null) return result;
 
