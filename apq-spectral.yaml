@@ -1,6 +1,6 @@
 extends: spectral:oas
 functions:
-  - resources
+  - apq-resources
 rules:
   openapi-custom:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -78,13 +78,13 @@ rules:
       field: "default"
       function: truthy
   openapi-custom:OAR014:
-    description: '{{error}}'
-    message: "OAR014: Resources depth level should be below the non-suggested range."
+    description: "Resources depth level should be below the non-suggested range."
+    message: "OAR014: {{error}}"
     formats: ['oas2', 'oas3']
     severity: warn
-    given: "$.paths"
+    given: "$.paths.*~"
     then:
-      function: resources
+      function: apq-resources
       functionOptions:
         max: 5
   openapi-custom:OAR015:

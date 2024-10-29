@@ -1,1130 +1,1149 @@
 {
   "extends": "spectral:oas",
+  "functions": [
+    "apq-resources"
+  ],
   "rules": {
-      "openapi-custom:OAR001": {
-          "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
-          "message": "OAR001: HTTPS protocol is mandatory.",
-          "formats": [
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.servers[*].url",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^https://"
-              }
-          }
-      },
-      "openapi-custom:OAR006": {
-          "description": "Routes must define request media types supported by the API.",
-          "message": "OAR006: Specify at least one Media Type in the content of the request body.",
-          "formats": [
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.paths[*][post,put,patch]",
-          "then": [
-              {
-                  "field": "requestBody",
-                  "function": "truthy"
-              },
-              {
-                  "field": "requestBody.content",
-                  "function": "truthy"
-              }
-          ]
-      },
-      "openapi-custom:OAR007": {
-          "description": "Routes must define response media types supported by the API",
-          "message": "OAR007: Specify at least one Media Type in the content of the response body.",
-          "severity": "error",
-          "formats": [
-              "oas3"
-          ],
-          "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
-          "then": [
-              {
-                  "field": "content",
-                  "function": "truthy"
-              }
-          ]
-      },
-      "openapi-custom:OAR008": {
-          "description": "HTTP verbs not encouraged.",
-          "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
-          "formats": [
-              "oas2",
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.paths[*][?(@property == 'head' || @property == 'options')]",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR009": {
-          "description": "Default request media type should be defined for operations.",
-          "message": "OAR009: Default request media type is mandatory.",
-          "formats": [
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$..content",
-          "then": {
-              "field": "application/json",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR010": {
-          "description": "Default response media type should be defined for responses.",
-          "message": "OAR010: Default response media type is mandatory.",
-          "severity": "warn",
-          "formats": [
-              "oas3"
-          ],
-          "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
-          "then": {
-              "field": "content['application/json']",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR011": {
-          "description": "URLs should follow the specified naming convention.",
-          "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention.",
-          "formats": [
-              "oas2",
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.paths[*]~",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^(/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
-              }
-          }
-      },
-      "openapi-custom:OAR013": {
-          "description": "Default response is required for all operations.",
-          "message": "OAR013: Default response is required.",
-          "formats": [
-              "oas2",
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses",
-          "then": {
-              "field": "default",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR015": {
-          "description": "Resources depth level should be smaller than 5.",
-          "message": "OAR015: Path exceeds the maximum allowed depth level of 5.",
-          "formats": [
-              "oas2",
-              "oas3"
-          ],
-          "severity": "error",
-          "given": "$.paths.*~",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^/[^/]*((/{[^}]*})*/[^/]*(/{[^}]*})*){0,4}/?$"
-              }
-          }
-      },
-      "openapi-custom:OAR019": {
-          "description": "$select must be defined as a query parameter in all operations.",
-          "message": "OAR019: $select must be defined as a query parameter in this operation.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$select' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR020": {
-          "description": "$expand must be defined as a query parameter in all operations.",
-          "message": "OAR020: $expand must be defined as a query parameter in this operation.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$expand' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR021": {
-          "description": "$exclude must be defined as a query parameter in all operations.",
-          "message": "OAR021: $exclude must be defined as a query parameter in this operation.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$exclude' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR022": {
-          "description": "$orderby must be defined as a query parameter in all operations.",
-          "message": "OAR022: $orderby must be defined as a query parameter in this operation.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$orderby' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR023": {
-          "description": "$total must be defined as a query parameter in all operations.",
-          "message": "OAR023: $total must be defined as a query parameter in this operation.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$total' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR024": {
-          "description": "$start must be defined as a query parameter in all operations.",
-          "message": "OAR024: $start must be defined as a query parameter in this operation.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$start' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR025": {
-          "description": "$limit must be defined as a query parameter in all operations.",
-          "message": "OAR025: $limit must be defined as a query parameter in this operation.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$limit' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR026": {
-          "description": "The $total parameter default value should be false.",
-          "message": "OAR026: The $total parameter default value should be false.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.name == '$total' && @.in == 'query')]",
-          "then": {
-              "field": "schema.default",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^false$"
-              }
-          }
-      },
-      "openapi-custom:OAR027": {
-          "description": "Location header is required in responses with code 201 from POST operations.",
-          "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
-          "severity": "error",
-          "given": "$.paths[*].post.responses['201'].headers",
-          "then": {
-              "field": "Location",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR028": {
-          "description": "$filter must be defined as a query parameter in all operations.",
-          "message": "OAR028: $filter must be defined as a query parameter in this operation.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters",
-          "then": {
-              "field": "$[?(@.name == '$filter' && @.in == 'query')]",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR030": {
-          "description": "The path '/status' must be declared.",
-          "message": "OAR030: The path '/status' must be declared.",
-          "severity": "error",
-          "given": "$.paths",
-          "then": {
-              "field": "/status",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR031": {
-          "description": "The examples can help developers to understand the response data structure and representation.\"",
-          "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
-          "severity": "error",
-          "given": [
-              "$.paths.*.*.parameters",
-              "$.paths.*.*[responses,requestBody]..content.*"
-          ],
-          "then": {
-              "field": "examples",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR032": {
-          "description": "Ambiguous path parts not encouraged.",
-          "message": "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided.",
-          "severity": "error",
-          "given": "$.paths.*~",
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^.*elements|instances|resources|values|terms|objects|items|elements|instances|resources|values.*$"
-              }
-          }
-      },
-      "openapi-custom:OAR033": {
-          "description": "Headers 'Accept', 'Content-Type', and 'Authorization' are not allowed.",
-          "message": "OAR033: The header '{{value}}' is not allowed.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]",
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^(Accept|Content-Type|Authorization)$"
-              }
-          }
-      },
-      "openapi-custom:OAR036": {
-          "description": "Cookie use is forbidden as a session mechanism.",
-          "message": "OAR036: Cookie use is forbidden as a session mechanism.",
-          "severity": "error",
-          "given": [
-              "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]",
-              "$.paths[*][get,post,put,patch,delete].responses[*].headers.*~"
-          ],
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^(Cookie|Set-Cookie)$"
-              }
-          }
-      },
-      "openapi-custom:OAR037": {
-          "description": "String types require a valid format.",
-          "message": "OAR037: String types require a valid format.",
-          "severity": "error",
-          "given": "$..parameters.[*].schema[?(@.type=='string')]",
-          "then": {
-              "field": "format",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR038": {
-          "description": "Response schema must be compliant with the standard.",
-          "message": "OAR038: Response property is required for status code '{{property}}'.",
-          "severity": "error",
-          "given": "$.paths.*.*.responses..content..schema.properties",
-          "then": {
-              "field": "@key",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^data|error$"
-              }
-          }
-      },
-      "openapi-custom:OAR044": {
-          "description": "Declared media type should conform to RFC6838 and RFC7231.",
-          "message": "OAR044: Declared media type range should conform to RFC7231.",
-          "severity": "error",
-          "given": "$.paths.*.*.responses.*.content.*~",
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^application/[a-zA-Z0-9-_]+$"
-              }
-          }
-      },
-      "openapi-custom:OAR045": {
-          "description": "Response schema is required for responses with status codes 201 and others that return content.",
-          "message": "OAR045: Response schema is required for status code '{{property}}'.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property !== '204')]",
-          "then": {
-              "field": "content",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR046": {
-          "description": "Every operation (get, post, put, patch, delete) must have at least one tag associated.",
-          "message": "OAR046: Associate a tag to this operation.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete]",
-          "then": {
-              "field": "tags",
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "type": "array",
-                      "minLength": 1
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR047": {
-          "description": "Tags required and each tag must have a short description.",
-          "message": "OAR047: Add tags with a short description to each one.",
-          "severity": "error",
-          "given": "$",
-          "then": [
-              {
-                  "field": "tags",
-                  "function": "schema",
-                  "functionOptions": {
-                      "schema": {
-                          "type": "array",
-                          "minLength": 1,
-                          "items": {
-                              "type": "object",
-                              "required": [
-                                  "name",
-                                  "description"
-                              ],
-                              "properties": {
-                                  "name": {
-                                      "type": "string",
-                                      "minLength": 1
-                                  },
-                                  "description": {
-                                      "type": "string",
-                                      "minLength": 1
-                                  }
-                              }
-                          }
-                      }
-                  }
-              }
-          ]
-      },
-      "openapi-custom:OAR049": {
-          "description": "204 No Content MUST NOT return any content.",
-          "message": "OAR049: 204 No Content MUST NOT return any content.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses['204']",
-          "then": {
-              "field": "content",
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR050": {
-          "description": "Provide a summary for each operation.",
-          "message": "OAR050: Provide a summary for each operation.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete]",
-          "then": {
-              "field": "summary",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR051": {
-          "description": "Provide a different summary and description for each operation.",
-          "message": "OAR051: Provide a different summary and description.",
-          "severity": "error",
-          "given": "$.paths[*][?(@.summary && @.description && @.summary === @.description)]",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR054": {
-          "description": "Ensure the host matches the specified format",
-          "severity": "error",
-          "given": [
-              "$.host",
-              "$.servers[*].url"
-          ],
-          "then": [
-              {
-                  "field": "$key",
-                  "function": "pattern",
-                  "functionOptions": {
-                      "match": "^((\\*|[\\w\\d]+(-[\\w\\d]+)*)\\.)*(apiaddicts)(\\.org)$"
-                  }
-              }
-          ]
-      },
-      "openapi-custom:OAR060": {
-          "description": "All query parameters must be defined as optional.",
-          "message": "OAR060: All query parameter must be optional (required: false).",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
-          "then": {
-              "field": "required",
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR061": {
-          "description": "Ensure get have mandatory response codes",
-          "message": "OAR061: Ensure get have the mandatory response codes",
-          "severity": "error",
-          "given": "$.paths[?(!(@property === '/status' || @property === '/another'))].get.responses",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "oneOf": [
-                          {
-                              "required": [
-                                  "200"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "202"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "206"
-                              ],
-                              "not": {
-                                  "required": [
-                                      "201",
-                                      "204"
-                                  ]
-                              }
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR062": {
-          "description": "Ensure post have mandatory response codes",
-          "message": "OAR062: Ensure post have the mandatory response codes",
-          "severity": "error",
-          "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].post.responses",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "oneOf": [
-                          {
-                              "required": [
-                                  "200"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "201"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "202"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "204"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "206"
-                              ]
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR063": {
-          "description": "Ensure put have mandatory response codes",
-          "message": "OAR063: Ensure put have the mandatory response codes",
-          "severity": "error",
-          "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].put.responses",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "oneOf": [
-                          {
-                              "required": [
-                                  "200"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "202"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "204"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "206"
-                              ]
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR064": {
-          "description": "Ensure patch have mandatory response codes",
-          "message": "OAR064: Ensure patch have the mandatory response codes",
-          "severity": "error",
-          "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].patch.responses",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "oneOf": [
-                          {
-                              "required": [
-                                  "200"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "202"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "204"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "206"
-                              ]
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR065": {
-          "description": "Ensure delete have mandatory response codes",
-          "message": "OAR065: Ensure delete have the mandatory response codes",
-          "severity": "error",
-          "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].delete.responses",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "oneOf": [
-                          {
-                              "required": [
-                                  "200"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "202"
-                              ]
-                          },
-                          {
-                              "required": [
-                                  "204"
-                              ]
-                          }
-                      ]
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR066": {
-          "description": "RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
-          "message": "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
-          "severity": "warn",
-          "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
-          "then": {
-              "function": "casing",
-              "functionOptions": {
-                  "type": "snake"
-              }
-          }
-      },
-      "openapi-custom:OAR067": {
-          "description": "RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
-          "message": "OAR067: RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
-          "severity": "warn",
-          "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
-          "then": {
-              "function": "casing",
-              "functionOptions": {
-                  "type": "camel"
-              }
-          }
-      },
-      "openapi-custom:OAR068": {
-          "description": "RequestBody and Responses schema property names must be compliant with the PascalCase naming convention.",
-          "message": "OAR068: RequestBody and Responses schema property names must be compliant with the PascalCase naming convention.",
-          "severity": "warn",
-          "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
-          "then": {
-              "function": "casing",
-              "functionOptions": {
-                  "type": "pascal"
-              }
-          }
-      },
-      "openapi-custom:OAR070": {
-          "description": "Parameters in path should not be numeric.",
-          "message": "OAR070: Parameters in path should not be numeric.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]",
-          "then": {
-              "field": "schema.type",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^(?!integer|number)"
-              }
-          }
-      },
-      "openapi-custom:OAR071": {
-          "description": "Query parameters 'param1', 'param2', and 'param3' must be defined in the operation.",
-          "message": "OAR071: Query parameters 'param1', 'param2', and 'param3' must be defined.",
-          "severity": "error",
-          "given": "$.paths[*].get.parameters",
-          "then": [
-              {
-                  "field": "$[?(@.name == 'param1')]",
-                  "function": "truthy"
-              },
-              {
-                  "field": "$[?(@.name == 'param2')]",
-                  "function": "truthy"
-              },
-              {
-                  "field": "$[?(@.name == 'param3')]",
-                  "function": "truthy"
-              }
-          ]
-      },
-      "openapi-custom:OAR072": {
-          "description": "Responses with status codes other than 200 must not include 'stacktrace'.",
-          "message": "The response with status code {{property}} must not include 'stacktrace'.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '200')]",
-          "then": {
-              "field": "content.application/json.schema.properties",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "stacktrace"
-              }
-          }
-      },
-      "openapi-custom:OAR073": {
-          "description": "API should include a 429 response to indicate rate limiting, except for the /status path.",
-          "message": "OAR073: API should include a 429 response to indicate rate limiting.",
-          "severity": "error",
-          "given": "$.paths[?(@ !== '/status')][*].responses",
-          "then": {
-              "field": "429",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR074": {
-          "description": "Numeric parameters should have minimum, maximum, or format restriction.",
-          "message": "OAR074: Numeric parameter '{{property}}' should have a minimum, maximum, or format restriction.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'integer' || @.schema.type == 'number')]",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "type": "object",
-                      "properties": {
-                          "schema": {
-                              "anyOf": [
-                                  {
-                                      "required": [
-                                          "minimum"
-                                      ]
-                                  },
-                                  {
-                                      "required": [
-                                          "maximum"
-                                      ]
-                                  },
-                                  {
-                                      "required": [
-                                          "format"
-                                      ]
-                                  }
-                              ]
-                          }
-                      }
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR075": {
-          "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
-          "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'string' && @.in == 'path')]",
-          "then": {
-              "function": "schema",
-              "functionOptions": {
-                  "schema": {
-                      "type": "object",
-                      "properties": {
-                          "schema": {
-                              "anyOf": [
-                                  {
-                                      "required": [
-                                          "minLength"
-                                      ]
-                                  },
-                                  {
-                                      "required": [
-                                          "maxLength"
-                                      ]
-                                  },
-                                  {
-                                      "required": [
-                                          "pattern"
-                                      ]
-                                  },
-                                  {
-                                      "required": [
-                                          "enum"
-                                      ]
-                                  }
-                              ]
-                          }
-                      }
-                  }
-              }
-          }
-      },
-      "openapi-custom:OAR077": {
-          "description": "All parameters in query must be snake_case.",
-          "message": "OAR077: All parameters in query must be snake_case.",
-          "severity": "warn",
-          "given": "$.paths[*][*].parameters[?(@.in == 'query')]",
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^[a-z]+(_[a-z]+)*$"
-              }
-          }
-      },
-      "openapi-custom:OAR078": {
-          "description": "All API methods must have security defined.",
-          "message": "OAR078: The operation '{{property}}' must have security defined.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete]",
-          "then": {
-              "field": "security",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR079": {
-          "description": "Operations with path parameters should include a 404 Not Found response.",
-          "message": "OAR079: Path parameters should have a 404 Not Found response.",
-          "severity": "warn",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]",
-          "then": {
-              "field": "responses['404']",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR080": {
-          "description": "The security scheme must be among those allowed by the organization and must be complete.",
-          "message": "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].security[*]",
-          "then": {
-              "field": "@key",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^(apiKey|oauth2)$"
-              }
-          }
-      },
-      "openapi-custom:OAR081": {
-          "description": "Fields of type password should be string with format password.",
-          "message": "OAR081: Fields of type password should be string with format password.",
-          "severity": "error",
-          "given": "$..properties[?(@.type == 'string' && @.format == 'number')]",
-          "then": {
-              "field": "format",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^password$"
-              }
-          }
-      },
-      "openapi-custom:OAR082": {
-          "description": "The string properties of the specified parameters must define a byte or binary format.",
-          "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
-          "severity": "error",
-          "given": "$..properties[?(@.type == 'string')]",
-          "then": {
-              "field": "format",
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^(byte|binary)$"
-              }
-          }
-      },
-      "openapi-custom:OAR083": {
-          "description": "Certain parameters (e.g., email, password) should not pass through the querystring.",
-          "message": "OAR083: The parameter '{{value}}' should not pass through the querystring.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
-          "then": {
-              "field": "name",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^(email|password)$"
-              }
-          }
-      },
-      "openapi-custom:OAR084": {
-          "description": "The format password should not pass through the querystring.",
-          "message": "OAR084: The format password should not be used in querystring parameters.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
-          "then": {
-              "field": "schema.format",
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^password$"
-              }
-          }
-      },
-      "openapi-custom:OAR085": {
-          "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
-          "message": "OAR085: The OpenAPI version '{{value}}' is not allowed. Allowed versions: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
-          "severity": "warn",
-          "given": "$.openapi",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^(2\\.0|3\\.0\\.0|3\\.0\\.1|3\\.0\\.2|3\\.0\\.3|3\\.1\\.0)$"
-              }
-          }
-      },
-      "openapi-custom:OAR086": {
-          "description": "Descriptions must begin with a capital letter, end with a period, and not be empty.",
-          "message": "OAR086: Descriptions must begin with a capital letter, end with a period, and not be empty.",
-          "severity": "warn",
-          "given": "$..description",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^[A-Z][\\s\\S]*\\.$"
-              }
-          }
-      },
-      "openapi-custom:OAR087": {
-          "description": "Summaries must begin with a capital letter, end with a period, and not be empty.",
-          "message": "OAR087: Summaries must begin with a capital letter, end with a period, and not be empty.",
-          "severity": "warn",
-          "given": "$..summary",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^[A-Z][\\s\\S]*\\.$"
-              }
-          }
-      },
-      "openapi-custom:OAR088": {
-          "description": "The $ref of a parameter must end with the suffix Param.",
-          "message": "OAR088: The $ref of a parameter must end with the suffix Param.",
-          "severity": "warn",
-          "given": "$..parameters[*].$ref",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "Param$"
-              }
-          }
-      },
-      "openapi-custom:OAR089": {
-          "description": "The $ref of a request body must end with the suffix Body.",
-          "message": "OAR089: The $ref of a request body must end with the suffix Body.",
-          "severity": "warn",
-          "given": "$..requestBody.$ref",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "Body$"
-              }
-          }
-      },
-      "openapi-custom:OAR091": {
-          "description": "Parameters must contain only $ref references.",
-          "message": "OAR091: Parameters must contain only $ref references.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].parameters[*].$ref",
-          "then": {
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR092": {
-          "description": "RequestBody must contain a $ref.",
-          "message": "OAR092: RequestBody must contain a $ref reference.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].requestBody[*].$ref",
-          "then": {
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR093": {
-          "description": "RequestBody must contain only references ($ref).",
-          "message": "OAR093: RequestBody must contain only references ($ref).",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses[*].$ref",
-          "then": {
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR094": {
-          "description": "Examples must be used instead of example in the content definition for better tool compatibility.",
-          "message": "OAR094: Examples must be used instead of example in the content definition for better tool compatibility.",
-          "severity": "warn",
-          "given": "$..content[*].example",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR096": {
-          "description": "Response code 403 must be defined for operations with security schemes defined.",
-          "message": "OAR096: Response code 403 must be defined for operations with security schemes defined.",
-          "severity": "error",
-          "given": "$.paths[*][*].security",
-          "then": {
-              "field": "responses['403']",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR097": {
-          "description": "The base path must contain at least two parts.",
-          "message": "OAR097: Path has too few parts.",
-          "severity": "error",
-          "given": "$.servers[*].url",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^https?://[^/]+/[^/]+/[^/]+"
-              }
-          }
-      },
-      "openapi-custom:OAR098": {
-          "description": "The base path must not contain more than two parts.",
-          "message": "OAR098: Path has too many parts.",
-          "severity": "error",
-          "given": "$.servers[*].url",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "notMatch": "^https?://[^/]+/([^/]+/){2,}[^/]+"
-              }
-          }
-      },
-      "openapi-custom:OAR099": {
-          "description": "API name must start with prefix 'api-'.",
-          "message": "OAR099: API name must start with prefix 'api-'.",
-          "severity": "error",
-          "given": "$.servers[*].url",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^https?://[^/]+/api-[^/]+"
-              }
-          }
-      },
-      "openapi-custom:OAR100": {
-          "description": "Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
-          "message": "OAR100: Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
-          "severity": "error",
-          "given": "$.servers[*].url",
-          "then": {
-              "function": "pattern",
-              "functionOptions": {
-                  "match": "^https?://[^/]+/.*/v[0-9]+$"
-              }
-          }
-      },
-      "openapi-custom:OAR103": {
-          "description": "GET requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
-          "message": "OAR103: GET request should not be used on paths containing 'get' or 'delete'.",
-          "severity": "error",
-          "given": "$.paths[?(@property.match(/(get|delete)/))].get",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR104": {
-          "description": "Post requests are not recommended for resource paths containing 'me'.",
-          "message": "OAR104: Post request should not be used on paths containing 'me'.",
-          "severity": "error",
-          "given": "$.paths[?(@property.match(/(me)/))].post",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR105": {
-          "description": "PUT requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
-          "message": "OAR105: PUT request should not be used on paths containing 'get' or 'delete'.",
-          "severity": "error",
-          "given": "$.paths[?(@property.match(/(get|delete)/))].put",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR106": {
-          "description": "PATCH requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
-          "message": "OAR106: PATCH request should not be used on paths containing 'get' or 'delete'.",
-          "severity": "error",
-          "given": "$.paths[?(@property.match(/(get|delete)/))].patch",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR107": {
-          "description": "DELETE requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
-          "message": "OAR107: DELETE request should not be used on paths containing 'get' or 'delete'.",
-          "severity": "error",
-          "given": "$.paths[?(@property.match(/(get|delete)/))].delete",
-          "then": {
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR109": {
-          "description": "Use default response instead of directly specifying 5XX codes.",
-          "message": "OAR109: Use default response instead of specifying 5XX codes directly.",
-          "severity": "error",
-          "given": "$.paths[*][get,post,put,patch,delete].responses",
-          "then": {
-              "field": "$[?(@property.match(/^5[0-9][0-9]$/))]",
-              "function": "falsy"
-          }
-      },
-      "openapi-custom:OAR110": {
-          "description": "License information cannot be empty.",
-          "message": "OAR110: License information cannot be empty.",
-          "severity": "error",
-          "given": "$.info",
-          "then": {
-              "field": "license",
-              "function": "truthy"
-          }
-      },
-      "openapi-custom:OAR111": {
-          "description": "Contact information cannot be empty.",
-          "message": "OAR111: Contact information cannot be empty.",
-          "severity": "error",
-          "given": "$.info",
-          "then": {
-              "field": "contact",
-              "function": "truthy"
-          }
+    "openapi-custom:OAR001": {
+      "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
+      "message": "OAR001: HTTPS protocol is mandatory.",
+      "formats": [
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https://"
+        }
       }
+    },
+    "openapi-custom:OAR006": {
+      "description": "Routes must define request media types supported by the API.",
+      "message": "OAR006: Specify at least one Media Type in the content of the request body.",
+      "formats": [
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.paths[*][post,put,patch]",
+      "then": [
+        {
+          "field": "requestBody",
+          "function": "truthy"
+        },
+        {
+          "field": "requestBody.content",
+          "function": "truthy"
+        }
+      ]
+    },
+    "openapi-custom:OAR007": {
+      "description": "Routes must define response media types supported by the API",
+      "message": "OAR007: Specify at least one Media Type in the content of the response body.",
+      "severity": "error",
+      "formats": [
+        "oas3"
+      ],
+      "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
+      "then": [
+        {
+          "field": "content",
+          "function": "truthy"
+        }
+      ]
+    },
+    "openapi-custom:OAR008": {
+      "description": "HTTP verbs not encouraged.",
+      "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.paths[*][?(@property == 'head' || @property == 'options')]",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR009": {
+      "description": "Default request media type should be defined for operations.",
+      "message": "OAR009: Default request media type is mandatory.",
+      "formats": [
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$..content",
+      "then": {
+        "field": "application/json",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR010": {
+      "description": "Default response media type should be defined for responses.",
+      "message": "OAR010: Default response media type is mandatory.",
+      "severity": "warn",
+      "formats": [
+        "oas3"
+      ],
+      "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
+      "then": {
+        "field": "content['application/json']",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR011": {
+      "description": "URLs should follow the specified naming convention.",
+      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention.",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.paths[*]~",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
+        }
+      }
+    },
+    "openapi-custom:OAR013": {
+      "description": "Default response is required for all operations.",
+      "message": "OAR013: Default response is required.",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses",
+      "then": {
+        "field": "default",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR014": {
+      "description": "Resources depth level should be below the non-suggested range.",
+      "message": "OAR014: {{error}}",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "warn",
+      "given": "$.paths.*~",
+      "then": {
+        "function": "apq-resources",
+        "functionOptions": {
+          "max": 5
+        }
+      }
+    },
+    "openapi-custom:OAR015": {
+      "description": "Resources depth level should be smaller than 5.",
+      "message": "OAR015: Path exceeds the maximum allowed depth level of 5.",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.paths.*~",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^/[^/]*((/{[^}]*})*/[^/]*(/{[^}]*})*){0,4}/?$"
+        }
+      }
+    },
+    "openapi-custom:OAR019": {
+      "description": "$select must be defined as a query parameter in all operations.",
+      "message": "OAR019: $select must be defined as a query parameter in this operation.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$select' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR020": {
+      "description": "$expand must be defined as a query parameter in all operations.",
+      "message": "OAR020: $expand must be defined as a query parameter in this operation.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$expand' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR021": {
+      "description": "$exclude must be defined as a query parameter in all operations.",
+      "message": "OAR021: $exclude must be defined as a query parameter in this operation.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$exclude' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR022": {
+      "description": "$orderby must be defined as a query parameter in all operations.",
+      "message": "OAR022: $orderby must be defined as a query parameter in this operation.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$orderby' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR023": {
+      "description": "$total must be defined as a query parameter in all operations.",
+      "message": "OAR023: $total must be defined as a query parameter in this operation.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$total' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR024": {
+      "description": "$start must be defined as a query parameter in all operations.",
+      "message": "OAR024: $start must be defined as a query parameter in this operation.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$start' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR025": {
+      "description": "$limit must be defined as a query parameter in all operations.",
+      "message": "OAR025: $limit must be defined as a query parameter in this operation.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$limit' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR026": {
+      "description": "The $total parameter default value should be false.",
+      "message": "OAR026: The $total parameter default value should be false.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.name == '$total' && @.in == 'query')]",
+      "then": {
+        "field": "schema.default",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^false$"
+        }
+      }
+    },
+    "openapi-custom:OAR027": {
+      "description": "Location header is required in responses with code 201 from POST operations.",
+      "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
+      "severity": "error",
+      "given": "$.paths[*].post.responses['201'].headers",
+      "then": {
+        "field": "Location",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR028": {
+      "description": "$filter must be defined as a query parameter in all operations.",
+      "message": "OAR028: $filter must be defined as a query parameter in this operation.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters",
+      "then": {
+        "field": "$[?(@.name == '$filter' && @.in == 'query')]",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR030": {
+      "description": "The path '/status' must be declared.",
+      "message": "OAR030: The path '/status' must be declared.",
+      "severity": "error",
+      "given": "$.paths",
+      "then": {
+        "field": "/status",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR031": {
+      "description": "The examples can help developers to understand the response data structure and representation.\"",
+      "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
+      "severity": "error",
+      "given": [
+        "$.paths.*.*.parameters",
+        "$.paths.*.*[responses,requestBody]..content.*"
+      ],
+      "then": {
+        "field": "examples",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR032": {
+      "description": "Ambiguous path parts not encouraged.",
+      "message": "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided.",
+      "severity": "error",
+      "given": "$.paths.*~",
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^.*elements|instances|resources|values|terms|objects|items|elements|instances|resources|values.*$"
+        }
+      }
+    },
+    "openapi-custom:OAR033": {
+      "description": "Headers 'Accept', 'Content-Type', and 'Authorization' are not allowed.",
+      "message": "OAR033: The header '{{value}}' is not allowed.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]",
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^(Accept|Content-Type|Authorization)$"
+        }
+      }
+    },
+    "openapi-custom:OAR036": {
+      "description": "Cookie use is forbidden as a session mechanism.",
+      "message": "OAR036: Cookie use is forbidden as a session mechanism.",
+      "severity": "error",
+      "given": [
+        "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]",
+        "$.paths[*][get,post,put,patch,delete].responses[*].headers.*~"
+      ],
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^(Cookie|Set-Cookie)$"
+        }
+      }
+    },
+    "openapi-custom:OAR037": {
+      "description": "String types require a valid format.",
+      "message": "OAR037: String types require a valid format.",
+      "severity": "error",
+      "given": "$..parameters.[*].schema[?(@.type=='string')]",
+      "then": {
+        "field": "format",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR038": {
+      "description": "Response schema must be compliant with the standard.",
+      "message": "OAR038: Response property is required for status code '{{property}}'.",
+      "severity": "error",
+      "given": "$.paths.*.*.responses..content..schema.properties",
+      "then": {
+        "field": "@key",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^data|error$"
+        }
+      }
+    },
+    "openapi-custom:OAR044": {
+      "description": "Declared media type should conform to RFC6838 and RFC7231.",
+      "message": "OAR044: Declared media type range should conform to RFC7231.",
+      "severity": "error",
+      "given": "$.paths.*.*.responses.*.content.*~",
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^application/[a-zA-Z0-9-_]+$"
+        }
+      }
+    },
+    "openapi-custom:OAR045": {
+      "description": "Response schema is required for responses with status codes 201 and others that return content.",
+      "message": "OAR045: Response schema is required for status code '{{property}}'.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property !== '204')]",
+      "then": {
+        "field": "content",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR046": {
+      "description": "Every operation (get, post, put, patch, delete) must have at least one tag associated.",
+      "message": "OAR046: Associate a tag to this operation.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete]",
+      "then": {
+        "field": "tags",
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "type": "array",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR047": {
+      "description": "Tags required and each tag must have a short description.",
+      "message": "OAR047: Add tags with a short description to each one.",
+      "severity": "error",
+      "given": "$",
+      "then": [
+        {
+          "field": "tags",
+          "function": "schema",
+          "functionOptions": {
+            "schema": {
+              "type": "array",
+              "minLength": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "openapi-custom:OAR049": {
+      "description": "204 No Content MUST NOT return any content.",
+      "message": "OAR049: 204 No Content MUST NOT return any content.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses['204']",
+      "then": {
+        "field": "content",
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR050": {
+      "description": "Provide a summary for each operation.",
+      "message": "OAR050: Provide a summary for each operation.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete]",
+      "then": {
+        "field": "summary",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR051": {
+      "description": "Provide a different summary and description for each operation.",
+      "message": "OAR051: Provide a different summary and description.",
+      "severity": "error",
+      "given": "$.paths[*][?(@.summary && @.description && @.summary === @.description)]",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR054": {
+      "description": "Ensure the host matches the specified format",
+      "severity": "error",
+      "given": [
+        "$.host",
+        "$.servers[*].url"
+      ],
+      "then": [
+        {
+          "field": "$key",
+          "function": "pattern",
+          "functionOptions": {
+            "match": "^((\\*|[\\w\\d]+(-[\\w\\d]+)*)\\.)*(apiaddicts)(\\.org)$"
+          }
+        }
+      ]
+    },
+    "openapi-custom:OAR060": {
+      "description": "All query parameters must be defined as optional.",
+      "message": "OAR060: All query parameter must be optional (required: false).",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
+      "then": {
+        "field": "required",
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR061": {
+      "description": "Ensure get have mandatory response codes",
+      "message": "OAR061: Ensure get have the mandatory response codes",
+      "severity": "error",
+      "given": "$.paths[?(!(@property === '/status' || @property === '/another'))].get.responses",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "required": [
+                  "200"
+                ]
+              },
+              {
+                "required": [
+                  "202"
+                ]
+              },
+              {
+                "required": [
+                  "206"
+                ],
+                "not": {
+                  "required": [
+                    "201",
+                    "204"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR062": {
+      "description": "Ensure post have mandatory response codes",
+      "message": "OAR062: Ensure post have the mandatory response codes",
+      "severity": "error",
+      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].post.responses",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "required": [
+                  "200"
+                ]
+              },
+              {
+                "required": [
+                  "201"
+                ]
+              },
+              {
+                "required": [
+                  "202"
+                ]
+              },
+              {
+                "required": [
+                  "204"
+                ]
+              },
+              {
+                "required": [
+                  "206"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR063": {
+      "description": "Ensure put have mandatory response codes",
+      "message": "OAR063: Ensure put have the mandatory response codes",
+      "severity": "error",
+      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].put.responses",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "required": [
+                  "200"
+                ]
+              },
+              {
+                "required": [
+                  "202"
+                ]
+              },
+              {
+                "required": [
+                  "204"
+                ]
+              },
+              {
+                "required": [
+                  "206"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR064": {
+      "description": "Ensure patch have mandatory response codes",
+      "message": "OAR064: Ensure patch have the mandatory response codes",
+      "severity": "error",
+      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].patch.responses",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "required": [
+                  "200"
+                ]
+              },
+              {
+                "required": [
+                  "202"
+                ]
+              },
+              {
+                "required": [
+                  "204"
+                ]
+              },
+              {
+                "required": [
+                  "206"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR065": {
+      "description": "Ensure delete have mandatory response codes",
+      "message": "OAR065: Ensure delete have the mandatory response codes",
+      "severity": "error",
+      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].delete.responses",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "required": [
+                  "200"
+                ]
+              },
+              {
+                "required": [
+                  "202"
+                ]
+              },
+              {
+                "required": [
+                  "204"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR066": {
+      "description": "RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
+      "message": "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
+      "severity": "warn",
+      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+      "then": {
+        "function": "casing",
+        "functionOptions": {
+          "type": "snake"
+        }
+      }
+    },
+    "openapi-custom:OAR067": {
+      "description": "RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
+      "message": "OAR067: RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
+      "severity": "warn",
+      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+      "then": {
+        "function": "casing",
+        "functionOptions": {
+          "type": "camel"
+        }
+      }
+    },
+    "openapi-custom:OAR068": {
+      "description": "RequestBody and Responses schema property names must be compliant with the PascalCase naming convention.",
+      "message": "OAR068: RequestBody and Responses schema property names must be compliant with the PascalCase naming convention.",
+      "severity": "warn",
+      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+      "then": {
+        "function": "casing",
+        "functionOptions": {
+          "type": "pascal"
+        }
+      }
+    },
+    "openapi-custom:OAR070": {
+      "description": "Parameters in path should not be numeric.",
+      "message": "OAR070: Parameters in path should not be numeric.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]",
+      "then": {
+        "field": "schema.type",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(?!integer|number)"
+        }
+      }
+    },
+    "openapi-custom:OAR071": {
+      "description": "Query parameters 'param1', 'param2', and 'param3' must be defined in the operation.",
+      "message": "OAR071: Query parameters 'param1', 'param2', and 'param3' must be defined.",
+      "severity": "error",
+      "given": "$.paths[*].get.parameters",
+      "then": [
+        {
+          "field": "$[?(@.name == 'param1')]",
+          "function": "truthy"
+        },
+        {
+          "field": "$[?(@.name == 'param2')]",
+          "function": "truthy"
+        },
+        {
+          "field": "$[?(@.name == 'param3')]",
+          "function": "truthy"
+        }
+      ]
+    },
+    "openapi-custom:OAR072": {
+      "description": "Responses with status codes other than 200 must not include 'stacktrace'.",
+      "message": "The response with status code {{property}} must not include 'stacktrace'.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '200')]",
+      "then": {
+        "field": "content.application/json.schema.properties",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "stacktrace"
+        }
+      }
+    },
+    "openapi-custom:OAR073": {
+      "description": "API should include a 429 response to indicate rate limiting, except for the /status path.",
+      "message": "OAR073: API should include a 429 response to indicate rate limiting.",
+      "severity": "error",
+      "given": "$.paths[?(@ !== '/status')][*].responses",
+      "then": {
+        "field": "429",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR074": {
+      "description": "Numeric parameters should have minimum, maximum, or format restriction.",
+      "message": "OAR074: Numeric parameter '{{property}}' should have a minimum, maximum, or format restriction.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'integer' || @.schema.type == 'number')]",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "minimum"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "maximum"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "format"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR075": {
+      "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
+      "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'string' && @.in == 'path')]",
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "minLength"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "maxLength"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "pattern"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "enum"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "openapi-custom:OAR077": {
+      "description": "All parameters in query must be snake_case.",
+      "message": "OAR077: All parameters in query must be snake_case.",
+      "severity": "warn",
+      "given": "$.paths[*][*].parameters[?(@.in == 'query')]",
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^[a-z]+(_[a-z]+)*$"
+        }
+      }
+    },
+    "openapi-custom:OAR078": {
+      "description": "All API methods must have security defined.",
+      "message": "OAR078: The operation '{{property}}' must have security defined.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete]",
+      "then": {
+        "field": "security",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR079": {
+      "description": "Operations with path parameters should include a 404 Not Found response.",
+      "message": "OAR079: Path parameters should have a 404 Not Found response.",
+      "severity": "warn",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]",
+      "then": {
+        "field": "responses['404']",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR080": {
+      "description": "The security scheme must be among those allowed by the organization and must be complete.",
+      "message": "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].security[*]",
+      "then": {
+        "field": "@key",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(apiKey|oauth2)$"
+        }
+      }
+    },
+    "openapi-custom:OAR081": {
+      "description": "Fields of type password should be string with format password.",
+      "message": "OAR081: Fields of type password should be string with format password.",
+      "severity": "error",
+      "given": "$..properties[?(@.type == 'string' && @.format == 'number')]",
+      "then": {
+        "field": "format",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^password$"
+        }
+      }
+    },
+    "openapi-custom:OAR082": {
+      "description": "The string properties of the specified parameters must define a byte or binary format.",
+      "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
+      "severity": "error",
+      "given": "$..properties[?(@.type == 'string')]",
+      "then": {
+        "field": "format",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(byte|binary)$"
+        }
+      }
+    },
+    "openapi-custom:OAR083": {
+      "description": "Certain parameters (e.g., email, password) should not pass through the querystring.",
+      "message": "OAR083: The parameter '{{value}}' should not pass through the querystring.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
+      "then": {
+        "field": "name",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^(email|password)$"
+        }
+      }
+    },
+    "openapi-custom:OAR084": {
+      "description": "The format password should not pass through the querystring.",
+      "message": "OAR084: The format password should not be used in querystring parameters.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
+      "then": {
+        "field": "schema.format",
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^password$"
+        }
+      }
+    },
+    "openapi-custom:OAR085": {
+      "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
+      "message": "OAR085: The OpenAPI version '{{value}}' is not allowed. Allowed versions: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
+      "severity": "warn",
+      "given": "$.openapi",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(2\\.0|3\\.0\\.0|3\\.0\\.1|3\\.0\\.2|3\\.0\\.3|3\\.1\\.0)$"
+        }
+      }
+    },
+    "openapi-custom:OAR086": {
+      "description": "Descriptions must begin with a capital letter, end with a period, and not be empty.",
+      "message": "OAR086: Descriptions must begin with a capital letter, end with a period, and not be empty.",
+      "severity": "warn",
+      "given": "$..description",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^[A-Z][\\s\\S]*\\.$"
+        }
+      }
+    },
+    "openapi-custom:OAR087": {
+      "description": "Summaries must begin with a capital letter, end with a period, and not be empty.",
+      "message": "OAR087: Summaries must begin with a capital letter, end with a period, and not be empty.",
+      "severity": "warn",
+      "given": "$..summary",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^[A-Z][\\s\\S]*\\.$"
+        }
+      }
+    },
+    "openapi-custom:OAR088": {
+      "description": "The $ref of a parameter must end with the suffix Param.",
+      "message": "OAR088: The $ref of a parameter must end with the suffix Param.",
+      "severity": "warn",
+      "given": "$..parameters[*].$ref",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "Param$"
+        }
+      }
+    },
+    "openapi-custom:OAR089": {
+      "description": "The $ref of a request body must end with the suffix Body.",
+      "message": "OAR089: The $ref of a request body must end with the suffix Body.",
+      "severity": "warn",
+      "given": "$..requestBody.$ref",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "Body$"
+        }
+      }
+    },
+    "openapi-custom:OAR091": {
+      "description": "Parameters must contain only $ref references.",
+      "message": "OAR091: Parameters must contain only $ref references.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[*].$ref",
+      "then": {
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR092": {
+      "description": "RequestBody must contain a $ref.",
+      "message": "OAR092: RequestBody must contain a $ref reference.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].requestBody[*].$ref",
+      "then": {
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR093": {
+      "description": "RequestBody must contain only references ($ref).",
+      "message": "OAR093: RequestBody must contain only references ($ref).",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses[*].$ref",
+      "then": {
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR094": {
+      "description": "Examples must be used instead of example in the content definition for better tool compatibility.",
+      "message": "OAR094: Examples must be used instead of example in the content definition for better tool compatibility.",
+      "severity": "warn",
+      "given": "$..content[*].example",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR096": {
+      "description": "Response code 403 must be defined for operations with security schemes defined.",
+      "message": "OAR096: Response code 403 must be defined for operations with security schemes defined.",
+      "severity": "error",
+      "given": "$.paths[*][*].security",
+      "then": {
+        "field": "responses['403']",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR097": {
+      "description": "The base path must contain at least two parts.",
+      "message": "OAR097: Path has too few parts.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https?://[^/]+/[^/]+/[^/]+"
+        }
+      }
+    },
+    "openapi-custom:OAR098": {
+      "description": "The base path must not contain more than two parts.",
+      "message": "OAR098: Path has too many parts.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "notMatch": "^https?://[^/]+/([^/]+/){2,}[^/]+"
+        }
+      }
+    },
+    "openapi-custom:OAR099": {
+      "description": "API name must start with prefix 'api-'.",
+      "message": "OAR099: API name must start with prefix 'api-'.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https?://[^/]+/api-[^/]+"
+        }
+      }
+    },
+    "openapi-custom:OAR100": {
+      "description": "Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
+      "message": "OAR100: Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https?://[^/]+/.*/v[0-9]+$"
+        }
+      }
+    },
+    "openapi-custom:OAR103": {
+      "description": "GET requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
+      "message": "OAR103: GET request should not be used on paths containing 'get' or 'delete'.",
+      "severity": "error",
+      "given": "$.paths[?(@property.match(/(get|delete)/))].get",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR104": {
+      "description": "Post requests are not recommended for resource paths containing 'me'.",
+      "message": "OAR104: Post request should not be used on paths containing 'me'.",
+      "severity": "error",
+      "given": "$.paths[?(@property.match(/(me)/))].post",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR105": {
+      "description": "PUT requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
+      "message": "OAR105: PUT request should not be used on paths containing 'get' or 'delete'.",
+      "severity": "error",
+      "given": "$.paths[?(@property.match(/(get|delete)/))].put",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR106": {
+      "description": "PATCH requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
+      "message": "OAR106: PATCH request should not be used on paths containing 'get' or 'delete'.",
+      "severity": "error",
+      "given": "$.paths[?(@property.match(/(get|delete)/))].patch",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR107": {
+      "description": "DELETE requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw.",
+      "message": "OAR107: DELETE request should not be used on paths containing 'get' or 'delete'.",
+      "severity": "error",
+      "given": "$.paths[?(@property.match(/(get|delete)/))].delete",
+      "then": {
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR109": {
+      "description": "Use default response instead of directly specifying 5XX codes.",
+      "message": "OAR109: Use default response instead of specifying 5XX codes directly.",
+      "severity": "error",
+      "given": "$.paths[*][get,post,put,patch,delete].responses",
+      "then": {
+        "field": "$[?(@property.match(/^5[0-9][0-9]$/))]",
+        "function": "falsy"
+      }
+    },
+    "openapi-custom:OAR110": {
+      "description": "License information cannot be empty.",
+      "message": "OAR110: License information cannot be empty.",
+      "severity": "error",
+      "given": "$.info",
+      "then": {
+        "field": "license",
+        "function": "truthy"
+      }
+    },
+    "openapi-custom:OAR111": {
+      "description": "Contact information cannot be empty.",
+      "message": "OAR111: Contact information cannot be empty.",
+      "severity": "error",
+      "given": "$.info",
+      "then": {
+        "field": "contact",
+        "function": "truthy"
+      }
+    }
   }
 }
