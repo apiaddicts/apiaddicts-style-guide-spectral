@@ -42,7 +42,7 @@ rules:
     description: "Default request media type should be defined for operations."
     message: "OAR009: Default request media type is mandatory."
     formats: ['oas3']
-    severity: "warn"
+    severity: "error"
     given: "$..content"
     then:
       field: "application/json"
@@ -60,7 +60,7 @@ rules:
     description: "URLs should follow the specified naming convention."
     message: "OAR011: The resource names with more than two words must be compliant with the standard naming convention."
     formats: ['oas2', 'oas3']
-    severity: warn
+    severity: error
     given: "$.paths[*]~"
     then:
       function: pattern
@@ -70,7 +70,7 @@ rules:
     description: "Default response is required for all operations."
     message: "OAR013: Default response is required."
     formats: ['oas2', 'oas3']
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses"
     then:
       field: "default"
@@ -120,7 +120,7 @@ rules:
   openapi-custom:OAR023:
     description: "$total must be defined as a query parameter in all operations."
     message: "OAR023: $total must be defined as a query parameter in this operation."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters"
     then:
       field: "$[?(@.name == '$total' && @.in == 'query')]"
@@ -128,7 +128,7 @@ rules:
   openapi-custom:OAR024:
     description: "$start must be defined as a query parameter in all operations."
     message: "OAR024: $start must be defined as a query parameter in this operation."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters"
     then:
       field: "$[?(@.name == '$start' && @.in == 'query')]"
@@ -136,7 +136,7 @@ rules:
   openapi-custom:OAR025:
     description: "$limit must be defined as a query parameter in all operations."
     message: "OAR025: $limit must be defined as a query parameter in this operation."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters"
     then:
       field: "$[?(@.name == '$limit' && @.in == 'query')]"
@@ -154,7 +154,7 @@ rules:
   openapi-custom:OAR027:
     description: "Location header is required in responses with code 201 from POST operations."
     message: "OAR027: Location header is required in responses with code 201 from POST operations."
-    severity: warn
+    severity: error
     given: "$.paths[*].post.responses['201'].headers"
     then:
       field: "Location"
@@ -178,7 +178,7 @@ rules:
   openapi-custom:OAR031:
     description: The examples can help developers to understand the response data structure and representation."
     message: "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined."
-    severity: warn
+    severity: error
     given:
       - $.paths.*.*.parameters
       - $.paths.*.*[responses,requestBody]..content.*
@@ -188,7 +188,7 @@ rules:
   openapi-custom:OAR032:
     description: "Ambiguous path parts not encouraged."
     message: "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided."
-    severity: warn
+    severity: error
     given: "$.paths.*~"
     then:
       field: "name"
@@ -220,7 +220,7 @@ rules:
   openapi-custom:OAR037:
     description: "String types require a valid format."
     message: "OAR037: String types require a valid format."
-    severity: "warn"
+    severity: "error"
     given: "$..parameters.[*].schema[?(@.type=='string')]"
     then:
       field: "format"
@@ -228,7 +228,7 @@ rules:
   openapi-custom:OAR038:
     description: "Response schema must be compliant with the standard."
     message: "OAR038: Response property is required for status code '{{property}}'."
-    severity: warn
+    severity: error
     given: "$.paths.*.*.responses..content..schema.properties"
     then:
       field: "@key"
@@ -335,7 +335,7 @@ rules:
   openapi-custom:OAR061:
     description: "Ensure get have mandatory response codes"
     message: "OAR061: Ensure get have the mandatory response codes"
-    severity: warn
+    severity: error
     given: "$.paths[?(!(@property === '/status' || @property === '/another'))].get.responses"
     then:
       function: schema
@@ -350,7 +350,7 @@ rules:
   openapi-custom:OAR062:
     description: "Ensure post have mandatory response codes"
     message: "OAR062: Ensure post have the mandatory response codes"
-    severity: warn
+    severity: error
     given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].post.responses"
     then:
       function: schema
@@ -365,7 +365,7 @@ rules:
   openapi-custom:OAR063:
     description: "Ensure put have mandatory response codes"
     message: "OAR063: Ensure put have the mandatory response codes"
-    severity: warn
+    severity: error
     given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].put.responses"
     then:
       function: schema
@@ -379,7 +379,7 @@ rules:
   openapi-custom:OAR064:
     description: "Ensure patch have mandatory response codes"
     message: "OAR064: Ensure patch have the mandatory response codes"
-    severity: warn
+    severity: error
     given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].patch.responses"
     then:
       function: schema
@@ -393,7 +393,7 @@ rules:
   openapi-custom:OAR065:
     description: "Ensure delete have mandatory response codes"
     message: "OAR065: Ensure delete have the mandatory response codes"
-    severity: warn
+    severity: error
     given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].delete.responses"
     then:
       function: schema
@@ -433,7 +433,7 @@ rules:
   openapi-custom:OAR070:
     description: "Parameters in path should not be numeric."
     message: "OAR070: Parameters in path should not be numeric."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]"
     then:
       field: "schema.type"
@@ -443,7 +443,7 @@ rules:
   openapi-custom:OAR071:
     description: "Query parameters 'param1', 'param2', and 'param3' must be defined in the operation."
     message: "OAR071: Query parameters 'param1', 'param2', and 'param3' must be defined."
-    severity: warn
+    severity: error
     given: "$.paths[*].get.parameters"
     then:
       - field: "$[?(@.name == 'param1')]"
@@ -455,7 +455,7 @@ rules:
   openapi-custom:OAR072:
     description: "Responses with status codes other than 200 must not include 'stacktrace'."
     message: "The response with status code {{property}} must not include 'stacktrace'."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses[?(@property != '200')]"
     then:
       field: "content.application/json.schema.properties"
@@ -465,7 +465,7 @@ rules:
   openapi-custom:OAR073:
     description: "API should include a 429 response to indicate rate limiting, except for the /status path."
     message: "OAR073: API should include a 429 response to indicate rate limiting."
-    severity: warn
+    severity: error
     given: "$.paths[?(@ !== '/status')][*].responses"
     then:
       field: "429"
@@ -473,7 +473,7 @@ rules:
   openapi-custom:OAR074:
     description: "Numeric parameters should have minimum, maximum, or format restriction."
     message: "OAR074: Numeric parameter '{{property}}' should have a minimum, maximum, or format restriction."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'integer' || @.schema.type == 'number')]"
     then:
       function: schema
@@ -489,7 +489,7 @@ rules:
   openapi-custom:OAR075:
     description: "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction."
     message: "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'string' && @.in == 'path')]"
     then:
       function: schema
@@ -516,7 +516,7 @@ rules:
   openapi-custom:OAR078:
     description: "All API methods must have security defined."
     message: "OAR078: The operation '{{property}}' must have security defined."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete]"
     then:
       field: "security"
@@ -532,7 +532,7 @@ rules:
   openapi-custom:OAR080:
     description: "The security scheme must be among those allowed by the organization and must be complete."
     message: "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].security[*]"
     then:
       field: "@key"
@@ -542,7 +542,7 @@ rules:
   openapi-custom:OAR081:
     description: "Fields of type password should be string with format password."
     message: "OAR081: Fields of type password should be string with format password."
-    severity: warn
+    severity: error
     given: "$..properties[?(@.type == 'string' && @.format == 'number')]"
     then:
       field: "format"
@@ -552,7 +552,7 @@ rules:
   openapi-custom:OAR082:
     description: "The string properties of the specified parameters must define a byte or binary format."
     message: "OAR082: The string properties must define a 'byte' or 'binary' format."
-    severity: warn
+    severity: error
     given: "$..properties[?(@.type == 'string')]"
     then:
       field: "format"
@@ -562,7 +562,7 @@ rules:
   openapi-custom:OAR083:
     description: "Certain parameters (e.g., email, password) should not pass through the querystring."
     message: "OAR083: The parameter '{{value}}' should not pass through the querystring."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
     then:
       field: "name"
@@ -572,7 +572,7 @@ rules:
   openapi-custom:OAR084:
     description: "The format password should not pass through the querystring."
     message: "OAR084: The format password should not be used in querystring parameters."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
     then:
       field: "schema.format"
@@ -627,21 +627,21 @@ rules:
   openapi-custom:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[*].$ref"
     then:
       function: truthy
   openapi-custom:OAR092:
     description: "RequestBody must contain a $ref."
     message: "OAR092: RequestBody must contain a $ref reference."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].requestBody[*].$ref"
     then:
       function: truthy
   openapi-custom:OAR093:
     description: "RequestBody must contain only references ($ref)."
     message: "OAR093: RequestBody must contain only references ($ref)."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses[*].$ref"
     then:
       function: truthy
@@ -655,7 +655,7 @@ rules:
   openapi-custom:OAR096:
     description: "Response code 403 must be defined for operations with security schemes defined."
     message: "OAR096: Response code 403 must be defined for operations with security schemes defined."
-    severity: warn
+    severity: error
     given: "$.paths[*][*].security"
     then:
       field: "responses['403']"
@@ -699,42 +699,42 @@ rules:
   openapi-custom:OAR103:
     description: "GET requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw."
     message: "OAR103: GET request should not be used on paths containing 'get' or 'delete'."
-    severity: warn
+    severity: error
     given: "$.paths[?(@property.match(/(get|delete)/))].get"
     then:
       function: falsy
   openapi-custom:OAR104:
     description: "Post requests are not recommended for resource paths containing 'me'."
     message: "OAR104: Post request should not be used on paths containing 'me'."
-    severity: warn
+    severity: error
     given: "$.paths[?(@property.match(/(me)/))].post"
     then:
       function: falsy
   openapi-custom:OAR105:
     description: "PUT requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw."
     message: "OAR105: PUT request should not be used on paths containing 'get' or 'delete'."
-    severity: warn
+    severity: error
     given: "$.paths[?(@property.match(/(get|delete)/))].put"
     then:
       function: falsy
   openapi-custom:OAR106:
     description: "PATCH requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw."
     message: "OAR106: PATCH request should not be used on paths containing 'get' or 'delete'."
-    severity: warn
+    severity: error
     given: "$.paths[?(@property.match(/(get|delete)/))].patch"
     then:
       function: falsy
   openapi-custom:OAR107:
     description: "DELETE requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw."
     message: "OAR107: DELETE request should not be used on paths containing 'get' or 'delete'."
-    severity: warn
+    severity: error
     given: "$.paths[?(@property.match(/(get|delete)/))].delete"
     then:
       function: falsy
   openapi-custom:OAR109:
     description: "Use default response instead of directly specifying 5XX codes."
     message: "OAR109: Use default response instead of specifying 5XX codes directly."
-    severity: warn
+    severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses"
     then:
       field: "$[?(@property.match(/^5[0-9][0-9]$/))]"

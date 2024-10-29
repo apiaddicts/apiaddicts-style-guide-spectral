@@ -1,0 +1,12 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      tags:
+      - used-tag
+      - undescribed-tag
+      - unlisted-tag    # Noncompliant {{OAR047: This tag should be declared in the tags section of the contract}}
+      responses: {}

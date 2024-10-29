@@ -1,0 +1,49 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    patch:
+      requestBody:
+        content:
+          application/xml: {}
+      responses:
+        200:
+          description: Ok
+          content:
+            application/xml: {}
+    get:
+      responses:
+        200:
+          description: Ok
+          content:
+            application/xml: {}
+    post:
+      requestBody:
+        content:
+          application/xml: {}
+      responses:
+        200:
+          description: Ok
+          content:
+            application/xml: {}
+    put:
+      requestBody:
+        content:
+          application/xml: {}
+      responses:
+        200:
+          description: Ok
+          content:
+            application/xml: {}
+    delete:
+      requestBody:
+        content:
+          application/xml: {}
+      responses:
+        200:
+          description: Ok
+          content:
+            application/xml: {}
+

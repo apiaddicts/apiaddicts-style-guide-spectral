@@ -1,0 +1,82 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /owners/{ownerId}:
+    put:
+      summary: Update an owner.
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          description: The id of the owner to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                homeAddress:
+                  type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                  homeAddress:
+                    type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pets/{petId}:
+    put:
+      summary: Update a pet.
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to update.
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                breed_id:
+                  type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                  breed_id:
+                    type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+

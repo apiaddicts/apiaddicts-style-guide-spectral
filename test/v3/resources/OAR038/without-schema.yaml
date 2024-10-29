@@ -1,0 +1,27 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /endpoint:
+    post:
+      responses:
+        201: # Noncompliant {{OAR038: Response schema is required}}
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  aaa:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                      name:
+                        type: string
+        204:
+          description: No content

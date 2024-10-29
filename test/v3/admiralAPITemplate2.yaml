@@ -1,0 +1,1344 @@
+openapi: 3.0.1
+info:
+  title: API-Submission
+  description: <p>In order to perform any request to this API, it is necessary to construct the URL concatenating the above <strong>Base URL</strong> along with any of the <strong>Relative PATHS</strong> of the requests exposed in this document</p><h5>For instance:</h5><p><strong>Base URL:</strong> <a>https://internal.ucenacp.admiral-eu.com/ad-server</a> + <strong>Relative PATH:</strong> <a>/group</a></p><h5>Complete URL:</h5> <p><a>https://internal.ucenacp.admiral-eu.com/ad-server/group</a></p>
+  contact:
+    name: Name of API Owner or responsible.
+    url: http://api.admiral.com/support
+    email: contact@admiral.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: v1
+servers:
+  - url: https://internal.ucenacp.admiral-eu.com/ad-server/api-admiral-template
+    description: Production server
+tags:
+  - name: coverables
+    description: coverables
+  - name: coverages
+    description: coverages
+  - name: Monitoring
+    description: 'Operations related to monitoring'
+security:
+  - oAuth2:
+    - write
+    - read
+paths:
+  /submissions/{submissionUUID}/coverables:
+    get:
+      summary: Get a list of coverables
+      description: Get a list of coverables in api submisision
+      operationId: getAllCoverables
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/skipParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/totalParam'
+        - $ref: '#/components/parameters/orderByParam'
+        - $ref: '#/components/parameters/selectParam'
+        - $ref: '#/components/parameters/excludeParam'
+        - $ref: '#/components/parameters/expandParam'
+        - $ref: '#/components/parameters/filterParam'
+        - $ref: '#/components/parameters/queryParam'
+        - $ref: '#/components/parameters/submissionUUID'
+      responses:
+        '206':
+          $ref: '#/components/responses/coverableListResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    post:
+      summary: Create a coverable
+      description: Create a Coverable in api submisision
+      operationId: createCoverable
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coverableCreateRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/coverableCreateAndUpdateResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+  /submissions/{submissionUUID}/coverables/{coverableUUID}:
+    get:
+      summary: Get a coverable
+      description: Get a Coverable in api submisision
+      operationId: getCoverableByUUID
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverableResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    put:
+      summary: Update coverable
+      description: Update a complete coverable
+      operationId: updateCoverable
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coverableUpdateRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverableCreateAndUpdateResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    patch:
+      summary: Update partial coverable
+      description: Update a partial coverable
+      operationId: patchCoverable
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coverablePartialUpdateRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverablePartialUpdateAndDeleteResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    delete:
+      summary: Delete coverable
+      description: Delte a coverable
+      operationId: deleteCoverableByUUID
+      tags:
+        - coverables
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverablePartialUpdateAndDeleteResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+  /submissions/{submissionUUID}/coverables/{coverableUUID}/coverages:
+    get:
+      summary: Get a list of coverages
+      description: Get a list of coverages in api submisision
+      operationId: getAllCoverages
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/skipParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/totalParam'
+        - $ref: '#/components/parameters/orderByParam'
+        - $ref: '#/components/parameters/selectParam'
+        - $ref: '#/components/parameters/excludeParam'
+        - $ref: '#/components/parameters/expandParam'
+        - $ref: '#/components/parameters/filterParam'
+        - $ref: '#/components/parameters/queryParam'
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      responses:
+        '206':
+          $ref: '#/components/responses/coverageListResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    post:
+      summary: Create a coverage
+      description: Create a Coverable in Active Directory
+      operationId: createCoverage
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coverageCreateRequestBody'
+      responses:
+        '201':
+          $ref: '#/components/responses/coverageCreateAndUpdateResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+  /submissions/{submissionUUID}/coverables/{coverableUUID}/coverages/{coverageUUID}:
+    get:
+      summary: Get a coverage
+      description: Get a coverage in api submisision
+      operationId: getCoverageByUUID
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+        - $ref: '#/components/parameters/coverageUUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverageResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    put:
+      summary: Update coverage
+      description: Update a complete coverage
+      operationId: updateCoverage
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+        - $ref: '#/components/parameters/coverageUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coverageUpdateRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/coverageCreateAndUpdateResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    patch:
+      summary: Update partial coverage
+      description: Update a partial coverage
+      operationId: patchCoverage
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+        - $ref: '#/components/parameters/coverageUUID'
+      requestBody:
+        $ref: '#/components/requestBodies/coveragePartialUpdateRequestBody'
+      responses:
+        '200':
+          $ref: '#/components/responses/coveragePartialUpdateAndDeleteResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+    delete:
+      summary: Delete coverage
+      description: Delete a coverage
+      operationId: deleteCoverageByUUID
+      tags:
+        - coverages
+      parameters:
+        - $ref: '#/components/parameters/submissionUUID'
+        - $ref: '#/components/parameters/coverableUUID'
+        - $ref: '#/components/parameters/coverageUUID'
+      responses:
+        '200':
+          $ref: '#/components/responses/coveragePartialUpdateAndDeleteResponse'
+        '400':
+          $ref: '#/components/responses/badRequestResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '404':
+          $ref: '#/components/responses/notFoundResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '500':
+          $ref: '#/components/responses/internalServerErrorResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+  /status:
+    get:
+      summary: API monitoring endpoint.
+      description: |
+        This is a response proposal for the **/status** endpoint specified on RecordGo API definition standard.
+        The endpoint should check API involved systems (such as databases or external backends) as well as API responses to given requests.
+        There are two arrays to be fulfilled: the _systems_ array and the _requests_ array.
+        Each of them will contain the systems checks and the API calls checks.
+      operationId: healthCheck
+      security:
+        - oAuth2: [read]
+      tags:
+      - Monitoring
+      responses:
+        '200':
+          $ref: '#/components/responses/statusSuccessResponse'
+        '401':
+          $ref: '#/components/responses/unauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/forbiddenResponse'
+        '415':
+          $ref: '#/components/responses/unsupportedMediaTypeResponse'
+        '429':
+          $ref: '#/components/responses/tooManyRequestsResponse'
+        '503':
+          $ref: '#/components/responses/serviceUnavailableResponse'
+        default:
+          $ref: '#/components/responses/unexpectedErrorResponse'
+components:
+  securitySchemes:
+    oAuth2:
+      description: OAuth 2.0 authentication.
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: https://admiral/api-oAuth2/v1/token
+          scopes:
+            read: Grant read-only access to all your data
+            write: Grant write-only access to all your data
+        clientCredentials:
+          tokenUrl: https://admiral/api-oAuth2/v1/token
+          scopes:
+            read: Grant read-only access to all your data
+            write: Grant write-only access to all your data
+  parameters:
+    submissionUUID:
+      in: path
+      name: submissionUUID
+      required: true
+      description: The uuid of a submission
+      schema:
+        $ref: '#/components/schemas/uuid'
+      examples:
+        Example1:
+          value: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    coverableUUID:
+      in: path
+      name: coverableUUID
+      required: true
+      description: The uuid of a coverable
+      schema:
+        $ref: '#/components/schemas/uuid'
+      examples:
+        Example1:
+          value: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    coverageUUID:
+      in: path
+      name: coverageUUID
+      required: true
+      description: The uuid of a coverable
+      schema:
+        $ref: '#/components/schemas/uuid'
+      examples:
+        Example1:
+          value: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    skipParam:
+      in: query
+      name: $skip
+      description: |
+        Number of records we want to skip.
+        * Minimum value: 0
+        * Maximum value: Total of records - 1
+      schema:
+        type: integer
+        format: int32
+        default: 0
+        minimum: 0
+      required: true
+      example: 0
+    limitParam:
+      in: query
+      name: $limit
+      description: |
+        Maximum number of records per page.
+        * Minimum value: 1
+        * Maximum value: 250
+      schema:
+        type: integer
+        format: int32
+        default: 25
+      required: true
+      example: 25
+    totalParam:
+      in: query
+      name: $total
+      description: |
+        Indicates whether the _total_ and _total_pages_ attributes should be calculated and returned in the _metadata.paging_ object of the standard response.
+      schema:
+        type: boolean
+        default: false
+      required: false
+      example: true
+    selectParam:
+      in: query
+      name: $select
+      schema:
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          type: string
+      description: |
+        Allows you to select the attributes of the resource that you want to obtain in the query.
+        It is recommended for use when you only want to obtain a few attributes from a complex resource.
+        It can be specified as an array of attributes.
+      example: [id,longDescription,type]
+    excludeParam:
+      in: query
+      name: $exclude
+      schema:
+        type: array
+        items:
+          type: string
+        minItems: 1
+        maxItems: 100
+      description: |
+        Allows you to exclude certain attributes of the resource.
+        It is recommended for use when you want to exclude some attributes from a complex resource.
+        It can be specified as an array of attributes.
+      example: [id,type]
+    expandParam:
+      in: query
+      name: $expand
+      schema:
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          type: string
+      description: |
+        Indicates a list of sub-attributes that you want to expand.
+        It can be specified as an array of attributes.
+      example: [subcategories,typeName]
+    orderByParam:
+      in: query
+      name: $orderby
+      schema:
+        type: array
+        minItems: 1
+        maxItems: 100
+        items:
+          type: string
+      description: |
+        It allows to indicate the ordering criteria of a query.
+        It can be specified as an array of attributes.
+      example: [date desc]
+    filterParam:
+      in: query
+      name: $filter
+      schema:
+        type: string
+        maxLength: 100
+      description: Indicates the filter criteria for a complex query.
+      example: substringof('t',alias) OR substringof('des',description)
+    queryParam:
+      in: query
+      name: queryParameter
+      description: |
+        Any parameter that can be passed using the _query string_.
+        Types can be numeric (integer, float, double), string, boolean, etc.
+      schema:
+        type: string
+      required: false
+      example: field=example
+
+  schemas:
+    standardError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Code of the error
+          example: 100
+        message:
+          type: string
+          description: Message of the error
+          example: Error message
+        stackTrace:
+          type: string
+          description: Stack trace error from server
+          example: 'System.NullReferenceException: Object reference not set to an instance of an object.'
+      required:
+        - code
+        - message
+
+    standardPaging:
+      type: object
+      description: Pagination information object
+      properties:
+        skip:
+          type: integer
+          format: int32
+          description: Number of records to skip.
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          description: Number of records per page
+          example: 25
+        total:
+          type: integer
+          format: int32
+          description: Total number of records
+          example: 35
+        numPage:
+          type: integer
+          format: int32
+          description: Page number
+          example: 1
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages number
+          example: 7
+      required:
+      - skip
+      - limit
+      - total
+      - numPage
+      - totalPages
+
+    standardResponse:
+      properties:
+        data:
+          anyOf:
+            - type: object
+              nullable: true
+            - type: array
+              nullable: true
+    standardErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/standardResponse'
+        - properties:
+            errors:
+              type: array
+              items:
+                $ref: '#/components/schemas/standardError'
+      required:
+        - errors
+    standardPagedResponse:
+      allOf:
+        - $ref: '#/components/schemas/standardResponse'
+        - properties:
+            paging:
+              allOf:
+                - $ref: '#/components/schemas/standardPaging'
+      required:
+        - paging
+        - data
+
+    standardCreateAndUpdateUUID:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: 62977d46-7a50-41c9-8d84-38272ac2a8df
+
+    uuid:
+      type: string
+      format: uuid
+      minLength: 36
+      maxLength: 36
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+      example: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    locationHeader:
+      type: string
+      example: '/resource/1234'
+
+    CoverableDto:
+      type: object
+      required:
+        - name
+        - coverableType
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: 62977d46-7a50-41c9-8d84-38272ac2a8df
+        years:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: name
+        coverableType:
+          type: string
+          example: Fire
+      discriminator:
+        propertyName: coverableType
+    Vehicle:
+      allOf:
+        - $ref: '#/components/schemas/CoverableDto'
+        - type: object
+          properties:
+            brand:
+              type: string
+              example: Opel
+    Household:
+      allOf:
+        - $ref: '#/components/schemas/CoverableDto'
+        - type: object
+          properties:
+            location:
+              type: string
+              example: street x
+    CoverageDto:
+      type: object
+      required:
+        - name
+        - coverageType
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: 62977d46-7a50-41c9-8d84-38272ac2a8df
+        name:
+          type: string
+          example: name
+        coverageType:
+          type: string
+          example: DriverInsurance
+      discriminator:
+        propertyName: coverageType
+    Fire:
+      allOf:
+        - $ref: '#/components/schemas/CoverageDto'
+        - type: object
+          properties:
+            genre:
+              type: string
+              example: strong
+    DriverInsurance:
+      allOf:
+        - $ref: '#/components/schemas/CoverageDto'
+        - type: object
+          properties:
+            years:
+              type: integer
+              example: 10
+    system:
+      type: object
+      properties:
+        system:
+          type: string
+          description: System name
+          example: database
+        status:
+          type: boolean
+          description: System status
+          example: true
+    status:
+      type: object
+      properties:
+        systems:
+          type: array
+          items:
+            $ref: '#/components/schemas/system'
+  requestBodies:
+    coverableCreateRequestBody:
+      description: Coverable creation
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Vehicle'
+              - $ref: '#/components/schemas/Household'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverableCreateRequestBodyVehicle'
+            Example2:
+              $ref: '#/components/examples/exampleCoverableCreateRequestBodyHousehold'
+    coverableUpdateRequestBody:
+      description: Coverable update
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Vehicle'
+              - $ref: '#/components/schemas/Household'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverableUpdateRequestBodyVehicle'
+            Example2:
+              $ref: '#/components/examples/exampleCoverableUpdateRequestBodyHousehold'
+    coverablePartialUpdateRequestBody:
+      description: Coverable update
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Vehicle'
+              - $ref: '#/components/schemas/Household'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverableUpdateRequestBodyVehicle'
+            Example2:
+              $ref: '#/components/examples/exampleCoverableUpdateRequestBodyHousehold'
+    coverageCreateRequestBody:
+      description: Coverable creation
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Fire'
+              - $ref: '#/components/schemas/DriverInsurance'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverageCreateRequestBodyFire'
+            Example2:
+              $ref: '#/components/examples/exampleCoverageCreateRequestBodyDriverInsurance'
+    coverageUpdateRequestBody:
+      description: Coverable update
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Fire'
+              - $ref: '#/components/schemas/DriverInsurance'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverageUpdateRequestBodyFire'
+            Example2:
+              $ref: '#/components/examples/exampleCoverageUpdateRequestBodyDriverInsurance'
+    coveragePartialUpdateRequestBody:
+      description: Coverable update
+      required: true
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - $ref: '#/components/schemas/Fire'
+              - $ref: '#/components/schemas/DriverInsurance'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCoverageUpdateRequestBodyFire'
+            Example2:
+              $ref: '#/components/examples/exampleCoverageUpdateRequestBodyDriverInsurance'
+  responses:
+    badRequestResponse:
+      description: Bad request
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 400
+                message: Bad request
+    unauthorizedResponse:
+      description: Unauthorized
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 401
+                message: Unauthorized
+    forbiddenResponse:
+      description: Forbidden
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 403
+                message: Forbidden
+    notFoundResponse:
+      description: Not found
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 404
+                message: Not found
+    unsupportedMediaTypeResponse:
+      description: UnsupportedMediaType
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 415
+                message: UnsupportedMediaType
+    tooManyRequestsResponse:
+      description: Too many requests
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 429
+                message: Too many requests
+    internalServerErrorResponse:
+      description: Internal server error
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 500
+                message: Internal server error
+    serviceUnavailableResponse:
+      description: Service unavailable
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 503
+                message: Service unavailable
+    unexpectedErrorResponse:
+      description: Unexpected error
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/standardErrorResponse'
+          example:
+            errors:
+              - code: 500
+                message: Unexpected Error
+
+    coverableListResponse:
+      description: OK
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardPagedResponse'
+              - properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/Vehicle'
+                        - $ref: '#/components/schemas/Household'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleGetAllCoverablesVehicle'
+            Example2:
+              $ref: '#/components/examples/exampleGetAllCoverablesHousehold'
+    coverableResponse:
+      description: OK
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    oneOf:
+                      - $ref: '#/components/schemas/Vehicle'
+                      - $ref: '#/components/schemas/Household'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleGetCoverableVehicle'
+            Example2:
+              $ref: '#/components/examples/exampleGetCoverableHousehold'
+    coverableCreateAndUpdateResponse:
+      description: OK
+      headers:
+        Location:
+          description: Resource location
+          schema:
+            $ref: '#/components/schemas/locationHeader'
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/standardCreateAndUpdateUUID'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCreateAndUpdateCoverable'
+    coverablePartialUpdateAndDeleteResponse:
+      description: Coverable partial update response
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/standardCreateAndUpdateUUID'
+          examples:
+            Example1:
+              $ref: '#/components/examples/examplePartialUpdateAndDeleteCoverable'
+    coverageListResponse:
+      description: OK
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardPagedResponse'
+              - properties:
+                  data:
+                    type: array
+                    items:
+                      oneOf:
+                        - $ref: '#/components/schemas/Fire'
+                        - $ref: '#/components/schemas/DriverInsurance'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleGetAllCoverageFire'
+            Example2:
+              $ref: '#/components/examples/exampleGetAllCoverageDriverInsurance'
+    coverageResponse:
+      description: OK
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    oneOf:
+                      - $ref: '#/components/schemas/Fire'
+                      - $ref: '#/components/schemas/DriverInsurance'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleGetCoverageFire'
+            Example2:
+              $ref: '#/components/examples/exampleGetCoverageDriverInsurance'
+    coverageCreateAndUpdateResponse:
+      description: OK
+      headers:
+        Location:
+          description: Resource location
+          schema:
+            $ref: '#/components/schemas/locationHeader'
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/standardCreateAndUpdateUUID'
+          examples:
+            Example1:
+              $ref: '#/components/examples/exampleCreateAndUpdateCoverage'
+    coveragePartialUpdateAndDeleteResponse:
+      description: Coverable partial update response
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/standardCreateAndUpdateUUID'
+          examples:
+            Example1:
+              $ref: '#/components/examples/examplePartialUpdateAndDeleteCoverage'
+    statusSuccessResponse:
+      description: Status success response
+      headers:
+        X-Trace-ID:
+          description: Trace id header
+          schema:
+            $ref: '#/components/schemas/uuid'
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/standardResponse'
+              - properties:
+                  data:
+                    $ref: '#/components/schemas/status'
+          examples:
+            exampleGetStatus:
+              $ref: '#/components/examples/exampleGetStatus'
+  examples:
+    exampleGetAllCoverablesVehicle:
+      value:
+        data:
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            name: vehicle
+            brand: opel
+            coverableType: DriverInsurance
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            years: 10
+            name: vehicle2
+            brand: seat
+            coverableType: DriverInsurance
+        paging:
+          skip: 0
+          limit: 25
+          total: 35
+          numPage: 1
+          totalPages: 2
+    exampleGetAllCoverablesHousehold:
+      value:
+        data:
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            years: 30
+            name: house
+            location: Madrid
+            coverableType: Fire
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            years: 12
+            name: house2
+            location: Sevilla
+            coverableType: Fire
+        paging:
+          skip: 0
+          limit: 25
+          total: 35
+          numPage: 1
+          totalPages: 2
+    exampleGetCoverableVehicle:
+      value:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+          years: 2
+          name: vehicle
+          brand: opel
+          coverableType: DriverInsurance
+    exampleGetCoverableHousehold:
+      value:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+          years: 30
+          name: house
+          location: Madrid
+          coverableType: Fire
+    exampleCreateAndUpdateCoverable:
+      value:
+        data:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    examplePartialUpdateAndDeleteCoverable:
+      value:
+        data:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    exampleCoverableCreateRequestBodyVehicle:
+      value:
+          coverableType: DriverInsurance
+          years: 2
+          name: vehicle
+          brand: opel
+    exampleCoverableCreateRequestBodyHousehold:
+      value:
+          coverableType: Fire
+          years: 30
+          name: house
+          location: Madrid
+    exampleCoverableUpdateRequestBodyVehicle:
+      value:
+          coverableType: DriverInsurance
+          name: vehicle
+          brand: opel
+    exampleCoverableUpdateRequestBodyHousehold:
+      value:
+          coverableType: Fire
+          years: 30
+          name: house
+    exampleGetAllCoverageFire:
+      value:
+        data:
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            name: fire1
+            genre: string
+            coverageType: Fire
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            name: fire2
+            genre: string
+            coverageType: Fire
+        paging:
+          skip: 0
+          limit: 25
+          total: 35
+          numPage: 1
+          totalPages: 2
+    exampleGetAllCoverageDriverInsurance:
+      value:
+        data:
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            name: driverInsurance1
+            years: 5
+            coverageType: DriverInsurance
+          - uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+            name: driverInsurance2
+            years: 10
+            coverageType: DriverInsurance
+        paging:
+          skip: 0
+          limit: 25
+          total: 35
+          numPage: 1
+          totalPages: 2
+    exampleGetCoverageFire:
+      value:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+          name: fire1
+          genre: string
+          coverageType: fire
+    exampleGetCoverageDriverInsurance:
+      value:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+          name: driverInsurance1
+          years: 10
+          coverageType: DriverInsurance
+    exampleCreateAndUpdateCoverage:
+      value:
+        data:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    examplePartialUpdateAndDeleteCoverage:
+      value:
+        data:
+          uuid: 62977d46-7a50-41c9-8d84-38272ac2a8df
+    exampleCoverageCreateRequestBodyFire:
+      value:
+          name: fire1
+          genre: string
+          coverageType: fire
+    exampleCoverageCreateRequestBodyDriverInsurance:
+      value:
+          name: driverInsurance1
+          years: 5
+          coverageType: DriverInsurance
+    exampleCoverageUpdateRequestBodyFire:
+      value:
+          name: fire1
+          genre: string
+          coverageType: Fire
+    exampleCoverageUpdateRequestBodyDriverInsurance:
+      value:
+          name: driverInsurance1
+          years: 5
+          coverageType: DriverInsurance
+    exampleGetStatus:
+      value:
+        data:
+          systems:
+            - system: database
+              status: true
