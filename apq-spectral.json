@@ -1,5 +1,6 @@
 {
   "extends": "spectral:oas",
+  "functionsDir": "./functions",
   "functions": [
     "apq-resources"
   ],
