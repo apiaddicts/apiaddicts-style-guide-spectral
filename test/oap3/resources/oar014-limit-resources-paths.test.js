@@ -1,9 +1,9 @@
-const { linterForRule } = require('./helpers/utils');
+const { linterForRule } = require('../../helpers/utils');
 
 let linter;
 
-const oar014fail = require('./oap3/resources/OAR014/fail-limit-ressorces-paths');
-const oar014ok = require('./oap3/resources/OAR014/ok-limit-ressorces-paths');
+const oar014fail = require('./OAR014/fail-limit-ressorces-paths');
+const oar014ok = require('./OAR014/ok-limit-ressorces-paths');
 
 beforeAll(async () => {
   linter = await linterForRule('openapi-custom:OAR014');
