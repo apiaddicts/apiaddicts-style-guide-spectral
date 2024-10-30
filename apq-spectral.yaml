@@ -328,15 +328,14 @@ rules:
       function: falsy
   openapi-custom:OAR054:
     description: "Ensure the host matches the specified format"
+    message: "OAR054: Hostname must be a subdomain of the organization's domain name."
     severity: error
-    given:
-      - "$.host"
-      - "$.servers[*].url"
+    given: "$.servers[*]"
     then:
-      - field: $key
-        function: pattern
-        functionOptions:
-          match: "^((\\*|[\\w\\d]+(-[\\w\\d]+)*)\\.)*(apiaddicts)(\\.org)$"
+      field: url
+      function: pattern
+      functionOptions:
+        match: ^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.apiquality.io\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$
   openapi-custom:OAR060:
     description: "All query parameters must be defined as optional."
     message: "OAR060: All query parameter must be optional (required: false)."
