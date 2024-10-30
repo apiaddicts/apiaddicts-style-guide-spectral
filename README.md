@@ -1,4 +1,7 @@
+<!-- README.md -->
+
 [![Node.js CI](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml/badge.svg)](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml)
++ [![cov](https://apiaddicts.github.io/apquality-spectral/badges/coverage.svg)](https://github.com/apiaddicts/apquality-spectral/actions)
 
 # ApiQuality API Style Guide
 
