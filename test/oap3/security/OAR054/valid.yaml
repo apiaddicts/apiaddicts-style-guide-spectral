@@ -1,9 +1,0 @@
-openapi: "3.0.0"
-info:
-  version: 1.0.0
-  title: Swagger Petstore
-servers:
-  - url: https://api-dev.openfinance.es/api-vehicular/v1/
-  - url: https://api-test.openfinance.es/api-vehicular/v1/
-  - url: https://api.openfinance.es/api-vehicular/v1/
-paths: {}
