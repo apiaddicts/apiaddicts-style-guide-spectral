@@ -2,7 +2,6 @@ extends: spectral:oas
 functionsDir: './functions'
 functions:
   - apq-resources
-  - apq-pattern
 rules:
   openapi-custom:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
