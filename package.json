@@ -31,6 +31,10 @@
       "./functions/*.js": {
         "statements": 80
       }
-    }
+    },
+    "coverageReporters": [
+      "lcov",
+      "json-summary"
+    ]
   }
 }
