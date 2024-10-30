@@ -27,12 +27,5 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - run: npm run make-badges
 
-
-    - name: Create Coverage Badges
-      uses: jaywcjlove/coverage-badges-cli@main
-      with:
-        style: flat
-        source: coverage/coverage-summary.json
-        output: coverage/badges.svg
-        jsonPath: totals.percent_covered
