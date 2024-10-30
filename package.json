@@ -4,7 +4,7 @@
   "description": "Spectral ruleset by API Quality",
   "main": "apq-spectral.yaml",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage --detectOpenHandles --no-cache --forceExit"
   },
   "author": {
     "name": "API Quality"
