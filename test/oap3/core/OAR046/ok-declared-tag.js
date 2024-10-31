@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi" : "3.0.1",
   "tags" : [ {
     "name" : "used-tag",
@@ -24,4 +24,4 @@
       }
     }
   }
-}
+};
