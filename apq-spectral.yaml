@@ -2,6 +2,7 @@ extends: spectral:oas
 functionsDir: './functions'
 functions:
   - apq-resources
+  - apq-tags
 rules:
   openapi-custom:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -268,16 +269,12 @@ rules:
       function: truthy
   openapi-custom:OAR046:
     description: "Every operation (get, post, put, patch, delete) must have at least one tag associated."
-    message: "OAR046: Associate a tag to this operation."
+    message: "OAR046: {{error}}"
     severity: error
     given: "$.paths[*][get,post,put,patch,delete]"
     then:
       field: "tags"
-      function: schema
-      functionOptions:
-        schema:
-          type: array
-          minLength: 1
+      function: apq-tags
   openapi-custom:OAR047:
     description: "Tags required and each tag must have a short description."
     message: "OAR047: Add tags with a short description to each one."
