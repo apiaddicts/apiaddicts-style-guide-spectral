@@ -3,6 +3,7 @@ functionsDir: './functions'
 functions:
   - apq-resources
   - apq-tags
+  - apq-alternate-paths
 rules:
   openapi-custom:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -99,6 +100,16 @@ rules:
       function: pattern
       functionOptions:
         match: "^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,4}\/?$"
+  openapi-custom:OAR017:
+    description: "Resources depth level should be smaller than 5."
+    message: "OAR017: Resource path should alternate static and parametrized parts."
+    formats: ['oas2', 'oas3']
+    severity: error
+    given: "$.paths.*~"
+    then:
+      function: apq-alternate-paths
+      functionOptions:
+        except: ["me"]
   openapi-custom:OAR019:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."

@@ -2,7 +2,8 @@
   "extends": "spectral:oas",
   "functionsDir": "./functions",
   "functions": [
-    "apq-resources"
+    "apq-resources",
+    "apq-tags"
   ],
   "rules": {
     "openapi-custom:OAR001": {
@@ -371,18 +372,12 @@
     },
     "openapi-custom:OAR046": {
       "description": "Every operation (get, post, put, patch, delete) must have at least one tag associated.",
-      "message": "OAR046: Associate a tag to this operation.",
+      "message": "OAR046: {{error}}",
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
         "field": "tags",
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "type": "array",
-            "minLength": 1
-          }
-        }
+        "function": "apq-tags"
       }
     },
     "openapi-custom:OAR047": {
@@ -451,20 +446,16 @@
     },
     "openapi-custom:OAR054": {
       "description": "Ensure the host matches the specified format",
+      "message": "OAR054: Hostname must be a subdomain of the organization's domain name.",
       "severity": "error",
-      "given": [
-        "$.host",
-        "$.servers[*].url"
-      ],
-      "then": [
-        {
-          "field": "$key",
-          "function": "pattern",
-          "functionOptions": {
-            "match": "^((\\*|[\\w\\d]+(-[\\w\\d]+)*)\\.)*(apiaddicts)(\\.org)$"
-          }
+      "given": "$.servers[*]",
+      "then": {
+        "field": "url",
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(http(s)?:\\/\\/.)[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.apiquality.io\\b([-a-zA-Z0-9@:%_\\+.~#?&\\/=]*)$"
         }
-      ]
+      }
     },
     "openapi-custom:OAR060": {
       "description": "All query parameters must be defined as optional.",
