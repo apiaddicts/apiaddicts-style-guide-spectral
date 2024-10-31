@@ -13,10 +13,8 @@ beforeAll(async () => {
 test('openapi-custom:OAR029 should find errors', () => {
   return linter.run(oar029fail).then((results) => {
     expect(results.length).toBe(2);
-    expect(results[0].message).toBe('OAR046: Operation references undeclared global tags: other-tag.');
-    expect(results[0].severity).toBe(0);
-    expect(results[1].message).toBe('OAR046: Associate at least one tag to this operation.');
-    expect(results[1].severity).toBe(0);
+    expect(results[0].path.join('.')).toBe('paths./pets.post.responses.200.content.application/json.schema');
+    expect(results[1].path.join('.')).toBe('paths./pets/{petId}.get.responses.200.content.application/json.schema');
   });
 });
 

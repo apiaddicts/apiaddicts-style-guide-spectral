@@ -198,7 +198,7 @@ rules:
     description: "A response not compliant with the standard may cause application issues."
     message: "OAR029: Response schema must be compliant with the standard."
     severity: error
-    given: $.paths[*].responses..content..schema
+    given: $.paths[*][*].responses[?(@property != '204')]..content..schema
     then:
       function: apq-custom-schema
       functionOptions:
@@ -228,7 +228,7 @@ rules:
               required:
               - code
             payload:
-              type: any
+              type: object
           required:
           - status
           - payload
