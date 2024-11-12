@@ -1,17 +1,12 @@
 {
   "extends": "spectral:oas",
   "functionsDir": "./functions",
-  "functions": [
-    "apq-resources",
-    "apq-tags"
-  ],
+  "functions": ["apq-resources", "apq-tags", "apq-alternate-paths", "apq-custom-schema"],
   "rules": {
     "openapi-custom:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
       "message": "OAR001: HTTPS protocol is mandatory.",
-      "formats": [
-        "oas3"
-      ],
+      "formats": ["oas3"],
       "severity": "error",
       "given": "$.servers[*].url",
       "then": {
@@ -24,9 +19,7 @@
     "openapi-custom:OAR006": {
       "description": "Routes must define request media types supported by the API.",
       "message": "OAR006: Specify at least one Media Type in the content of the request body.",
-      "formats": [
-        "oas3"
-      ],
+      "formats": ["oas3"],
       "severity": "error",
       "given": "$.paths[*][post,put,patch]",
       "then": [
@@ -44,9 +37,7 @@
       "description": "Routes must define response media types supported by the API",
       "message": "OAR007: Specify at least one Media Type in the content of the response body.",
       "severity": "error",
-      "formats": [
-        "oas3"
-      ],
+      "formats": ["oas3"],
       "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
       "then": [
         {
@@ -58,10 +49,7 @@
     "openapi-custom:OAR008": {
       "description": "HTTP verbs not encouraged.",
       "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "formats": ["oas2", "oas3"],
       "severity": "error",
       "given": "$.paths[*][?(@property == 'head' || @property == 'options')]",
       "then": {
@@ -71,9 +59,7 @@
     "openapi-custom:OAR009": {
       "description": "Default request media type should be defined for operations.",
       "message": "OAR009: Default request media type is mandatory.",
-      "formats": [
-        "oas3"
-      ],
+      "formats": ["oas3"],
       "severity": "error",
       "given": "$..content",
       "then": {
@@ -85,9 +71,7 @@
       "description": "Default response media type should be defined for responses.",
       "message": "OAR010: Default response media type is mandatory.",
       "severity": "warn",
-      "formats": [
-        "oas3"
-      ],
+      "formats": ["oas3"],
       "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
       "then": {
         "field": "content['application/json']",
@@ -97,10 +81,7 @@
     "openapi-custom:OAR011": {
       "description": "URLs should follow the specified naming convention.",
       "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "formats": ["oas2", "oas3"],
       "severity": "error",
       "given": "$.paths[*]~",
       "then": {
@@ -113,10 +94,7 @@
     "openapi-custom:OAR013": {
       "description": "Default response is required for all operations.",
       "message": "OAR013: Default response is required.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "formats": ["oas2", "oas3"],
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].responses",
       "then": {
@@ -127,10 +105,7 @@
     "openapi-custom:OAR014": {
       "description": "Resources depth level should be below the non-suggested range.",
       "message": "OAR014: {{error}}",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "formats": ["oas2", "oas3"],
       "severity": "warn",
       "given": "$.paths.*~",
       "then": {
@@ -143,16 +118,27 @@
     "openapi-custom:OAR015": {
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR015: Path exceeds the maximum allowed depth level of 5.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "formats": ["oas2", "oas3"],
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
         "function": "pattern",
         "functionOptions": {
           "match": "^/[^/]*((/{[^}]*})*/[^/]*(/{[^}]*})*){0,4}/?$"
+        }
+      }
+    },
+    "openapi-custom:OAR017": {
+      "description": "Resources depth level should be smaller than 5.",
+      "message": "OAR017: Resource path should alternate static and parametrized parts.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/develop/docs/resources/OAR017.md",
+      "formats": ["oas2", "oas3"],
+      "severity": "error",
+      "given": "$.paths.*~",
+      "then": {
+        "function": "apq-alternate-paths",
+        "functionOptions": {
+          "except": ["me"]
         }
       }
     },
@@ -259,6 +245,57 @@
         "function": "truthy"
       }
     },
+    "openapi-custom:OAR029": {
+      "description": "A response not compliant with the standard may cause application issues.",
+      "message": "OAR029: Response schema must be compliant with the standard.",
+      "severity": "error",
+      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "then": {
+        "function": "apq-custom-schema",
+        "functionOptions": {
+          "except": ["/status"],
+          "schema": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "integer"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "internal_code": {
+                    "type": "string"
+                  },
+                  "errors": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": ["code"]
+              },
+              "payload": {
+                "type": "object"
+              }
+            },
+            "required": ["status", "payload"]
+          }
+        }
+      }
+    },
     "openapi-custom:OAR030": {
       "description": "The path '/status' must be declared.",
       "message": "OAR030: The path '/status' must be declared.",
@@ -273,10 +310,7 @@
       "description": "The examples can help developers to understand the response data structure and representation.\"",
       "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
       "severity": "error",
-      "given": [
-        "$.paths.*.*.parameters",
-        "$.paths.*.*[responses,requestBody]..content.*"
-      ],
+      "given": ["$.paths.*.*.parameters", "$.paths.*.*[responses,requestBody]..content.*"],
       "then": {
         "field": "examples",
         "function": "truthy"
@@ -395,10 +429,7 @@
               "minLength": 1,
               "items": {
                 "type": "object",
-                "required": [
-                  "name",
-                  "description"
-                ],
+                "required": ["name", "description"],
                 "properties": {
                   "name": {
                     "type": "string",
@@ -478,24 +509,15 @@
           "schema": {
             "oneOf": [
               {
-                "required": [
-                  "200"
-                ]
+                "required": ["200"]
               },
               {
-                "required": [
-                  "202"
-                ]
+                "required": ["202"]
               },
               {
-                "required": [
-                  "206"
-                ],
+                "required": ["206"],
                 "not": {
-                  "required": [
-                    "201",
-                    "204"
-                  ]
+                  "required": ["201", "204"]
                 }
               }
             ]
@@ -514,29 +536,19 @@
           "schema": {
             "oneOf": [
               {
-                "required": [
-                  "200"
-                ]
+                "required": ["200"]
               },
               {
-                "required": [
-                  "201"
-                ]
+                "required": ["201"]
               },
               {
-                "required": [
-                  "202"
-                ]
+                "required": ["202"]
               },
               {
-                "required": [
-                  "204"
-                ]
+                "required": ["204"]
               },
               {
-                "required": [
-                  "206"
-                ]
+                "required": ["206"]
               }
             ]
           }
@@ -554,24 +566,16 @@
           "schema": {
             "oneOf": [
               {
-                "required": [
-                  "200"
-                ]
+                "required": ["200"]
               },
               {
-                "required": [
-                  "202"
-                ]
+                "required": ["202"]
               },
               {
-                "required": [
-                  "204"
-                ]
+                "required": ["204"]
               },
               {
-                "required": [
-                  "206"
-                ]
+                "required": ["206"]
               }
             ]
           }
@@ -589,24 +593,16 @@
           "schema": {
             "oneOf": [
               {
-                "required": [
-                  "200"
-                ]
+                "required": ["200"]
               },
               {
-                "required": [
-                  "202"
-                ]
+                "required": ["202"]
               },
               {
-                "required": [
-                  "204"
-                ]
+                "required": ["204"]
               },
               {
-                "required": [
-                  "206"
-                ]
+                "required": ["206"]
               }
             ]
           }
@@ -624,19 +620,13 @@
           "schema": {
             "oneOf": [
               {
-                "required": [
-                  "200"
-                ]
+                "required": ["200"]
               },
               {
-                "required": [
-                  "202"
-                ]
+                "required": ["202"]
               },
               {
-                "required": [
-                  "204"
-                ]
+                "required": ["204"]
               }
             ]
           }
@@ -749,19 +739,13 @@
               "schema": {
                 "anyOf": [
                   {
-                    "required": [
-                      "minimum"
-                    ]
+                    "required": ["minimum"]
                   },
                   {
-                    "required": [
-                      "maximum"
-                    ]
+                    "required": ["maximum"]
                   },
                   {
-                    "required": [
-                      "format"
-                    ]
+                    "required": ["format"]
                   }
                 ]
               }
@@ -784,24 +768,16 @@
               "schema": {
                 "anyOf": [
                   {
-                    "required": [
-                      "minLength"
-                    ]
+                    "required": ["minLength"]
                   },
                   {
-                    "required": [
-                      "maxLength"
-                    ]
+                    "required": ["maxLength"]
                   },
                   {
-                    "required": [
-                      "pattern"
-                    ]
+                    "required": ["pattern"]
                   },
                   {
-                    "required": [
-                      "enum"
-                    ]
+                    "required": ["enum"]
                   }
                 ]
               }
