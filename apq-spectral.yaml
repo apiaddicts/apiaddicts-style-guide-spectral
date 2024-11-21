@@ -245,7 +245,7 @@ rules:
     message: "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined."
     severity: error
     given:
-      - $.paths.*.*.parameters
+      - $.paths.*.*.parameters.*
       - $.paths.*.*[responses,requestBody]..content.*
     then:
       field: examples
