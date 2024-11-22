@@ -1,4 +1,4 @@
-{
+module.exports ={
   "openapi" : "3.0.1",
   "info" : {
     "version" : "1.0.0",
@@ -17,7 +17,7 @@
       },
       "get" : {
         "summary" : "List all pets",
-        "description" : "List all pets",
+        "description" : "List all pets from the system that the user has access to",
         "responses" : {
           "default" : {
             "description" : "the default response"
