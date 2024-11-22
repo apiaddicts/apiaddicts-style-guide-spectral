@@ -6,6 +6,7 @@ functions:
   - apq-alternate-paths
   - apq-custom-schema
   - apq-params-string
+  - apq-compare-insensitive
 rules:
   openapi-custom:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -427,11 +428,15 @@ rules:
       function: truthy
   openapi-custom:OAR051:
     description: "Provide a different summary and description for each operation."
-    message: "OAR051: Provide a different summary and description."
+    message: "OAR051: Provide a different summary and description for each operation."
     severity: "error"
-    given: "$.paths[*][?(@.summary && @.description && @.summary === @.description)]"
+    given: "$.paths[*].*"
     then:
-      function: falsy
+      function: apq-compare-insensitive
+      functionOptions:
+        property: summary
+        equalTo: description
+        result: falsy     
   openapi-custom:OAR054:
     description: "Ensure the host matches the specified format"
     message: "OAR054: Hostname must be a subdomain of the organization's domain name."
