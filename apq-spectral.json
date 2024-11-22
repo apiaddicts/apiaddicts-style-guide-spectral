@@ -1,7 +1,7 @@
 {
   "extends": "spectral:oas",
   "functionsDir": "./functions",
-  "functions": ["apq-resources", "apq-tags", "apq-alternate-paths", "apq-custom-schema"],
+  "functions": ["apq-resources", "apq-tags", "apq-alternate-paths", "apq-custom-schema", "apq-params-string"],
   "rules": {
     "openapi-custom:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
@@ -310,7 +310,7 @@
       "description": "The examples can help developers to understand the response data structure and representation.\"",
       "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
       "severity": "error",
-      "given": ["$.paths.*.*.parameters", "$.paths.*.*[responses,requestBody]..content.*"],
+      "given": ["$.paths.*.*.parameters.*", "$.paths.*.*[responses,requestBody]..content.*"],
       "then": {
         "field": "examples",
         "function": "truthy"
@@ -342,6 +342,83 @@
         }
       }
     },
+    "openapi-custom:OAR034": {
+      "description": "A paged response not compliant with the standard may cause application issues.",
+      "message": "OAR034 - Paged response schema must be compliant with the standard.",
+      "severity": "error",
+      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "then": {
+        "function": "apq-custom-schema",
+        "functionOptions": {
+          "except": ["/status"],
+          "schema": {
+            "type": "object",
+            "properties": {
+              "numPages": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "start": {
+                "type": "integer"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "next": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "previous": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "last": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "self": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "first": {
+                    "type": "object",
+                    "properties": {
+                      "href": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "required": ["self", "previous", "next"]
+              }
+            },
+            "required": ["start", "limit", "links"],
+            "pagingPropertyName": "paging"
+          }
+        }
+      }
+    },
     "openapi-custom:OAR036": {
       "description": "Cookie use is forbidden as a session mechanism.",
       "message": "OAR036: Cookie use is forbidden as a session mechanism.",
@@ -360,12 +437,11 @@
     },
     "openapi-custom:OAR037": {
       "description": "String types require a valid format.",
-      "message": "OAR037: String types require a valid format.",
+      "message": "OAR037: {{error}}",
       "severity": "error",
-      "given": "$..parameters.[*].schema[?(@.type=='string')]",
+      "given": ["$.paths[*].parameters.*", "$.paths[*][get,put,post,patch,delete].parameters.*"],
       "then": {
-        "field": "format",
-        "function": "truthy"
+        "function": "apq-params-string"
       }
     },
     "openapi-custom:OAR038": {
