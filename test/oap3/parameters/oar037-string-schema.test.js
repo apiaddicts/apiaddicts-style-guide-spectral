@@ -6,11 +6,11 @@ const oar037fail = require('./OAR037/fail-string-format');
 const oar037ok = require('./OAR037/ok-string-format');
 
 beforeAll(async () => {
-  linter = await linterForRule('openapi-custom:OAR037');
+  linter = await linterForRule('apiq:OAR037');
   return linter;
 });
 
-test('openapi-custom:OAR037 should find errors', () => {
+test('apiq:OAR037 should find errors', () => {
   return linter.run(oar037fail).then((results) => {
     expect(results.length).toBe(5);
     expect(results[0].path.join('.')).toBe('paths./invoices.parameters.0');
@@ -26,7 +26,7 @@ test('openapi-custom:OAR037 should find errors', () => {
   });
 });
 
-test('openapi-custom:OAR037 should find no errors', () => {
+test('apiq:OAR037 should find no errors', () => {
   return linter.run(oar037ok).then((results) => {
     expect(results.length).toBe(0);
   });
