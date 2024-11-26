@@ -11,6 +11,7 @@ rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
     message: "OAR001: HTTPS protocol is mandatory."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/develop/docs/resources/OAR001.md"
     formats: ['oas3']
     severity: "error"
     given: "$.servers[*].url"
@@ -23,6 +24,7 @@ rules:
     message: "OAR006: Specify at least one Media Type in the content of the request body."
     formats: ['oas3']
     severity: "error"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/develop/docs/resources/OAR006.md"
     given: "$.paths[*][post,put,patch]"
     then:
       - field: "requestBody"
@@ -32,6 +34,7 @@ rules:
   apiq:OAR007:
     description: "Routes must define response media types supported by the API"
     message: "OAR007: Specify at least one Media Type in the content of the response body."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/develop/docs/resources/OAR007.md"
     severity: "error"
     formats: ['oas3']
     given: "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]"
@@ -41,11 +44,12 @@ rules:
   apiq:OAR008:
     description: "HTTP verbs not encouraged."
     message: "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE)."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/develop/docs/resources/OAR008.md"
     formats: ['oas2', 'oas3']
     severity: error
-    given: "$.paths[*][?(@property == 'head' || @property == 'options')]"
+    given: "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch']"
     then:
-      function: falsy
+      function: truthy
   apiq:OAR009:
     description: "Default request media type should be defined for operations."
     message: "OAR009: Default request media type is mandatory."
