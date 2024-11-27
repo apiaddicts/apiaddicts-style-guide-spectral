@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
@@ -10,7 +10,7 @@
     }
   ],
   "paths": {
-    "/Pets": {
+    "/pets": {
       "get": {
         "summary": "List all pets",
         "operationId": "listPets",
@@ -43,7 +43,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pets"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -53,7 +57,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -61,7 +69,7 @@
         }
       }
     },
-    "/Pets/{Id}": {
+    "/pets/{Id}": {
       "get": {
         "summary": "Info for a specific pet",
         "operationId": "showPetById",
@@ -85,7 +93,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pet"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -95,7 +107,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
