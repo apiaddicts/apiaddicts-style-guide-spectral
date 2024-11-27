@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
@@ -43,7 +43,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pets"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -53,7 +57,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -85,7 +93,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pet"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -95,7 +107,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }

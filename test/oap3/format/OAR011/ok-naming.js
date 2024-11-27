@@ -43,7 +43,11 @@ module.exports = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pets"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -53,7 +57,11 @@ module.exports = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -85,7 +93,11 @@ module.exports = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Pet"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -95,7 +107,11 @@ module.exports = {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
