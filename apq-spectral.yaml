@@ -7,6 +7,7 @@ functions:
   - apq-custom-schema
   - apq-params-string
   - apq-compare-insensitive
+  - apq-naming-convention
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -75,9 +76,9 @@ rules:
     severity: error
     given: "$.paths[*]~"
     then:
-      function: pattern
+      function: apq-naming-convention
       functionOptions:
-        match: "^(\/|[a-z0-9-.]+|{[a-zA-Z0-9_]+})+$"
+        pattern: "kebabCase"
   apiq:OAR013:
     description: "Default response is required for all operations."
     message: "OAR013: Default response is required."
