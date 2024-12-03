@@ -71,14 +71,6 @@ module.exports = {
                       "type": "string",
                       "format": "password"
                     },
-                    "byte": {
-                      "type": "string",
-                      "format": "byte"
-                    },
-                    "binary": {
-                      "type": "string",
-                      "format": "binary"
-                    },
                     "email": {
                       "type": "string",
                       "format": "email"
@@ -174,14 +166,6 @@ module.exports = {
                   "password": {
                     "type": "string",
                     "format": "password"
-                  },
-                  "byte": {
-                    "type": "string",
-                    "format": "byte"
-                  },
-                  "binary": {
-                    "type": "string",
-                    "format": "binary"
                   },
                   "email": {
                     "type": "string",
