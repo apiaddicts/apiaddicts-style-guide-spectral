@@ -3,7 +3,7 @@
 /**
  * @param {object} given
  * @param {object} options
- * @param {object} options.Formats
+ * @param {object} options.formats
  * @param {Array<string>} options.formats.string
  * @param {Array<string>} options.formats.number
  * @param {Array<string>} options.formats.integer

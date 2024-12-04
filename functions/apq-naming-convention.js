@@ -8,7 +8,7 @@ const patterns = {
 };
 
 /**
- * @param {Array<string>} given
+ * @param {object} given
  * @param {object} options
  * @param {string} options.pattern
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
