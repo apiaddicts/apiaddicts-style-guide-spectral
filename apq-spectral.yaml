@@ -8,6 +8,7 @@ functions:
   - apq-schema-format
   - apq-compare-insensitive
   - apq-naming-convention
+  - apq-default-value
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -179,12 +180,12 @@ rules:
     description: "The $total parameter default value should be false."
     message: "OAR026: The $total parameter default value should be false."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.name == '$total' && @.in == 'query')]"
+    given: "$.paths[*][*].parameters[?(@.name == '$total' && @.in == 'query')]"
     then:
-      field: "schema.default"
-      function: pattern
+      field: "schema"
+      function: apq-default-value
       functionOptions:
-        match: "^false$"
+        match: false
   apiq:OAR027:
     description: "Location header is required in responses with code 201 from POST operations."
     message: "OAR027: Location header is required in responses with code 201 from POST operations."

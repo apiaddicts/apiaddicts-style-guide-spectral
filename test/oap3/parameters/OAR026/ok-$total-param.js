@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi" : "3.0.0",
   "info" : {
     "version" : "1.0.0",
@@ -16,11 +16,12 @@
               "type" : "string"
             }
           }
-        }, { # Noncompliant {{OAR026: The $total parameter default value should be false}}
+        }, {
           "in" : "query",
           "name" : "$total",
           "schema": {
-            "type" : "boolean"
+            "type" : "boolean",
+            "default" : "false"
           }
         } ],
         "responses" : {
