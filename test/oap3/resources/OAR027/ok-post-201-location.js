@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi" : "3.0.0",
   "info" : {
     "version" : "1.0.0",
@@ -11,7 +11,7 @@
           "201" : {
             "description" : "Created",
             "headers" : {
-              "Location" : {
+              "location" : {
                 "schema": {
                   "type" : "string"
                 }

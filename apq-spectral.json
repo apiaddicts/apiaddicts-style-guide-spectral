@@ -8,7 +8,8 @@
     "apq-schema-format",
     "apq-compare-insensitive",
     "apq-naming-convention",
-    "apq-default-value"
+    "apq-default-value",
+    "apq-truthy-insensitive"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -272,10 +273,13 @@
       "description": "Location header is required in responses with code 201 from POST operations.",
       "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
       "severity": "error",
-      "given": "$.paths[*].post.responses['201'].headers",
+      "given": "$.paths[*].post.responses['201']",
       "then": {
-        "field": "Location",
-        "function": "truthy"
+        "field": "headers",
+        "function": "apq-truthy-insensitive",
+        "functionOptions": {
+          "property": "Location"
+        }
       }
     },
     "apiq:OAR028": {
