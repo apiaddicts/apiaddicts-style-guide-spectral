@@ -666,7 +666,7 @@ rules:
       field: "name"
       function: pattern
       functionOptions:
-        match: "^[a-z]+(_[a-z]+)*$"
+        match: ^\$?_?[a-z]+(_[a-z]+)*$
   apiq:OAR078:
     description: "All API methods must have security defined."
     message: "OAR078: The operation '{{property}}' must have security defined."
