@@ -55,6 +55,32 @@ module.exports = {
           }
         }
       }
+    },
+    "/stores" : {
+      "get" : {
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "other",
+          "schema": {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "in" : "query",
+          "name" : "$total",
+          "schema": {
+            "type" : "string",
+            "default" : "true"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ok"
+          }
+        }
+      }
     }
   }
 }
