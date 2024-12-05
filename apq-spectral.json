@@ -1031,7 +1031,7 @@
         "field": "name",
         "function": "pattern",
         "functionOptions": {
-          "match": "^[a-z]+(_[a-z]+)*$"
+          "match": "^\\$?_?[a-z]+(_[a-z]+)*$"
         }
       }
     },
