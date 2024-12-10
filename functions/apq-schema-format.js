@@ -17,7 +17,7 @@ module.exports = function checkTypeAndFormat(given, options, context) {
   const errors = [];
   const path = context.path || [];
 
-  if (given.type === "string") {
+  if (given.type === "string" && options.formats.string) {
     if (given.format) {
       if (!options.formats.string.includes(given.format)) {
         errors.push({
@@ -26,7 +26,7 @@ module.exports = function checkTypeAndFormat(given, options, context) {
         });
       }
     }
-  } else if (given.type === "integer") {
+  } else if (given.type === "integer" && options.formats.integer) {
     if (given.format) {
       if (!options.formats.integer.includes(given.format)) {
         errors.push({
@@ -40,7 +40,7 @@ module.exports = function checkTypeAndFormat(given, options, context) {
         path
       });
     }
-  } else if (given.type === "number") {
+  } else if (given.type === "number" && options.formats.number) {
     if (given.format) {
       if (!options.formats.number.includes(given.format)) {
         errors.push({

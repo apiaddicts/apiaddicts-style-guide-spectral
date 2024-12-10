@@ -526,16 +526,6 @@
               "ipv4",
               "ipv6",
               "password"
-            ],
-            "number": [
-              "int32",
-              "int64",
-              "float",
-              "double"
-            ],
-            "integer": [
-              "int32",
-              "int64"
             ]
           }
         }
@@ -1018,6 +1008,34 @@
                 ]
               }
             }
+          }
+        }
+      }
+    },
+    "apiq:OAR076": {
+      "description": "Schema should use well-defined type and format.",
+      "message": "OAR076: {{error}}",
+      "severity": "error",
+      "given": [
+        "$.paths[*].parameters.*.schema",
+        "$.paths[*][*].parameters.*.schema",
+        "$.paths[*][*].requestBody.content.*.schema",
+        "$.paths[*][*].responses.*.content.*.schema"
+      ],
+      "then": {
+        "function": "apq-schema-format",
+        "functionOptions": {
+          "formats": {
+            "number": [
+              "int32",
+              "int64",
+              "float",
+              "double"
+            ],
+            "integer": [
+              "int32",
+              "int64"
+            ]
           }
         }
       }

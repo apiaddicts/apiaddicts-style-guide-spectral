@@ -14,23 +14,12 @@ module.exports = {
           "format": "dateTime",
           "maxLength": 100
         }
-      },
-      "paramTwo": {
-        "in": "query",
-        "name": "paramTwo",
-        "schema": {
-          "type": "number",
-          "format": "^\d{3}-\d{2}-\d{4}$"
-        }
       }
     }
   },
   "paths": {
     "/invoices": {
       "parameters": [
-        {
-          "$ref": "#/components/parameters/paramTwo"
-        },
         {
           "in": "header",
           "name": "paramThree",
@@ -60,18 +49,6 @@ module.exports = {
                     "date": {
                       "type": "string",
                       "format": "date"
-                    },
-                    "date-time": {
-                      "type": "number",
-                      "format": "date-time"
-                    },
-                    "password": {
-                      "type": "boolean",
-                      "format": "password"
-                    },
-                    "byte": {
-                      "type": "integer",
-                      "format": "email"
                     },
                     "binary": {
                       "type": "string",
@@ -128,14 +105,6 @@ module.exports = {
             "schema": {
               "type": "string",
               "format": "date"
-            }
-          },
-          {
-            "in": "query",
-            "name": "paramSix",
-            "schema": {
-              "type": "number",
-              "format": "double"
             }
           },
         ],
@@ -266,15 +235,7 @@ module.exports = {
               "type": "string",
               "format": "date"
             }
-          },
-          {
-            "in": "query",
-            "name": "paramSix",
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
+          }
         ],
         "responses": {
           "200": {
