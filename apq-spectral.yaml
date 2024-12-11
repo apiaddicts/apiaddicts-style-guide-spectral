@@ -9,6 +9,7 @@ functions:
   - apq-naming-convention
   - apq-default-value
   - apq-truthy-insensitive
+  - apq-properties-schema-format
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -364,15 +365,17 @@ rules:
       functionOptions:
         formats:
           string:
-            - email
             - date
             - date-time
-            - uri
+            - password
+            - byte
+            - binary
+            - email
             - uuid
+            - uri
             - hostname
             - ipv4
             - ipv6
-            - password
   apiq:OAR038:
     description: "Response schema must be compliant with the standard."
     message: "OAR038: Response property is required for status code '{{property}}'."
@@ -717,15 +720,15 @@ rules:
       functionOptions:
         match: "^password$"
   apiq:OAR082:
-    description: "The string properties of the specified parameters must define a byte or binary format."
+    description: "The string properties of the specified names must define a byte or binary format."
     message: "OAR082: The string properties must define a 'byte' or 'binary' format."
     severity: error
     given: "$..properties[?(@.type == 'string')]"
     then:
-      field: "format"
-      function: pattern
+      function: apq-properties-schema-format
       functionOptions:
-        match: "^(byte|binary)$"
+        formats: ['byte', 'binary']
+        properties: ['image', 'file']
   apiq:OAR083:
     description: "Certain parameters (e.g., email, password) should not pass through the querystring."
     message: "OAR083: The parameter '{{value}}' should not pass through the querystring."
