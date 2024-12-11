@@ -52,7 +52,7 @@ module.exports = {
                     },
                     "binary": {
                       "type": "string",
-                      "format": "binary"
+                      "format": "Binari"
                     },
                     "email": {
                       "type": "string",
@@ -131,7 +131,7 @@ module.exports = {
                   },
                   "byte": {
                     "type": "string",
-                    "format": "byte"
+                    "format": "Bite"
                   },
                 }
               }
@@ -163,11 +163,11 @@ module.exports = {
                     },
                     "byte": {
                       "type": "string",
-                      "format": "byte"
+                      "format": "Bite"
                     },
                     "binary": {
                       "type": "string",
-                      "format": "binary"
+                      "format": "Binari"
                     },
                     "email": {
                       "type": "string",
@@ -262,11 +262,11 @@ module.exports = {
                     },
                     "byte": {
                       "type": "string",
-                      "format": "byte"
+                      "format": "Bite"
                     },
                     "binary": {
                       "type": "string",
-                      "format": "binary"
+                      "format": "Binari"
                     },
                     "email": {
                       "type": "string",
