@@ -11,7 +11,8 @@ module.exports = (given, options, context) => {
   const errors = [];
   if (!given) return errors;
 
-  if (given[options.property]?.toUpperCase() === given[options.equalTo]?.toUpperCase() && options.result === "falsy") {
+  if (given[options.property] && given[options.equalTo] &&
+      given[options.property].toUpperCase() === given[options.equalTo].toUpperCase() && options.result === "falsy") {
     errors.push({
       message: context.rule.message
     });
