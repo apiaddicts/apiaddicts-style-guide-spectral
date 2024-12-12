@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for apq-compare-insensitive.js</title>
+    <title>Code coverage report for apq-properties-schema-format.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,20 +19,20 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> apq-compare-insensitive.js</h1>
+        <h1><a href="index.html">All files</a> apq-properties-schema-format.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>7/8</span>
+                <span class='fraction'>10/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
@@ -102,51 +102,51 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Check that format is valid for a schema type.
+&nbsp;
 /**
- * @param {Array&lt;string&gt;} given
+ * @param {object} given
  * @param {object} options
- * @param {string} options.property
- * @param {string} options.equalTo
- * @param {string} options.result
+ * @param {Array&lt;string&gt;} options.formats
+ * @param {Array&lt;string&gt;} options.properties
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (given, options, context) =&gt; {
-  const errors = [];
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!given) <span class="cstat-no" title="statement not covered" >return errors;</span>
-&nbsp;
-  if (given[options.property] &amp;&amp; given[options.equalTo] &amp;&amp;
-      given[options.property].toUpperCase() === given[options.equalTo].toUpperCase() &amp;&amp; options.result === "falsy") {
-    errors.push({
-      message: context.rule.message
-    });
+module.exports = function checkTypeAndFormat(given, options, context) {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (given === null || typeof given !== "object") {
+<span class="cstat-no" title="statement not covered" >    return [];</span>
   }
 &nbsp;
-  //   TODO: When 'truthy' required, implement the following logic:
-  //   else if (options.result === 'truthy') {
-  //     errors.push({
-  //       message: context.rule.message
-  //     });
-  //   }
+  const errors = [];
+  const path = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  const name = path.slice(-1)[0].toString();
+&nbsp;
+  if (options.properties.includes(name)) {
+    if (!given.format || !options.formats.includes(given.format)) {
+      errors.push({
+        message: context.rule.message,
+        path: [...path, name]
+      });
+    }
+  }
 &nbsp;
   return errors;
 };
