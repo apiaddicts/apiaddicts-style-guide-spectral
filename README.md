@@ -2,17 +2,15 @@
 
 [![Node.js CI](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml/badge.svg)](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml) ![Coverage](./coverage/badges.svg)
 
-# ApiQuality API Style Guide
+# APIAddicts Style Guide Spectral
 
 This repository contains a Style Guide for OpenAPI definitions.
-The Style Guide is a companion to the [ApiQuality Guidelines](https://apiquality.io), the [OpenAPI 3.0 specification](https://spec.openapis.org).
+The Style Guide is the spectral guide that implements similar rules that sonarapi-rules. It's used by [ApiQuality Guidelines](https://apiquality.io) and another users.
 
-The repository also contains a [Spectral](https://github.com/stoplightio/spectral) ruleset to check
-an API definition for conformance to the ApiQuality Guidelines and this Style Guide.
 
-> **NOTE:** It is highly recommended that you leverage the Spectral rule set. ApiQuality team have found Spectral to be very useful identifying many common mistakes that affect the overall quality of their Open API documentation. It's one of the first things the API Stewardship Board turns to when reviewing an API specification.
+> **NOTE:** It is highly recommended that you leverage the Spectral rule set. APIAddicts team have found Spectral to be very useful identifying many common mistakes that affect the overall quality of their Open API documentation. It's one of the first things the API Stewardship Board turns to when reviewing an API specification.
 >
-> However, the errors, warnings, and info messages identified by Spectral should be evaluated in the context of *your service*, and using *your judgement*. If you have any questions, concerns, or comments, please don't hesitate to start a discussion in the [API Stewardship Teams Channel](https://github.com/apiaddicts/apquality-spectral/issues).
+> However, the errors, warnings, and info messages identified by Spectral should be evaluated in the context of *your service*, and using *your judgement*. If you have any questions, concerns, or comments, please don't hesitate to start a discussion in the [API Stewardship Teams Channel](https://github.com/apiaddicts/apiaddicts-style-guide-spectral/issues).
 
 ## How to use the Spectral Ruleset
 
