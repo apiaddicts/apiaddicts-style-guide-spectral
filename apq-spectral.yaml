@@ -10,6 +10,7 @@ functions:
   - apq-default-value
   - apq-truthy-insensitive
   - apq-properties-schema-format
+  - apq-responses
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -695,10 +696,13 @@ rules:
     description: "Operations with path parameters should include a 404 Not Found response."
     message: "OAR079: Path parameters should have a 404 Not Found response."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]"
+    given: "$.paths[*]"
     then:
-        field: "responses['404']"
-        function: truthy
+        function: apq-responses
+        functionOptions:
+          verbs: ['get', 'put', 'patch', 'delete']
+          parameters: ['path']
+          responses: ['404']
   apiq:OAR080:
     description: "The security scheme must be among those allowed by the organization and must be complete."
     message: "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete."
