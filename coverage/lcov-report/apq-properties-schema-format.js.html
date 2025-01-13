@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">10% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/10</span>
+                <span class='fraction'>1/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">10% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/10</span>
+                <span class='fraction'>1/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,25 +101,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Check that format is valid for a schema type.
 &nbsp;
@@ -130,25 +130,25 @@
  * @param {Array&lt;string&gt;} options.properties
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = function checkTypeAndFormat(given, options, context) {
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (given === null || typeof given !== "object") {
+module.exports = function <span class="fstat-no" title="function not covered" >checkTypeAndFormat(</span>given, options, context) {
+<span class="cstat-no" title="statement not covered" >  if (given === null || typeof given !== "object") {</span>
 <span class="cstat-no" title="statement not covered" >    return [];</span>
   }
 &nbsp;
-  const errors = [];
-  const path = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
-  const name = path.slice(-1)[0].toString();
+  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
+  const path = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
+  const name = <span class="cstat-no" title="statement not covered" >path.slice(-1)[0].toString();</span>
 &nbsp;
-  if (options.properties.includes(name)) {
-    if (!given.format || !options.formats.includes(given.format)) {
-      errors.push({
+<span class="cstat-no" title="statement not covered" >  if (options.properties.includes(name)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (!given.format || !options.formats.includes(given.format)) {</span>
+<span class="cstat-no" title="statement not covered" >      errors.push({</span>
         message: context.rule.message,
         path: [...path, name]
       });
     }
   }
 &nbsp;
-  return errors;
+<span class="cstat-no" title="statement not covered" >  return errors;</span>
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -157,7 +157,7 @@ module.exports = function checkTypeAndFormat(given, options, context) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-20T11:45:11.582Z
+                at 2025-01-13T10:56:20.284Z
             </div>
         <script src="prettify.js"></script>
         <script>
