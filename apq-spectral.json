@@ -488,18 +488,17 @@
         }
       }
     },
-    "apiq:OAR035": {
-      "description": "Response code 401 must be defined for operations with security schemes defined.",
-      "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
-      "severity": "error",
-      "given": "$.paths[*][*].responses",
-      "then": {
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^(?!401$).*"
+      "apiq:OAR035": {
+        "description": "Response code 401 must be defined for operations with security schemes defined.",
+        "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
+        "severity": "error",
+        "given": "$.paths[*][*].responses",
+        "then": {
+          "function": "truthy",
+          "field": "401",
+          "message": "Operation must define a 401 Unauthorized response for security schemes."
         }
-      }
-    },
+      },
     "apiq:OAR036": {
       "description": "Cookie use is forbidden as a session mechanism.",
       "message": "OAR036: Cookie use is forbidden as a session mechanism.",

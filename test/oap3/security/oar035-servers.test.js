@@ -11,11 +11,10 @@ beforeAll(async () => {
 });
 
 test('apiq:OAR035 should find errors for operations without 401 response for security schemes', () => {
-    console.log("victor", linter)
 
   return linter.run(failServerUrl).then((results) => {
-    expect(results.length).toBe(1);
-    expect(results[0].path.join('.')).toBe('paths./with-auth-and-header.get.responses');
+    expect(results.length).toBe(1);  
+      expect(results[0].path.join('.')).toBe('paths./with-auth-and-header.get.responses');
   });
 });
 
