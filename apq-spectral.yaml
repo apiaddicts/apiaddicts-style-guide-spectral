@@ -340,6 +340,15 @@ rules:
             - limit
             - links
           pagingPropertyName: paging
+  apiq:OAR035:
+    description: "Response code 401 must be defined for operations with security schemes defined."
+    message: "OAR035: Response code 401 must be defined for operations with security schemes defined."
+    severity: "error"
+    given: "$.paths[*][*].responses"
+    then:
+      function: truthy
+      field: "401"
+      message: "Operation must define a 401 Unauthorized response for security schemes."
   apiq:OAR036:
     description: "Cookie use is forbidden as a session mechanism."
     message: "OAR036: Cookie use is forbidden as a session mechanism."
@@ -870,6 +879,24 @@ rules:
       function: pattern
       functionOptions:
         match: "^https?://[^/]+/.*/v[0-9]+$"
+  apiq:OAR101:
+    description: "The first part of the path should be one of the allowed paths (e.g., '/hello')."
+    message: "OAR101: The first part of the path should be one of the allowed paths."
+    severity: "error"
+    given: "$.servers[*].url"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^https?://[^/]+/hello/.*$"
+  apiq:OAR102:
+    description: "The second part of the path should be one of the allowed values."
+    message: "OAR102: The second part of the path should be one of the allowed values."
+    severity: "error"
+    given: "$.servers[*].url"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^https?://[^/]+/hola/hello$"
   apiq:OAR103:
     description: "GET requests are not recommended for resource paths containing 'get' or 'delete', as this may indicate a design flaw."
     message: "OAR103: GET request should not be used on paths containing 'get' or 'delete'."
