@@ -896,6 +896,18 @@
         }
       }
     },
+    "apiq:OAR069": {
+      "description": "Any param in PATH or QUERY should have a Bad Request (400) response.",
+      "message": "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response.",
+      "severity": "warn",
+      "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
+      "then": {
+        "function": "required",
+        "functionOptions": {
+          "path": "$.responses.400"
+        }
+      }
+    },
     "apiq:OAR070": {
       "description": "Parameters in path should not be numeric.",
       "message": "OAR070: Parameters in path should not be numeric.",
