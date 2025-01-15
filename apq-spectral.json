@@ -488,6 +488,17 @@
         }
       }
     },
+      "apiq:OAR035": {
+        "description": "Response code 401 must be defined for operations with security schemes defined.",
+        "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
+        "severity": "error",
+        "given": "$.paths[*][*].responses",
+        "then": {
+          "function": "truthy",
+          "field": "401",
+          "message": "Operation must define a 401 Unauthorized response for security schemes."
+        }
+      },
     "apiq:OAR036": {
       "description": "Cookie use is forbidden as a session mechanism.",
       "message": "OAR036: Cookie use is forbidden as a session mechanism.",
@@ -882,6 +893,18 @@
         "function": "casing",
         "functionOptions": {
           "type": "pascal"
+        }
+      }
+    },
+    "apiq:OAR069": {
+      "description": "Any param in PATH or QUERY should have a Bad Request (400) response.",
+      "message": "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response.",
+      "severity": "warn",
+      "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
+      "then": {
+        "function": "required",
+        "functionOptions": {
+          "path": "$.responses.400"
         }
       }
     },
@@ -1312,6 +1335,30 @@
         "function": "pattern",
         "functionOptions": {
           "match": "^https?://[^/]+/.*/v[0-9]+$"
+        }
+      }
+    },
+    "apiq:OAR101": {
+      "description": "The first part of the path should be one of the allowed paths (e.g., '/hello').",
+      "message": "OAR101: The first part of the path should be one of the allowed paths.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https?://[^/]+/hello/.*$"
+        }
+      }
+    },
+    "apiq:OAR102": {
+      "description": "The second part of the path should be one of the allowed values.",
+      "message": "OAR102: The second part of the path should be one of the allowed values.",
+      "severity": "error",
+      "given": "$.servers[*].url",
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^https?://[^/]+/hola/hello$"
         }
       }
     },
