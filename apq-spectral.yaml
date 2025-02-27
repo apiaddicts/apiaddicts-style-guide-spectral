@@ -126,7 +126,7 @@ rules:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$select' && @.in == 'query')]"
       function: truthy
@@ -134,7 +134,7 @@ rules:
     description: "$expand must be defined as a query parameter in all operations."
     message: "OAR020: $expand must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$expand' && @.in == 'query')]"
       function: truthy
@@ -142,7 +142,7 @@ rules:
     description: "$exclude must be defined as a query parameter in all operations."
     message: "OAR021: $exclude must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$exclude' && @.in == 'query')]"
       function: truthy
@@ -150,7 +150,7 @@ rules:
     description: "$orderby must be defined as a query parameter in all operations."
     message: "OAR022: $orderby must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$orderby' && @.in == 'query')]"
       function: truthy
@@ -158,7 +158,7 @@ rules:
     description: "$total must be defined as a query parameter in all operations."
     message: "OAR023: $total must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$total' && @.in == 'query')]"
       function: truthy
@@ -166,7 +166,7 @@ rules:
     description: "$start must be defined as a query parameter in all operations."
     message: "OAR024: $start must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$start' && @.in == 'query')]"
       function: truthy
@@ -174,7 +174,7 @@ rules:
     description: "$limit must be defined as a query parameter in all operations."
     message: "OAR025: $limit must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$limit' && @.in == 'query')]"
       function: truthy
@@ -203,7 +203,7 @@ rules:
     description: "$filter must be defined as a query parameter in all operations."
     message: "OAR028: $filter must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$filter' && @.in == 'query')]"
       function: truthy
