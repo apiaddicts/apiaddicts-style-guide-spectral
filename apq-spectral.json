@@ -30,6 +30,24 @@
         }
       }
     },
+    "apiq:OAR002": {
+      "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
+      "message": "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
+      "severity": "error",
+      "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
+      "then": [
+        {
+          "function": "truthy",
+          "field": "key",
+          "message": "Scope must define a 'key' attribute."
+        }
+      ]
+    },
     "apiq:OAR006": {
       "description": "Routes must define request media types supported by the API.",
       "message": "OAR006: Specify at least one Media Type in the content of the request body.",

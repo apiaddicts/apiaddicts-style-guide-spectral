@@ -23,6 +23,52 @@ rules:
       function: pattern
       functionOptions:
         match: "^https://"
+  apiq:OAR002:
+    description: "A wrong scope definition may cause problems to import the API definition into WSO2."
+    message: "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*]"
+    then:
+      - function: "truthy"
+        field: "key"
+        message: "Scope must define a 'key' attribute."
+  apiq:OAR003:
+    description: "A description can help other developers to understand the correct use of the scope."
+    message: "OAR003: Scope must define a 'description' attribute."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR003.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*]"
+    then:
+      - function: "truthy"
+        field: "description"
+        message: "Scope must define a 'description' attribute."
+  apiq:OAR004:
+    description: "A role with forbidden characters may cause problems in some applications."
+    message: "OAR004: Role should not contain forbidden characters (e.g. special characters like €, *, etc.)."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*].roles[*]"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "^[A-Za-z0-9_]+$"
+  apiq:OAR005:
+    description: "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint."
+    message: "OAR005: Scope in the operation must be defined correctly and match an existing scope."
+    severity: "error"
+    given: "$.paths[*][*].x-scope"
+    then:
+      - function: "truthy"
+        message: "Scope must be defined in the operation."
+      - function: enumeration
+        functionOptions:
+          values:
+            - read
+            - write
   apiq:OAR006:
     description: "Routes must define request media types supported by the API."
     message: "OAR006: Specify at least one Media Type in the content of the request body."
@@ -182,7 +228,7 @@ rules:
     description: "The $total parameter default value should be false."
     message: "OAR026: The $total parameter default value should be false."
     severity: error
-    given: "$.paths[*][*].parameters[?(@.name == '$total' && @.in == 'query')]"
+    given: "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]"
     then:
       field: "schema"
       function: apq-default-value
@@ -396,6 +442,38 @@ rules:
       function: pattern
       functionOptions:
         match: "^data|error$"
+  apiq:OAR040:
+    description: "A scope name non-compliant with the standard may cause problems at application level."
+    message: "OAR040: Scope name must follow the 'apfc_sc_' prefix standard."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*].name"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^apfc_sc_.*"
+  apiq:OAR041:
+    description: Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.
+    message: "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$"
+    then:
+      - function: pattern
+        functionOptions:
+          match: "/x-wso2-security.apim.x-wso2-scopes/"
+      - field: "$.paths.*.*.x-scope"
+        function: truthy
+  apiq:OAR043:
+    description: "The file cannot contain empty lines, as this will prevent its analysis."
+    message: "OAR043:The file contains empty lines, which will prevent its analysis."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$"
+    then:
+      - function: "pattern"
+        functionOptions:
+          match: "/^(?!.*^(\\r?\\n|\\r|\\t|\\s)*$).*$/"
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
@@ -816,6 +894,14 @@ rules:
       function: pattern
       functionOptions:
         match: "Body$"
+  apiq:OAR090:
+    description: The $ref of a response must end with the suffix Response
+    message: The $ref of a response must end with the suffix "Response"
+    given: "$.paths.*.*.responses.*.$ref"
+    then:
+      function: pattern
+      functionOptions:
+        match: ".*Response$"
   apiq:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
@@ -941,6 +1027,16 @@ rules:
     given: "$.paths[?(@property.match(/(get|delete)/))].delete"
     then:
       function: falsy
+  apiq:OAR108:
+    description: "The schemas should match the provided examples."
+    message: "OAR108: Schema does not match the provided example."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.paths[*][*].responses[*].content[*].example"
+    then:
+      - function: pattern
+        functionOptions:
+          match: ".*"  
   apiq:OAR109:
     description: "Use default response instead of directly specifying 5XX codes."
     message: "OAR109: Use default response instead of specifying 5XX codes directly."
