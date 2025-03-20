@@ -12,12 +12,6 @@ module.exports = {
                     "key": "read",
                     "roles": ["READ_ROLE"]
                 },
-                {
-                    "name": "write",
-                    "key": "write",
-                    "roles": ["WRITE_ROLE"],
-                    "description": "Allows users to write data"
-                }
             ]
         }
     },
