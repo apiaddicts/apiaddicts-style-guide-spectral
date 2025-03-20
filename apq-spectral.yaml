@@ -11,7 +11,6 @@ functions:
   - apq-truthy-insensitive
   - apq-properties-schema-format
   - apq-responses
-  - apq-empty-lines
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
