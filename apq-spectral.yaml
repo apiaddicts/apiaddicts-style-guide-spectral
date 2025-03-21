@@ -51,7 +51,7 @@ rules:
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md"
     formats: ['oas2', 'oas3']
     severity: "error"
-    given: "$.x-wso2-security.apim.x-wso2-scopes[*].roles[*]"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*].roles"
     then:
       function: "pattern"
       functionOptions:
@@ -464,16 +464,6 @@ rules:
           match: "/x-wso2-security.apim.x-wso2-scopes/"
       - field: "$.paths.*.*.x-scope"
         function: truthy
-  apiq:OAR043:
-    description: "The file cannot contain empty lines, as this will prevent its analysis."
-    message: "OAR043:The file contains empty lines, which will prevent its analysis."
-    formats: ['oas2', 'oas3']
-    severity: "error"
-    given: "$"
-    then:
-      - function: "pattern"
-        functionOptions:
-          match: "/^(?!.*^(\\r?\\n|\\r|\\t|\\s)*$).*$/"
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
@@ -1032,11 +1022,17 @@ rules:
     message: "OAR108: Schema does not match the provided example."
     formats: ['oas2', 'oas3']
     severity: "error"
-    given: "$.paths[*][*].responses[*].content[*].example"
+    given: "$.paths[*].get.responses['200'].examples['application/json']"
     then:
-      - function: pattern
+      - function: "schema"
         functionOptions:
-          match: ".*"  
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              nombre:
+                type: "string" 
   apiq:OAR109:
     description: "Use default response instead of directly specifying 5XX codes."
     message: "OAR109: Use default response instead of specifying 5XX codes directly."
