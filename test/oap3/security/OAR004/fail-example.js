@@ -10,12 +10,12 @@ module.exports = {
                 {
                     "name": "read",
                     "key": "read",
-                    "roles": ["R€AD_R*LE"]
+                    "roles": "R€AD_R*"
                 },
                 {
                     "name": "write",
                     "key": "write",
-                    "roles": ["WR!TE_ROLE"]
+                    "roles": "WR!TE_ROLE"
                 }
             ]
         }
