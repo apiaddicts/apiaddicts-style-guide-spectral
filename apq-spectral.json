@@ -657,19 +657,11 @@
         "oas3"
       ],
       "severity": "error",
-      "given": "$",
-      "then": [
-        {
-          "function": "pattern",
-          "functionOptions": {
-            "match": "/x-wso2-security.apim.x-wso2-scopes/"
-          }
-        },
-        {
-          "field": "$.paths.*.*.x-scope",
-          "function": "truthy"
-        }
-      ]
+      "given": "$.paths['/pets'].get",
+      "then": {
+        "field": "x-aut-type",
+        "function": "truthy"
+      }
     },
     "apiq:OAR044": {
       "description": "Declared media type should conform to RFC6838 and RFC7231.",
@@ -1359,13 +1351,14 @@
     "apiq:OAR090": {
       "description": "The $ref of a response must end with the suffix Response",
       "message": "The $ref of a response must end with the suffix \"Response\"",
-      "given": "$.paths.*.*.responses.*.$ref",
+      "given": "$.paths['/sample'].get.responses['200'].$ref",
       "then": {
         "function": "pattern",
         "functionOptions": {
           "match": ".*Response$"
         }
-      }
+      },
+      "resolved": false
     },
     "apiq:OAR091": {
       "description": "Parameters must contain only $ref references.",
