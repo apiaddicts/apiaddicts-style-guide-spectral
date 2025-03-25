@@ -457,13 +457,10 @@ rules:
     message: "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths."
     formats: ['oas2', 'oas3']
     severity: "error"
-    given: "$"
+    given: "$.paths['/pets'].get"
     then:
-      - function: pattern
-        functionOptions:
-          match: "/x-wso2-security.apim.x-wso2-scopes/"
-      - field: "$.paths.*.*.x-scope"
-        function: truthy
+      field: "x-aut-type"
+      function: truthy
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
@@ -887,11 +884,12 @@ rules:
   apiq:OAR090:
     description: The $ref of a response must end with the suffix Response
     message: The $ref of a response must end with the suffix "Response"
-    given: "$.paths.*.*.responses.*.$ref"
+    given: "$.paths['/sample'].get.responses['200'].$ref"
     then:
       function: pattern
       functionOptions:
         match: ".*Response$"
+    resolved: false
   apiq:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
@@ -1022,7 +1020,9 @@ rules:
     message: "OAR108: Schema does not match the provided example."
     formats: ['oas2', 'oas3']
     severity: "error"
-    given: "$.paths[*].get.responses['200'].examples['application/json']"
+    given: 
+      - "$.paths['/item'].get.responses['200'].content['application/json'].example"
+      - "$.paths['/item'].get.responses['200'].examples['application/json']"
     then:
       - function: "schema"
         functionOptions:

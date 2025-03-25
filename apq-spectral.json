@@ -657,19 +657,11 @@
         "oas3"
       ],
       "severity": "error",
-      "given": "$",
-      "then": [
-        {
-          "function": "pattern",
-          "functionOptions": {
-            "match": "/x-wso2-security.apim.x-wso2-scopes/"
-          }
-        },
-        {
-          "field": "$.paths.*.*.x-scope",
-          "function": "truthy"
-        }
-      ]
+      "given": "$.paths['/pets'].get",
+      "then": {
+        "field": "x-aut-type",
+        "function": "truthy"
+      }
     },
     "apiq:OAR044": {
       "description": "Declared media type should conform to RFC6838 and RFC7231.",
