@@ -1,32 +1,23 @@
 module.exports = {
-    "openapi": "3.0.0",
-    "info": {
-        "version": "1.0.0",
-        "title": "Swagger Petstore"
-    },
+    "swagger": "2.0",
     "x-wso2-security": {
         "apim": {
             "x-wso2-scopes": [
                 {
                     "name": "read",
-                    "roles": ["READ_ROLE"],
                     "key": "read",
-                    "description": "Allows users to read data"
+                    "roles": "READ_ROLE",
+                    "description": "Allows users to view records"
                 }
             ]
         }
     },
-    "servers": [
-        {
-            "url": "https://petstore.swagger.io/v1"
-        }
-    ],
     "paths": {
         "/pets": {
             "get": {
-                "x-scope": "read"  // El 'x-scope' ahora se refiere correctamente a un scope definido al final del documento
+                "x-scope": "read",
+                "x-aut-type": "Application & Application User"
             }
         }
     }
 };
-
