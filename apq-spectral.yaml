@@ -882,8 +882,9 @@ rules:
       functionOptions:
         match: "Body$"
   apiq:OAR090:
-    description: The $ref of a response must end with the suffix Response
-    message: The $ref of a response must end with the suffix "Response"
+    description: "The $ref of a response must end with the suffix Response."
+    message: "OAR090: The $ref of a response must end with the suffix Response"
+    severity: error
     given: "$.paths['/sample'].get.responses['200'].$ref"
     then:
       function: pattern
