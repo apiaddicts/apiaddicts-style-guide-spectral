@@ -139,14 +139,14 @@ rules:
       function: truthy
   apiq:OAR014:
     description: "Resources depth level should be below the non-suggested range."
-    message: "OAR014: {{error}}"
-    formats: ['oas2', 'oas3']
-    severity: warn
-    given: "$.paths.*~"
+    message:     "OAR014: The number of parts of the path must be less than 4."
+    formats:    ['oas2', 'oas3']
+    severity:   warn
+    given:      "$.paths.*~"             
     then:
-      function: apq-resources
+      function: pattern                     
       functionOptions:
-        max: 5
+        notMatch: "^(?:\\/[^\\/]+){4,}"        
   apiq:OAR015:
     description: "Resources depth level should be smaller than 5."
     message: "OAR015: Path exceeds the maximum allowed depth level of 5."
@@ -480,13 +480,25 @@ rules:
       field: "content"
       function: truthy
   apiq:OAR046:
-    description: "Every operation (get, post, put, patch, delete) must have at least one tag associated."
-    message: "OAR046: {{error}}"
+    description: "Each operation SHOULD have a tag."
+    message: "OAR046: You should categorize the operations of your contract with tags."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete]"
+    given:
+    - "$.paths[*].get"
+    - "$.paths[*].post"
+    - "$.paths[*].put"
+    - "$.paths[*].patch"
+    - "$.paths[*].delete"
     then:
-      field: "tags"
-      function: apq-tags
+      function: schema              
+      functionOptions:
+        schema:
+          type: object
+          required: ["tags"]
+          properties:
+            tags:
+              type: array
+              minItems: 1
   apiq:OAR047:
     description: "Tags required and each tag must have a short description."
     message: "OAR047: Add tags with a short description to each one."
