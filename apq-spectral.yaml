@@ -1,7 +1,5 @@
 functionsDir: './functions'
 functions:
-  - apq-resources
-  - apq-tags
   - apq-alternate-paths
   - apq-custom-schema
   - apq-schema-format
