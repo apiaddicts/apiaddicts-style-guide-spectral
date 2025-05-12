@@ -932,11 +932,12 @@ rules:
   apiq:OAR096:
     description: "Response code 403 must be defined for operations with security schemes defined."
     message: "OAR096: Response code 403 must be defined for operations with security schemes defined."
-    severity: error
-    given: "$.paths[*][*].security"
+    severity: "error"
+    given: "$.paths[*][*].responses"
     then:
-      field: "responses['403']"
       function: truthy
+      field: "403"
+      message: "Operation must define a 403 Unauthorized response for security schemes."
   apiq:OAR097:
     description: "The base path must contain at least two parts."
     message: "OAR097: Path has too few parts."
