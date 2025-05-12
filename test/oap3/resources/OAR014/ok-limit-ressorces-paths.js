@@ -1,63 +1,54 @@
 module.exports = {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
-    "title": "Swagger Petstore"
+    "title": "Swagger Petstore",
+    "version": "1.0"
   },
   "paths": {
-    "/one": {
+    "/customers/{customerId}/invoices": {
       "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
           }
+        ],
+        "responses": {
+          "200": { "description": "OK" }
         }
       }
     },
-    "/one/two": {
+    "/invoices/{invoiceId}": {
       "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
           }
+        ],
+        "responses": {
+          "200": { "description": "OK" }
         }
       }
     },
-    "/one/two/three": {
+    "/invoices/{invoiceId}/products": {
       "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
           }
-        }
-      }
-    },
-    "/one/two/three/four": {
-      "get": {
+        ],
         "responses": {
-          "default": {
-            "description": "Ok"
-          }
-        }
-      }
-    },
-    "/one/two/three/four/five/six": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
-          }
-        }
-      }
-    },
-    "/one/two/three/four/five/six/seven": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "Ok."
-          }
+          "200": { "description": "OK" }
         }
       }
     }
   }
-}
+};
