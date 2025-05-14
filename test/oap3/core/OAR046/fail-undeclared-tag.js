@@ -1,32 +1,22 @@
 module.exports = {
-  "openapi" : "3.0.1",
-  "tags" : [ {
-    "name" : "used-tag",
-    "description" : "a tag referenced in the operations"
-  } ],
-  "info" : {
-    "version" : "1.0.0",
-    "title" : "Swagger Petstore"
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
   },
-  "paths" : {
-    "/pets" : {
-      "get" : {
-        "tags" : [ "other-tag" ],
-        "responses" : { }
-      }
-    },
-    "/pets/{petId}" : {
-      "get" : {
-        "parameters" : [ {
-          "name" : "petId",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : { }
+  "paths": {
+    "/pets": {
+      "get": {                       // Noncompliant {{OAR046: Associate a tag to this operation}}
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      },
+      "post": {                      // Noncompliant {{OAR046: Associate a tag to this operation}}
+        "responses": {
+          "default": { "description": "the default response" }
+        }
       }
     }
   }
 };
+

@@ -1,7 +1,5 @@
 functionsDir: './functions'
 functions:
-  - apq-resources
-  - apq-tags
   - apq-alternate-paths
   - apq-custom-schema
   - apq-schema-format
@@ -23,6 +21,52 @@ rules:
       function: pattern
       functionOptions:
         match: "^https://"
+  apiq:OAR002:
+    description: "A wrong scope definition may cause problems to import the API definition into WSO2."
+    message: "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*]"
+    then:
+      - function: "truthy"
+        field: "key"
+        message: "Scope must define a 'key' attribute."
+  apiq:OAR003:
+    description: "A description can help other developers to understand the correct use of the scope."
+    message: "OAR003: Scope must define a 'description' attribute."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR003.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*]"
+    then:
+      - function: "truthy"
+        field: "description"
+        message: "Scope must define a 'description' attribute."
+  apiq:OAR004:
+    description: "A role with forbidden characters may cause problems in some applications."
+    message: "OAR004: Role should not contain forbidden characters (e.g. special characters like €, *, etc.)."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md"
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*].roles"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "^[A-Za-z0-9_]+$"
+  apiq:OAR005:
+    description: "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint."
+    message: "OAR005: Scope in the operation must be defined correctly and match an existing scope."
+    severity: "error"
+    given: "$.paths[*][*].x-scope"
+    then:
+      - function: "truthy"
+        message: "Scope must be defined in the operation."
+      - function: enumeration
+        functionOptions:
+          values:
+            - read
+            - write
   apiq:OAR006:
     description: "Routes must define request media types supported by the API."
     message: "OAR006: Specify at least one Media Type in the content of the request body."
@@ -93,14 +137,14 @@ rules:
       function: truthy
   apiq:OAR014:
     description: "Resources depth level should be below the non-suggested range."
-    message: "OAR014: {{error}}"
-    formats: ['oas2', 'oas3']
-    severity: warn
-    given: "$.paths.*~"
+    message:     "OAR014: The number of parts of the path must be less than 4."
+    formats:    ['oas2', 'oas3']
+    severity:   warn
+    given:      "$.paths.*~"             
     then:
-      function: apq-resources
+      function: pattern                     
       functionOptions:
-        max: 5
+        notMatch: "^(?:\\/[^\\/]+){4,}"        
   apiq:OAR015:
     description: "Resources depth level should be smaller than 5."
     message: "OAR015: Path exceeds the maximum allowed depth level of 5."
@@ -126,7 +170,7 @@ rules:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$select' && @.in == 'query')]"
       function: truthy
@@ -134,7 +178,7 @@ rules:
     description: "$expand must be defined as a query parameter in all operations."
     message: "OAR020: $expand must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$expand' && @.in == 'query')]"
       function: truthy
@@ -142,7 +186,7 @@ rules:
     description: "$exclude must be defined as a query parameter in all operations."
     message: "OAR021: $exclude must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$exclude' && @.in == 'query')]"
       function: truthy
@@ -150,7 +194,7 @@ rules:
     description: "$orderby must be defined as a query parameter in all operations."
     message: "OAR022: $orderby must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$orderby' && @.in == 'query')]"
       function: truthy
@@ -158,7 +202,7 @@ rules:
     description: "$total must be defined as a query parameter in all operations."
     message: "OAR023: $total must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$total' && @.in == 'query')]"
       function: truthy
@@ -166,7 +210,7 @@ rules:
     description: "$start must be defined as a query parameter in all operations."
     message: "OAR024: $start must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$start' && @.in == 'query')]"
       function: truthy
@@ -174,7 +218,7 @@ rules:
     description: "$limit must be defined as a query parameter in all operations."
     message: "OAR025: $limit must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$limit' && @.in == 'query')]"
       function: truthy
@@ -182,7 +226,7 @@ rules:
     description: "The $total parameter default value should be false."
     message: "OAR026: The $total parameter default value should be false."
     severity: error
-    given: "$.paths[*][*].parameters[?(@.name == '$total' && @.in == 'query')]"
+    given: "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]"
     then:
       field: "schema"
       function: apq-default-value
@@ -203,7 +247,7 @@ rules:
     description: "$filter must be defined as a query parameter in all operations."
     message: "OAR028: $filter must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete].parameters"
+    given: "$.paths[*].get.parameters"
     then:
       field: "$[?(@.name == '$filter' && @.in == 'query')]"
       function: truthy
@@ -396,6 +440,25 @@ rules:
       function: pattern
       functionOptions:
         match: "^data|error$"
+  apiq:OAR040:
+    description: "A scope name non-compliant with the standard may cause problems at application level."
+    message: "OAR040: Scope name must follow the 'apfc_sc_' prefix standard."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.x-wso2-security.apim.x-wso2-scopes[*].name"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^apfc_sc_.*"
+  apiq:OAR041:
+    description: Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.
+    message: "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: "$.paths['/pets'].get"
+    then:
+      field: "x-aut-type"
+      function: truthy
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
@@ -415,13 +478,25 @@ rules:
       field: "content"
       function: truthy
   apiq:OAR046:
-    description: "Every operation (get, post, put, patch, delete) must have at least one tag associated."
-    message: "OAR046: {{error}}"
+    description: "Each operation SHOULD have a tag."
+    message: "OAR046: You should categorize the operations of your contract with tags."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete]"
+    given:
+    - "$.paths[*].get"
+    - "$.paths[*].post"
+    - "$.paths[*].put"
+    - "$.paths[*].patch"
+    - "$.paths[*].delete"
     then:
-      field: "tags"
-      function: apq-tags
+      function: schema              
+      functionOptions:
+        schema:
+          type: object
+          required: ["tags"]
+          properties:
+            tags:
+              type: array
+              minItems: 1
   apiq:OAR047:
     description: "Tags required and each tag must have a short description."
     message: "OAR047: Add tags with a short description to each one."
@@ -816,6 +891,16 @@ rules:
       function: pattern
       functionOptions:
         match: "Body$"
+  apiq:OAR090:
+    description: "The $ref of a response must end with the suffix Response."
+    message: "OAR090: The $ref of a response must end with the suffix Response"
+    severity: error
+    given: "$.paths['/sample'].get.responses['200'].$ref"
+    then:
+      function: pattern
+      functionOptions:
+        match: ".*Response$"
+    resolved: false
   apiq:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
@@ -847,11 +932,12 @@ rules:
   apiq:OAR096:
     description: "Response code 403 must be defined for operations with security schemes defined."
     message: "OAR096: Response code 403 must be defined for operations with security schemes defined."
-    severity: error
-    given: "$.paths[*][*].security"
+    severity: "error"
+    given: "$.paths[*][*].responses"
     then:
-      field: "responses['403']"
       function: truthy
+      field: "403"
+      message: "Operation must define a 403 Unauthorized response for security schemes."
   apiq:OAR097:
     description: "The base path must contain at least two parts."
     message: "OAR097: Path has too few parts."
@@ -941,6 +1027,24 @@ rules:
     given: "$.paths[?(@property.match(/(get|delete)/))].delete"
     then:
       function: falsy
+  apiq:OAR108:
+    description: "The schemas should match the provided examples."
+    message: "OAR108: Schema does not match the provided example."
+    formats: ['oas2', 'oas3']
+    severity: "error"
+    given: 
+      - "$.paths['/item'].get.responses['200'].content['application/json'].example"
+      - "$.paths['/item'].get.responses['200'].examples['application/json']"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              nombre:
+                type: "string" 
   apiq:OAR109:
     description: "Use default response instead of directly specifying 5XX codes."
     message: "OAR109: Use default response instead of specifying 5XX codes directly."
