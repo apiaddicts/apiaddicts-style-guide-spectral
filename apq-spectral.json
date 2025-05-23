@@ -1021,7 +1021,7 @@
       "severity": "warn",
       "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
       "then": {
-        "function": "required",
+        "function": "truthy",
         "functionOptions": {
           "path": "$.responses.400"
         }
