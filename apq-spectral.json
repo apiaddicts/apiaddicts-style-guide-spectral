@@ -995,12 +995,11 @@
       "description": "Any param in PATH or QUERY should have a Bad Request (400) response.",
       "message": "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response.",
       "severity": "warn",
-      "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
+      "given": "$.paths[*][*].responses",
       "then": {
         "function": "truthy",
-        "functionOptions": {
-          "path": "$.responses.400"
-        }
+        "field": "400",
+        "message": "Operation must define a 400 Bad Request response for parameters in PATH or QUERY."
       }
     },
     "apiq:OAR070": {
