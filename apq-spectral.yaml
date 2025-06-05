@@ -156,7 +156,7 @@ rules:
       functionOptions:
         match: "^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,4}\/?$"
   apiq:OAR017:
-    description: "Resources depth level should be smaller than 5."
+    description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
     documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md
     formats: ['oas2', 'oas3']

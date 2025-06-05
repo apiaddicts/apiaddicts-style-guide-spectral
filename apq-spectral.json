@@ -1136,29 +1136,17 @@
     },
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR076: {{error}}",
+      "message": "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'",
       "severity": "error",
-      "given": [
-        "$.paths[*].parameters.*.schema",
-        "$.paths[*][*].parameters.*.schema",
-        "$.paths[*][*].requestBody.content.*.schema",
-        "$.paths[*][*].responses.*.content.*.schema"
-      ],
+      "given": "$..[?(@.type=='number')]",
       "then": {
-        "function": "apq-schema-format",
+        "field": "format",
+        "function": "enumeration",
         "functionOptions": {
-          "formats": {
-            "number": [
-              "int32",
-              "int64",
-              "float",
-              "double"
-            ],
-            "integer": [
-              "int32",
-              "int64"
-            ]
-          }
+          "values": [
+            "float",
+            "double"
+          ]
         }
       }
     },
@@ -1187,25 +1175,12 @@
     },
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
-      "message": "OAR079: Path parameters should have a 404 Not Found response.",
+      "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
       "severity": "warn",
-      "given": "$.paths[*]",
+      "given": "$.paths[*][*]",
       "then": {
-        "function": "apq-responses",
-        "functionOptions": {
-          "verbs": [
-            "get",
-            "put",
-            "patch",
-            "delete"
-          ],
-          "parameters": [
-            "path"
-          ],
-          "responses": [
-            "404"
-          ]
-        }
+        "field": "responses.404",
+        "function": "truthy"
       }
     },
     "apiq:OAR080": {
@@ -1235,21 +1210,15 @@
       }
     },
     "apiq:OAR082": {
-      "description": "The string properties of the specified names must define a byte or binary format.",
+      "description": "The string properties must define a byte or binary format.",
       "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
       "severity": "error",
-      "given": "$..properties[?(@.type == 'string')]",
+      "given": "$..properties[*]",
       "then": {
-        "function": "apq-properties-schema-format",
+        "field": "format",
+        "function": "pattern",
         "functionOptions": {
-          "formats": [
-            "byte",
-            "binary"
-          ],
-          "properties": [
-            "image",
-            "file"
-          ]
+          "match": "^(byte|binary)$"
         }
       }
     },
@@ -1481,10 +1450,10 @@
       }
     },
     "apiq:OAR104": {
-      "description": "Post requests are not recommended for resource paths containing 'me'.",
-      "message": "OAR104: Post request should not be used on paths containing 'me'.",
+      "description": "POST requests should not be used on paths ending with 'me' or a templated parameter.",
+      "message": "OAR104: POST requests should not target paths ending in 'me' or a path parameter like '{id}'.",
       "severity": "error",
-      "given": "$.paths[?(@property.match(/(me)/))].post",
+      "given": "$.paths[?(/\\/(me|{[^}]+})$/.test(@property))].post",
       "then": {
         "function": "falsy"
       }
