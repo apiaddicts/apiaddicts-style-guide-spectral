@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
@@ -13,7 +13,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/successResponseData"
+                  "$ref": "#/components/schemas/successResponse"
                 }
               }
             }
@@ -22,7 +22,14 @@
             "description": "No content"
           },
           "400": {
-            "$ref": "#/components/responses/errorResponse"
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorResponse"
+                }
+              }
+            }
           },
           "default": {
             "description": "Unknown"
@@ -33,10 +40,10 @@
   },
   "components": {
     "schemas": {
-      "successResponseData": {
+      "successResponse": {
         "type": "object",
         "properties": {
-          "data": {
+          "payload": {
             "type": "object",
             "properties": {
               "tipos": {
@@ -49,44 +56,33 @@
           }
         }
       },
-      "errorResponseData": {
+      "errorResponse": {
         "type": "object",
         "properties": {
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                },
-                "stackTrace": {
-                  "type": "string"
-                }
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer"
               },
-              "required": [
-                "code",
-                "message"
-              ]
-            }
-          }
-        }
-      }
-    },
-    "responses": {
-      "errorResponse": {
-        "description": "Error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/errorResponseData"
-            }
+              "message": {
+                "type": "integer"
+              },
+              "details": {
+                "type": "integer"
+              },
+              "httpStatus": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "httpStatus"
+            ]
           }
         }
       }
     }
   }
-}
+};
