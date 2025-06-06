@@ -2,13 +2,7 @@ functionsDir: './functions'
 functions:
   - apq-alternate-paths
   - apq-custom-schema
-  - apq-schema-format
   - apq-compare-insensitive
-  - apq-naming-convention
-  - apq-default-value
-  - apq-truthy-insensitive
-  - apq-properties-schema-format
-  - apq-responses
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
