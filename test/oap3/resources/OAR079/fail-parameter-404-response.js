@@ -1,26 +1,39 @@
 module.exports = {
-  "openapi" : "3.0.0",
-  "info" : {
-    "version" : "1.0.0",
-    "title" : "Swagger Petstore"
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
   },
-  "paths" : {
-    "/pets/{id}" : {
-      "get" : {
-        "parameters" : [ {
-          "name" : "id",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
+  "paths": {
+    "/items": {
+      "get": {
+        "summary": "Get a list of items",
+        "parameters": [
+          {
+            "name": "param1",
+            "in": "path",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
           }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "Result",
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   }
-}
+};

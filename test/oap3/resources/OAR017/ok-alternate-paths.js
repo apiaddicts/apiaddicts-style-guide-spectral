@@ -1,54 +1,47 @@
 module.exports = {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
-    "title": "Swagger Petstore"
+    "title": "Swagger Petstore",
+    "version": "1.0.0"
   },
   "paths": {
-    "/one": {
+    "/customers/{customerId}/invoices": {
       "get": {
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
-          "default": {
+          "200": {
             "description": "Ok"
           }
         }
       }
     },
-    "/one/{two}": {
+    "/invoices/{invoiceId}": {
       "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
+        "parameters": [
+          {
+            "name": "invoiceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
           }
-        }
-      }
-    },
-    "/one/{two}/three": {
-      "get": {
+        ],
         "responses": {
-          "default": {
-            "description": "Ok"
-          }
-        }
-      }
-    },
-    "/one/{two}/three/{four}": {
-      "get": {
-        "responses": {
-          "default": {
-            "description": "Ok"
-          }
-        }
-      }
-    },
-    "/users/me/favorites": {
-      "get": {
-        "responses": {
-          "default": {
+          "200": {
             "description": "Ok"
           }
         }
       }
     }
   }
-}
+};
