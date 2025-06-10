@@ -179,8 +179,8 @@
       }
     },
     "apiq:OAR011": {
-      "description": "URLs should follow the specified naming convention.",
-      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention.",
+      "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
+      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
       "formats": [
         "oas2",
         "oas3"
@@ -188,9 +188,9 @@
       "severity": "error",
       "given": "$.paths[*]~",
       "then": {
-        "function": "apq-naming-convention",
+        "function": "pattern",
         "functionOptions": {
-          "pattern": "kebabCase"
+          "match": "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
         }
       }
     },
@@ -333,27 +333,24 @@
       "description": "The $total parameter default value should be false.",
       "message": "OAR026: The $total parameter default value should be false.",
       "severity": "error",
-      "given": "$.paths[*][*].parameters[?(@.name == '$total' && @.in == 'query')]",
+      "given": "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]",
       "then": {
-        "field": "schema",
-        "function": "apq-default-value",
-        "functionOptions": {
-          "type": "boolean",
-          "match": "false"
-        }
+        "field": "schema.default",
+        "function": "falsy"
       }
     },
     "apiq:OAR027": {
       "description": "Location header is required in responses with code 201 from POST operations.",
       "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
       "severity": "error",
-      "given": "$.paths[*].post.responses['201']",
+      "given": "$.paths.*.post.responses['201']",
       "then": {
-        "field": "headers",
-        "function": "apq-truthy-insensitive",
-        "functionOptions": {
-          "property": "Location"
-        }
+        "field": "headers.location.schema.type",
+        "function": "truthy"
       }
     },
     "apiq:OAR028": {
@@ -368,57 +365,54 @@
     },
     "apiq:OAR029": {
       "description": "A response not compliant with the standard may cause application issues.",
-      "message": "OAR029: Response schema must be compliant with the standard.",
+      "message": "OAR029: A response not compliant with the standard may cause application issues.",
+      "formats": [
+        "oas2",
+        "oas3"
+      ],
       "severity": "error",
-      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "given": "$.components.schemas.errorResponse",
       "then": {
-        "function": "apq-custom-schema",
+        "function": "schema",
         "functionOptions": {
-          "except": [
-            "/status"
-          ],
           "schema": {
             "type": "object",
             "properties": {
-              "status": {
+              "properties": {
                 "type": "object",
                 "properties": {
-                  "code": {
-                    "type": "integer"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "internal_code": {
-                    "type": "string"
-                  },
-                  "errors": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "type": "object",
+                  "error": {
+                    "type": "object",
+                    "properties": {
                       "properties": {
-                        "name": {
-                          "type": "string"
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "details": {
+                            "type": "array"
+                          },
+                          "httpStatus": {
+                            "type": "integer"
+                          }
                         },
-                        "value": {
-                          "type": "string"
-                        }
+                        "required": [
+                          "code",
+                          "message",
+                          "httpStatus"
+                        ]
                       }
                     }
                   }
-                },
-                "required": [
-                  "code"
-                ]
-              },
-              "payload": {
-                "type": "object"
+                }
               }
             },
             "required": [
-              "status",
-              "payload"
+              "properties"
             ]
           }
         }
@@ -589,32 +583,14 @@
     },
     "apiq:OAR037": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR037: {{error}}",
+      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, or ipv6).",
       "severity": "error",
-      "given": [
-        "$.paths[*].parameters.*.schema",
-        "$.paths[*][*].parameters.*.schema",
-        "$.paths[*][*].requestBody.content.*.schema",
-        "$.paths[*][*].responses.*.content.*.schema"
-      ],
+      "given": "$..schema..[?(@.type=='string')]",
       "then": {
-        "function": "apq-schema-format",
+        "field": "format",
+        "function": "pattern",
         "functionOptions": {
-          "formats": {
-            "string": [
-              "date",
-              "date-time",
-              "password",
-              "byte",
-              "binary",
-              "email",
-              "uuid",
-              "uri",
-              "hostname",
-              "ipv4",
-              "ipv6"
-            ]
-          }
+          "match": "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6)$"
         }
       }
     },
@@ -1019,12 +995,11 @@
       "description": "Any param in PATH or QUERY should have a Bad Request (400) response.",
       "message": "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response.",
       "severity": "warn",
-      "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
+      "given": "$.paths[*][*].responses",
       "then": {
         "function": "truthy",
-        "functionOptions": {
-          "path": "$.responses.400"
-        }
+        "field": "400",
+        "message": "Operation must define a 400 Bad Request response for parameters in PATH or QUERY."
       }
     },
     "apiq:OAR070": {
@@ -1160,29 +1135,17 @@
     },
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR076: {{error}}",
+      "message": "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'",
       "severity": "error",
-      "given": [
-        "$.paths[*].parameters.*.schema",
-        "$.paths[*][*].parameters.*.schema",
-        "$.paths[*][*].requestBody.content.*.schema",
-        "$.paths[*][*].responses.*.content.*.schema"
-      ],
+      "given": "$..[?(@.type=='number')]",
       "then": {
-        "function": "apq-schema-format",
+        "field": "format",
+        "function": "enumeration",
         "functionOptions": {
-          "formats": {
-            "number": [
-              "int32",
-              "int64",
-              "float",
-              "double"
-            ],
-            "integer": [
-              "int32",
-              "int64"
-            ]
-          }
+          "values": [
+            "float",
+            "double"
+          ]
         }
       }
     },
@@ -1211,25 +1174,12 @@
     },
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
-      "message": "OAR079: Path parameters should have a 404 Not Found response.",
+      "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
       "severity": "warn",
-      "given": "$.paths[*]",
+      "given": "$.paths[*][*]",
       "then": {
-        "function": "apq-responses",
-        "functionOptions": {
-          "verbs": [
-            "get",
-            "put",
-            "patch",
-            "delete"
-          ],
-          "parameters": [
-            "path"
-          ],
-          "responses": [
-            "404"
-          ]
-        }
+        "field": "responses.404",
+        "function": "truthy"
       }
     },
     "apiq:OAR080": {
@@ -1259,21 +1209,15 @@
       }
     },
     "apiq:OAR082": {
-      "description": "The string properties of the specified names must define a byte or binary format.",
+      "description": "The string properties must define a byte or binary format.",
       "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
       "severity": "error",
-      "given": "$..properties[?(@.type == 'string')]",
+      "given": "$..properties[*]",
       "then": {
-        "function": "apq-properties-schema-format",
+        "field": "format",
+        "function": "pattern",
         "functionOptions": {
-          "formats": [
-            "byte",
-            "binary"
-          ],
-          "properties": [
-            "image",
-            "file"
-          ]
+          "match": "^(byte|binary)$"
         }
       }
     },
@@ -1505,10 +1449,10 @@
       }
     },
     "apiq:OAR104": {
-      "description": "Post requests are not recommended for resource paths containing 'me'.",
-      "message": "OAR104: Post request should not be used on paths containing 'me'.",
+      "description": "POST requests should not be used on paths ending with 'me' or a templated parameter.",
+      "message": "OAR104: POST requests should not target paths ending in 'me' or a path parameter like '{id}'.",
       "severity": "error",
-      "given": "$.paths[?(@property.match(/(me)/))].post",
+      "given": "$.paths[?(/\\/(me|{[^}]+})$/.test(@property))].post",
       "then": {
         "function": "falsy"
       }

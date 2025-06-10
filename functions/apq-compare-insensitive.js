@@ -1,29 +1,33 @@
-
 /**
- * @param {Array<string>} given
- * @param {object} options
- * @param {string} options.property
- * @param {string} options.equalTo
- * @param {string} options.result
- * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
+ * @param {object} given                   
+ * @param {object} options                 
+ * @param {string} options.property        
+ * @param {string} options.equalTo         
+ * @param {string} options.result          
+ * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context    
+ *                                         
  */
 module.exports = (given, options, context) => {
   const errors = [];
-  if (!given) return errors;
+  if (!given) {
+    return errors;
+  }
 
-  if (given[options.property] && given[options.equalTo] &&
-      given[options.property].toUpperCase() === given[options.equalTo].toUpperCase() && options.result === "falsy") {
+  const propA = given[options.property];
+  const propB = given[options.equalTo];
+
+  if (
+    typeof propA === 'string' &&
+    typeof propB === 'string' &&
+    options.result === 'falsy' &&
+    propA.trim().toUpperCase() === propB.trim().toUpperCase()
+  ) {
     errors.push({
-      message: context.rule.message
+      message: context.rule.message,
+      path: [...context.path, options.property]
     });
   }
 
-  //   TODO: When 'truthy' required, implement the following logic:
-  //   else if (options.result === 'truthy') {
-  //     errors.push({
-  //       message: context.rule.message
-  //     });
-  //   }
-
   return errors;
 };
+
