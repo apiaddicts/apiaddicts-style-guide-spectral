@@ -1326,11 +1326,15 @@
       "description": "API name must start with prefix 'api-'.",
       "message": "OAR099: API name must start with prefix 'api-'.",
       "severity": "error",
-      "given": "$.servers[*].url",
+      "given": [
+        "$.servers[*].url",
+        "$.paths[*]~",
+        "$.basePath"
+      ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^https?://[^/]+/api-[^/]+"
+          "match": ".*?/api-[^/]+/v[0-9]+"
         }
       }
     },
