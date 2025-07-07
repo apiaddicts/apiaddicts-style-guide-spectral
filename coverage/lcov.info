@@ -165,7 +165,7 @@ FN:8,(anonymous_0)
 FNF:1
 FNH:0
 FNDA:0,(anonymous_0)
-DA:8,1
+DA:8,0
 DA:9,0
 DA:10,0
 DA:12,0
@@ -174,7 +174,7 @@ DA:16,0
 DA:17,0
 DA:22,0
 LF:8
-LH:1
+LH:0
 BRDA:10,0,0,0
 BRDA:10,0,1,0
 BRDA:12,1,0,0
@@ -194,14 +194,14 @@ FN:16,(anonymous_0)
 FNF:1
 FNH:0
 FNDA:0,(anonymous_0)
-DA:1,1
-DA:3,1
-DA:16,1
+DA:1,0
+DA:3,0
+DA:16,0
 DA:17,0
 DA:18,0
 DA:20,0
 LF:6
-LH:3
+LH:0
 BRDA:18,0,0,0
 BRDA:18,0,1,0
 BRF:2
@@ -213,7 +213,7 @@ FN:10,checkTypeAndFormat
 FNF:1
 FNH:0
 FNDA:0,checkTypeAndFormat
-DA:10,1
+DA:10,0
 DA:11,0
 DA:12,0
 DA:15,0
@@ -224,7 +224,7 @@ DA:20,0
 DA:21,0
 DA:28,0
 LF:10
-LH:1
+LH:0
 BRDA:11,0,0,0
 BRDA:11,0,1,0
 BRDA:11,1,0,0
@@ -254,7 +254,7 @@ FNDA:0,(anonymous_1)
 FNDA:0,(anonymous_2)
 FNDA:0,(anonymous_3)
 FNDA:0,(anonymous_4)
-DA:2,1
+DA:2,0
 DA:3,0
 DA:4,0
 DA:6,0
@@ -269,7 +269,7 @@ DA:18,0
 DA:19,0
 DA:25,0
 LF:14
-LH:1
+LH:0
 BRDA:4,0,0,0
 BRDA:4,0,1,0
 BRDA:6,1,0,0
@@ -299,7 +299,7 @@ FN:12,checkTypeAndFormat
 FNF:1
 FNH:0
 FNDA:0,checkTypeAndFormat
-DA:12,1
+DA:12,0
 DA:13,0
 DA:14,0
 DA:17,0
@@ -331,7 +331,7 @@ DA:87,0
 DA:88,0
 DA:97,0
 LF:31
-LH:1
+LH:0
 BRDA:13,0,0,0
 BRDA:13,0,1,0
 BRDA:13,1,0,0
@@ -387,13 +387,13 @@ FNF:2
 FNH:0
 FNDA:0,(anonymous_0)
 FNDA:0,(anonymous_1)
-DA:8,1
+DA:8,0
 DA:9,0
 DA:11,0
 DA:12,0
 DA:17,0
 LF:5
-LH:1
+LH:0
 BRDA:11,0,0,0
 BRDA:11,0,1,0
 BRDA:11,1,0,0

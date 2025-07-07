@@ -3,22 +3,17 @@
   "functions": [
     "apq-alternate-paths",
     "apq-custom-schema",
-    "apq-schema-format",
-    "apq-compare-insensitive",
-    "apq-naming-convention",
-    "apq-default-value",
-    "apq-truthy-insensitive",
-    "apq-properties-schema-format",
-    "apq-responses"
+    "apq-compare-insensitive"
+  ],
+   "extends": [
+    "spectral:asyncapi",
+    "spectral:oas"
   ],
   "rules": {
     "apiq:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
       "message": "OAR001: HTTPS protocol is mandatory.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR001.md",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.servers[*].url",
       "then": {
@@ -32,10 +27,6 @@
       "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
       "message": "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
       "then": [
@@ -50,10 +41,6 @@
       "description": "A description can help other developers to understand the correct use of the scope.",
       "message": "OAR003: Scope must define a 'description' attribute.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR003.md",
-      "formats": [
-      "oas2",
-      "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
       "then": [
@@ -68,10 +55,6 @@
       "description": "A role with forbidden characters may cause problems in some applications.",
       "message": "OAR004: Role should not contain forbidden characters (e.g. special characters like €, *, etc.).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md",
-      "formats": [
-      "oas2",
-      "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
@@ -105,9 +88,6 @@
     "apiq:OAR006": {
       "description": "Routes must define request media types supported by the API.",
       "message": "OAR006: Specify at least one Media Type in the content of the request body.",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR006.md",
       "given": "$.paths[*][post,put,patch]",
@@ -127,9 +107,6 @@
       "message": "OAR007: Specify at least one Media Type in the content of the response body.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR007.md",
       "severity": "error",
-      "formats": [
-        "oas3"
-      ],
       "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
       "then": [
         {
@@ -142,10 +119,6 @@
       "description": "HTTP verbs not encouraged.",
       "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch')]",
       "then": {
@@ -155,9 +128,6 @@
     "apiq:OAR009": {
       "description": "Default request media type should be defined for operations.",
       "message": "OAR009: Default request media type is mandatory.",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "given": "$..content",
       "then": {
@@ -169,9 +139,6 @@
       "description": "Default response media type should be defined for responses.",
       "message": "OAR010: Default response media type is mandatory.",
       "severity": "warn",
-      "formats": [
-        "oas3"
-      ],
       "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
       "then": {
         "field": "content['application/json']",
@@ -181,10 +148,6 @@
     "apiq:OAR011": {
       "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
       "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths[*]~",
       "then": {
@@ -197,10 +160,6 @@
     "apiq:OAR013": {
       "description": "Default response is required for all operations.",
       "message": "OAR013: Default response is required.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].responses",
       "then": {
@@ -211,10 +170,6 @@
     "apiq:OAR014": {
       "description": "Resources depth level should be below the non-suggested range.",
       "message": "OAR014: The number of parts of the path must be less than 4.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "warn",
       "given": "$.paths.*~",
       "then": {
@@ -227,10 +182,6 @@
     "apiq:OAR015": {
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR015: Path exceeds the maximum allowed depth level of 5.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -244,10 +195,6 @@
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR017: Resource path should alternate static and parametrized parts.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -342,10 +289,6 @@
     "apiq:OAR027": {
       "description": "Location header is required in responses with code 201 from POST operations.",
       "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths.*.post.responses['201']",
       "then": {
@@ -366,10 +309,6 @@
     "apiq:OAR029": {
       "description": "A response not compliant with the standard may cause application issues.",
       "message": "OAR029: A response not compliant with the standard may cause application issues.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.components.schemas.errorResponse",
       "then": {
@@ -610,10 +549,6 @@
     "apiq:OAR040": {
       "description": "A scope name non-compliant with the standard may cause problems at application level.",
       "message": "OAR040: Scope name must follow the 'apfc_sc_' prefix standard.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].name",
       "then": {
@@ -626,10 +561,6 @@
     "apiq:OAR041": {
       "description": "Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.",
       "message": "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths['/pets'].get",
       "then": {
@@ -1487,10 +1418,6 @@
     "apiq:OAR108": {
       "description": "The schemas should match the provided examples.",
       "message": "OAR108: Schema does not match the provided example.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": [
         "$.paths['/item'].get.responses['200'].content['application/json'].example",
