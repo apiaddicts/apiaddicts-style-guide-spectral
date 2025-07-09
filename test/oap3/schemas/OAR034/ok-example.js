@@ -8,7 +8,7 @@ module.exports = {
     "/endpoint": {
       "get": {
         "responses": {
-          "200": {
+          "206": {
             "description": "Ok",
             "content": {
               "application/json": {
@@ -44,14 +44,14 @@ module.exports = {
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/standard_response"
+            "$ref": "#/components/schemas/paged_response"
           }
         ],
         "properties": {
-          "data": {
+          "payload": {
             "type": "object",
             "properties": {
-              "tipos": {
+              "values": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -59,43 +59,65 @@ module.exports = {
               }
             }
           }
-        },
-        "required": ["data", "status"]
+        }
       },
-      "standard_response": {
+      "paged_response": {
         "type": "object",
         "properties": {
-          "status": {
+          "paging": {
             "type": "object",
             "properties": {
-              "http_status": {
-                "type": "string"
-              },
-              "code": {
+              "init": {
                 "type": "integer"
               },
-              "errors": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
-                    },
-                    "value": {
-                      "type": "string"
-                    }
+              "limit": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "numPages": {
+                "type": "integer"
+              },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "self": {
+                    "$ref": "#/components/schemas/link"
+                  },
+                  "first": {
+                    "$ref": "#/components/schemas/link"
+                  },
+                  "previous": {
+                    "$ref": "#/components/schemas/link"
+                  },
+                  "next": {
+                    "$ref": "#/components/schemas/link"
+                  },
+                  "last": {
+                    "$ref": "#/components/schemas/link"
                   }
-                }
-              },
-              "description": {
-                "type": "string"
-              },
-              "internal_code": {
-                "type": "string"
+                },
+                "required": [
+                  "self",
+                  "previous",
+                  "next"
+                ]
               }
             },
-            "required": ["http_status", "code", "description", "errors"]
+            "required": [
+              "init",
+              "limit",
+              "links"
+            ]
+          }
+        }
+      },
+      "link": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string"
           }
         }
       }
