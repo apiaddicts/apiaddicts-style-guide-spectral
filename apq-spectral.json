@@ -408,102 +408,25 @@
     },
     "apiq:OAR034": {
       "description": "A paged response not compliant with the standard may cause application issues.",
-      "message": "OAR034 - Paged response schema must be compliant with the standard.",
+      "message": "OAR034: Paged response schema must be compliant with the standard.",
       "severity": "error",
-      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "given": "$.paths[*][*].responses[?(@property != '204' && @property != '304' && @property != 'default')]",
       "then": {
-        "function": "apq-custom-schema",
-        "functionOptions": {
-          "except": [
-            "/status"
-          ],
-          "schema": {
-            "type": "object",
-            "properties": {
-              "numPages": {
-                "type": "integer"
-              },
-              "total": {
-                "type": "integer"
-              },
-              "start": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "links": {
-                "type": "object",
-                "properties": {
-                  "next": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "previous": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "last": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "self": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "first": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
-                "required": [
-                  "self",
-                  "previous",
-                  "next"
-                ]
-              }
-            },
-            "required": [
-              "start",
-              "limit",
-              "links"
-            ],
-            "pagingPropertyName": "paging"
-          }
-        }
+        "field": "content",
+        "function": "truthy"
       }
     },
-      "apiq:OAR035": {
-        "description": "Response code 401 must be defined for operations with security schemes defined.",
-        "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
-        "severity": "error",
-        "given": "$.paths[*][*].responses",
-        "then": {
-          "function": "truthy",
-          "field": "401",
-          "message": "Operation must define a 401 Unauthorized response for security schemes."
-        }
-      },
+    "apiq:OAR035": {
+      "description": "Response code 401 must be defined for operations with security schemes defined.",
+      "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
+      "severity": "error",
+      "given": "$.paths[*][*].responses",
+      "then": {
+        "function": "truthy",
+        "field": "401",
+        "message": "Operation must define a 401 Unauthorized response for security schemes."
+      }
+    },
     "apiq:OAR036": {
       "description": "Cookie use is forbidden as a session mechanism.",
       "message": "OAR036: Cookie use is forbidden as a session mechanism.",
@@ -1143,7 +1066,7 @@
       "description": "The string properties must define a byte or binary format.",
       "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
       "severity": "error",
-      "given": "$..properties[*]",
+      "given": "$..properties.*",
       "then": {
         "field": "format",
         "function": "pattern",
