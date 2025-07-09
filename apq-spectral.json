@@ -292,7 +292,7 @@
       "severity": "error",
       "given": "$.paths.*.post.responses['201']",
       "then": {
-        "field": "headers.location.schema.type",
+        "field": "headers.Location.schema.type",
         "function": "truthy"
       }
     },

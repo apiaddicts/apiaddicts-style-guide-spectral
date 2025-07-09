@@ -75,11 +75,7 @@ module.exports = {
                 "type": "string"
               }
             },
-            "required": [
-              "code",
-              "message",
-              "httpStatus"
-            ]
+            "required": ["code", "message", "httpStatus"]
           }
         }
       }
