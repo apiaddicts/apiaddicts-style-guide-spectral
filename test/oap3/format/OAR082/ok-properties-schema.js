@@ -25,7 +25,7 @@ module.exports = {
                     },
                     "precio": {
                       "type": "string",
-                      "format": "byte"
+                      "format": "binary"
                     }
                   }
                 }

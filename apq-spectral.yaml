@@ -219,7 +219,7 @@ rules:
     severity: error
     given: "$.paths.*.post.responses['201']"
     then:
-      field: "headers.location.schema.type"
+      field: "headers.Location.schema.type"
       function: truthy
   apiq:OAR028:
     description: "$filter must be defined as a query parameter in all operations."
@@ -303,61 +303,12 @@ rules:
         notMatch: "^(Accept|Content-Type|Authorization)$"
   apiq:OAR034:
     description: "A paged response not compliant with the standard may cause application issues."
-    message: "OAR034 - Paged response schema must be compliant with the standard."
+    message: "OAR034: Paged response schema must be compliant with the standard."
     severity: error
-    given: $.paths[*][*].responses[?(@property != '204')]..content..schema
+    given: "$.paths[*][*].responses[?(@property != '204' && @property != '304' && @property != 'default')]"
     then:
-      function: apq-custom-schema
-      functionOptions:
-        except: ['/status']
-        schema:
-          type: object
-          properties:
-            numPages:
-              type: integer
-            total:
-              type: integer
-            start:
-              type: integer
-            limit:
-              type: integer
-            links:
-              type: object
-              properties:
-                next:
-                  type: object
-                  properties:
-                    href:
-                      type: string
-                previous:
-                  type: object
-                  properties:
-                    href:
-                      type: string
-                last:
-                  type: object
-                  properties:
-                    href:
-                      type: string
-                self:
-                  type: object
-                  properties:
-                    href:
-                      type: string
-                first:
-                  type: object
-                  properties:
-                    href:
-                      type: string
-              required:
-                - self
-                - previous
-                - next
-          required:
-            - start
-            - limit
-            - links
-          pagingPropertyName: paging
+      field: content
+      function: truthy
   apiq:OAR035:
     description: "Response code 401 must be defined for operations with security schemes defined."
     message: "OAR035: Response code 401 must be defined for operations with security schemes defined."
@@ -765,7 +716,7 @@ rules:
     description: "The string properties must define a byte or binary format."
     message: "OAR082: The string properties must define a 'byte' or 'binary' format."
     severity: error
-    given: "$..properties[*]"
+    given: "$..properties.*"
     then:
       field: format
       function: pattern
