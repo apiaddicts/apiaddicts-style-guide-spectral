@@ -4,7 +4,8 @@
     "apq-alternate-paths",
     "apq-custom-schema",
     "apq-compare-insensitive",
-    "apq-parameter-naming-convention"
+    "apq-parameter-naming-convention",
+    "apq-resources-by-verb"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -263,6 +264,16 @@
             "me"
           ]
         }
+      }
+    },
+    "apiq:OAR018": {
+      "description": "Operation not recommended for resource path depending on HTTP verb",
+      "message": "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md",
+      "severity": "warn",
+      "given": "$.paths",
+      "then": {
+        "function": "apq-resources-by-verb"
       }
     },
     "apiq:OAR019": {
