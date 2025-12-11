@@ -3,7 +3,8 @@
   "functions": [
     "apq-alternate-paths",
     "apq-custom-schema",
-    "apq-compare-insensitive"
+    "apq-compare-insensitive",
+    "apq-parameter-naming-convention"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -154,6 +155,23 @@
         "function": "pattern",
         "functionOptions": {
           "match": "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+        }
+      }
+    },
+    "apiq:OAR012": {
+      "description": "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case, kebab-case (default), camelCase or UpperCamelCase",
+      "message": "OAR012: Path params, query params, object names and property names must follow the configured naming convention.",
+      "severity": "warn",
+      "given": [
+        "$.paths[*][*].parameters[*].name",
+        "$.paths[*][*].parameters[*].schema..properties.*",
+        "$.components.schemas..properties.*",
+        "$.components.schemas.*"
+      ],
+      "then": {
+        "function": "apq-parameter-naming-convention",
+        "functionOptions": {
+          "pattern": "kebab-case"
         }
       }
     },
