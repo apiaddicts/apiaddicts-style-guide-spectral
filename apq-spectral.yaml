@@ -141,15 +141,27 @@ rules:
         match: "^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,4}\/?$"
   apiq:OAR016:
     description: "Numeric types requires a valid format."
-    message: "OAR016: Numeric types must use a valid format (integer: int32/int64, number: float/double)."
+    message: "OAR016: Numeric types must use a valid format for their type."
     documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md
     severity: error
-    given: "$..[?(@.type && @.format)]"
+    given:
+      - "$..[?(@.type == 'integer' && @.format)]"
+      - "$..[?(@.type == 'number' && @.format)]"
     then:
-      function: pattern
+      function: schema
       functionOptions:
-        match: false
-        regex: ("type"\s*:\s*"integer"\s*,\s*"format"\s*:\s*"(int32|int64)"|"type"\s*:\s*"number"\s*,\s*"format"\s*:\s*"(float|double)")
+        schema:
+          oneOf:
+            - properties:
+                type:
+                  const: integer
+                format:
+                  enum: [int32, int64]
+            - properties:
+                type:
+                  const: number
+                format:
+                  enum: [float, double]
   apiq:OAR017:
     description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
