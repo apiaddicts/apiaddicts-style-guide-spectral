@@ -159,19 +159,21 @@
       }
     },
     "apiq:OAR012": {
-      "description": "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case, kebab-case (default), camelCase or UpperCamelCase",
+      "description": "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase",
       "message": "OAR012: Path params, query params, object names and property names must follow the configured naming convention.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md",
       "severity": "warn",
       "given": [
-        "$.paths[*][*].parameters[*].name",
-        "$.paths[*][*].parameters[*].schema..properties.*",
-        "$.components.schemas..properties.*",
-        "$.components.schemas.*"
+        "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name",
+        "$.paths[*][*].parameters[*].schema.properties.*~",
+        "$.paths[*][*].requestBody..schema.properties.*~",
+        "$.paths[*][*].responses..schema.properties.*~",
+        "$.components.schemas.*~"
       ],
       "then": {
         "function": "apq-parameter-naming-convention",
         "functionOptions": {
-          "pattern": "kebab-case"
+          "namingConvention": "snake_case"
         }
       }
     },
