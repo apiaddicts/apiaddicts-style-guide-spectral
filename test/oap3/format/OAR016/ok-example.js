@@ -1,26 +1,35 @@
-{
-  "openapi": "3.0.0",
+module.exports = {
+  "openapi": "3.0.1",
   "info": {
-    "version": "1.0.0",
-    "title": "Swagger Petstore"
+    "title": "Swagger Petstore",
+    "version": "1.0.0"
   },
   "paths": {
     "/invoices": {
       "get": {
         "responses": {
           "200": {
-            "description": "A invoice.",
+            "description": "An invoice.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "quantity": {
+                      "type": "integer"
+                    },
                     "price": {
                       "type": "number",
                       "format": "double"
                     },
                     "nested": {
-                      "$ref": "#/components/schemas/nested"
+                      "type": "object",
+                      "properties": {
+                        "count": {
+                          "type": "integer",
+                          "format": "int64"
+                        }
+                      }
                     }
                   }
                 }
@@ -30,18 +39,5 @@
         }
       }
     }
-  },
-  "components": {
-    "schemas": {
-      "nested": {
-        "type": "object",
-        "properties": {
-          "value": {
-            "type": "number", # Noncompliant {{OAR016: Numeric types requires a valid format}}
-            "format": "int64"
-          }
-        }
-      }
-    }
   }
-}
+};

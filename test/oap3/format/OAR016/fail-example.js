@@ -1,4 +1,4 @@
-{
+module.exports = {
   "openapi": "3.0.0",
   "info": {
     "version": "1.0.0",
@@ -9,22 +9,22 @@
       "get": {
         "responses": {
           "200": {
-            "description": "A invoice.",
+            "description": "An invoice.",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "price": {
+                    "amount": {
                       "type": "number",
-                      "format": "double"
+                      "format": "decimal"
                     },
                     "nested": {
                       "type": "object",
                       "properties": {
-                        "value": {
-                          "type": "number", # Noncompliant {{OAR016: Numeric types requires a valid format}}
-                          "format": "int64"
+                        "productId": {
+                          "type": "integer",
+                          "format": "big"
                         }
                       }
                     }
@@ -37,4 +37,4 @@
       }
     }
   }
-}
+};

@@ -211,6 +211,45 @@
         }
       }
     },
+    "apiq:OAR016": {
+      "description": "Numeric types requires a valid format.",
+      "message": "OAR016: Numeric types must use a valid format for their type.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
+      "severity": "error",
+      "given": [
+        "$..[?(@.type == 'integer' && @.format)]",
+        "$..[?(@.type == 'number' && @.format)]"
+      ],
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "properties": {
+                  "type": {
+                    "const": "integer"
+                  },
+                  "format": {
+                    "enum": ["int32", "int64"]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "type": {
+                    "const": "number"
+                  },
+                  "format": {
+                    "enum": ["float", "double"]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
     "apiq:OAR017": {
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR017: Resource path should alternate static and parametrized parts.",
