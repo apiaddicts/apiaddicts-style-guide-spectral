@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/20</span>
+                <span class='fraction'>16/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>10/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">10.52% </span>
+                <span class="strong">84.21% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/19</span>
+                <span class='fraction'>16/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -99,74 +99,74 @@
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
-const isVariable = <span class="fstat-no" title="function not covered" >(p</span>art) =&gt; {
-<span class="cstat-no" title="statement not covered" >  return (part.startsWith('{') &amp;&amp; part.endsWith('}'));</span>
+const isVariable = (part) =&gt; {
+  return (part.startsWith('{') &amp;&amp; part.endsWith('}'));
 }
 &nbsp;
-module.exports = <span class="fstat-no" title="function not covered" >(g</span>iven, { except }, context) =&gt; {
-  const result = <span class="cstat-no" title="statement not covered" >[];</span>
-  const paths = <span class="cstat-no" title="statement not covered" >given || [];</span>
-<span class="cstat-no" title="statement not covered" >  if (paths.length === 0) <span class="cstat-no" title="statement not covered" >return result;</span></span>
+module.exports = (given, { except }, context) =&gt; {
+  const result = [];
+  const paths = given || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (paths.length === 0) <span class="cstat-no" title="statement not covered" >return result;</span>
 &nbsp;
-  const parts = <span class="cstat-no" title="statement not covered" >paths.substr(1).split('/');</span>
-  let previousIsVar = <span class="cstat-no" title="statement not covered" >isVariable(parts.shift());</span>
-<span class="cstat-no" title="statement not covered" >  if (previousIsVar) {</span>
+  const parts = paths.substr(1).split('/');
+  let previousIsVar = isVariable(parts.shift());
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (previousIsVar) {
 <span class="cstat-no" title="statement not covered" >    return [{</span>
       message: context.rule.message,
     }];
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  for (const part of parts) {</span>
-<span class="cstat-no" title="statement not covered" >    if (except &amp;&amp; except.includes(part)) {</span>
+  for (const part of parts) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (except &amp;&amp; except.includes(part)) {
 <span class="cstat-no" title="statement not covered" >      previousIsVar = true;</span>
 <span class="cstat-no" title="statement not covered" >      continue;</span>
     }
 &nbsp;
-    const currentIsVariable = <span class="cstat-no" title="statement not covered" >isVariable(part);</span>
-<span class="cstat-no" title="statement not covered" >    if (currentIsVariable === previousIsVar) {</span>
-<span class="cstat-no" title="statement not covered" >      return [{</span>
+    const currentIsVariable = isVariable(part);
+    if (currentIsVariable === previousIsVar) {
+      return [{
         message: context.rule.message,
       }];
     }
-<span class="cstat-no" title="statement not covered" >    previousIsVar = currentIsVariable;</span>
+    previousIsVar = currentIsVariable;
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return result;</span>
+  return result;
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -175,7 +175,7 @@ module.exports = <span class="fstat-no" title="function not covered" >(g</span>i
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-09T15:33:48.000Z
+                at 2025-12-16T21:08:07.399Z
             </div>
         <script src="prettify.js"></script>
         <script>
