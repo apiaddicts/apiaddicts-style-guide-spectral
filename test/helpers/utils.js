@@ -7,7 +7,7 @@ const AsyncFunction = (async () => {}).constructor;
 
 const rulesetFile = './apq-spectral.yaml';
 
-async function linterForRule(rule) {
+async function linterForRule(rule, { namingConvention } = {}) {
   const linter = new Spectral();
 
   const m = {};
@@ -27,6 +27,12 @@ async function linterForRule(rule) {
       delete ruleset.rules[key];
     }
   });
+  if (namingConvention && ruleset.rules[rule] && ruleset.rules[rule].then) {
+    ruleset.rules[rule].then.functionOptions = {
+      ...ruleset.rules[rule].then.functionOptions,
+      namingConvention,
+    };
+  }
   linter.setRuleset(ruleset);
   return linter;
 }
