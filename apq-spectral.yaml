@@ -197,6 +197,8 @@ rules:
     given: "$.paths"
     then:
       function: apq-resources-by-verb
+      functionOptions:
+        allowed-resources-paths: ""
   apiq:OAR019:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."

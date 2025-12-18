@@ -273,7 +273,10 @@
       "severity": "warn",
       "given": "$.paths",
       "then": {
-        "function": "apq-resources-by-verb"
+        "function": "apq-resources-by-verb",
+        "functionOptions": {
+          "allowed-resources-paths": ""
+        }
       }
     },
     "apiq:OAR019": {
