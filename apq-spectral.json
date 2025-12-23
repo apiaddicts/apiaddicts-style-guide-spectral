@@ -5,7 +5,8 @@
     "apq-custom-schema",
     "apq-compare-insensitive",
     "apq-parameter-naming-convention",
-    "apq-resources-by-verb"
+    "apq-resources-by-verb",
+    "apq-at-most-one-body-parameter"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -648,6 +649,18 @@
           }
         }
       ]
+    },
+    "apiq:OAR048": {
+      "description": "APIs must define at most one body parameter.",
+      "message": "OAR048: An operation can have at most one body parameter",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md",
+      "severity": "error",
+      "formats": ["oas2"],
+      "given": "$.paths[*][*]",
+      "then": {
+        "field": "parameters",
+        "function": "apq-at-most-one-body-parameter"
+      }
     },
     "apiq:OAR049": {
       "description": "204 No Content MUST NOT return any content.",
