@@ -6,6 +6,7 @@ functions:
   - apq-parameter-naming-convention
   - apq-resources-by-verb
   - apq-at-most-one-body-parameter
+  - apq-standard-response-codes
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -429,6 +430,40 @@ rules:
       function: pattern
       functionOptions:
         match: "^data|error$"
+  apiq:OAR039:
+    description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
+    message: "{{error}}"
+    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR039.md
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      function: apq-standard-response-codes
+      functionOptions:
+        resources-exclusions:
+          - "get:/status"
+        required-codes-by-resources-paths: >
+          ;get:^/[^/{}]+$:200|206,400,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|206,400,500,503,404
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|206,400,500,503,404
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;post:^/[^/{}]+$:200|201|202,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|201|202,400,415,500,503,404
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|201|202,400,415,500,503,404
+          ;post:^/[^/{}]+/get$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/get$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/delete$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/delete$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
   apiq:OAR040:
     description: "A scope name non-compliant with the standard may cause problems at application level."
     message: "OAR040: Scope name must follow the 'apfc_sc_' prefix standard."
