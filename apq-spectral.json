@@ -5,6 +5,7 @@
     "apq-custom-schema",
     "apq-compare-insensitive",
     "apq-parameter-naming-convention",
+    "apq-resources-by-verb",
     "apq-at-most-one-body-parameter"
   ],
    "extends": [
@@ -263,6 +264,19 @@
           "except": [
             "me"
           ]
+        }
+      }
+    },
+    "apiq:OAR018": {
+      "description": "Operation not recommended for resource path depending on HTTP verb",
+      "message": "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md",
+      "severity": "warn",
+      "given": "$.paths",
+      "then": {
+        "function": "apq-resources-by-verb",
+        "functionOptions": {
+          "allowed-resources-paths": ";get:^/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;post:^/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$"
         }
       }
     },

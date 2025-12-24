@@ -4,6 +4,7 @@ functions:
   - apq-custom-schema
   - apq-compare-insensitive
   - apq-parameter-naming-convention
+  - apq-resources-by-verb
   - apq-at-most-one-body-parameter
 extends:
   - spectral:asyncapi
@@ -189,6 +190,44 @@ rules:
       function: apq-alternate-paths
       functionOptions:
         except: ["me"]
+  apiq:OAR018:
+    description: Operation not recommended for resource path depending on HTTP verb
+    message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
+    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md
+    severity: warn
+    given: "$.paths"
+    then:
+      function: apq-resources-by-verb
+      functionOptions:
+        allowed-resources-paths: |
+          ;get:^/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;post:^/[^/{}]+$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;post:^/[^/{}]+/get$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/get$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/get$
+          ;post:^/[^/{}]+/delete$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/delete$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/delete$
+
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
   apiq:OAR019:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."
