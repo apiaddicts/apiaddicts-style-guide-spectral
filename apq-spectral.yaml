@@ -119,7 +119,7 @@ rules:
   apiq:OAR012:
     description: "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase"
     message: "OAR012: Path params, query params, object names and property names must follow the configured naming convention."
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md"
     severity: warn
     given:
       - "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name"
@@ -160,7 +160,7 @@ rules:
   apiq:OAR016:
     description: "Numeric types requires a valid format."
     message: "OAR016: Numeric types must use a valid format for their type."
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md"
     severity: error
     given:
       - "$..[?(@.type == 'integer' && @.format)]"
@@ -183,7 +183,7 @@ rules:
   apiq:OAR017:
     description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md"
     severity: error
     given: "$.paths.*~"
     then:
@@ -193,7 +193,7 @@ rules:
   apiq:OAR018:
     description: Operation not recommended for resource path depending on HTTP verb
     message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md"
     severity: warn
     given: "$.paths"
     then:
@@ -511,7 +511,7 @@ rules:
   apiq:OAR048:
     description: APIs must define at most one body parameter.
     message: "OAR048: An operation can have at most one body parameter"
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md"
     severity: error
     formats:
       - oas2
@@ -546,6 +546,15 @@ rules:
         property: summary
         equalTo: description
         result: falsy
+  apiq:OAR052:
+    description: "Numeric schema types must define a format."
+    message: "OAR052: Numeric types requires a format"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md"
+    severity: warn
+    given: "$..[?(@.type == 'integer' || @.type == 'number')]"
+    then:
+      field: format
+      function: truthy
   apiq:OAR054:
     description: "Ensure the host matches the specified format"
     message: "OAR054: Hostname must be a subdomain of the organization's domain name."
