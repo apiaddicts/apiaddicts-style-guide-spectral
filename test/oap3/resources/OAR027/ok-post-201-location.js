@@ -11,7 +11,7 @@ module.exports = {
           "201" : {
             "description" : "Created",
             "headers" : {
-              "location" : {
+              "Location" : {
                 "schema": {
                   "type" : "string"
                 }

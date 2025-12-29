@@ -3,22 +3,21 @@
   "functions": [
     "apq-alternate-paths",
     "apq-custom-schema",
-    "apq-schema-format",
     "apq-compare-insensitive",
-    "apq-naming-convention",
-    "apq-default-value",
-    "apq-truthy-insensitive",
-    "apq-properties-schema-format",
-    "apq-responses"
+    "apq-parameter-naming-convention",
+    "apq-resources-by-verb",
+    "apq-at-most-one-body-parameter",
+    "apq-standard-response-codes"
+  ],
+   "extends": [
+    "spectral:asyncapi",
+    "spectral:oas"
   ],
   "rules": {
     "apiq:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
       "message": "OAR001: HTTPS protocol is mandatory.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR001.md",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.servers[*].url",
       "then": {
@@ -32,10 +31,6 @@
       "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
       "message": "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
       "then": [
@@ -50,10 +45,6 @@
       "description": "A description can help other developers to understand the correct use of the scope.",
       "message": "OAR003: Scope must define a 'description' attribute.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR003.md",
-      "formats": [
-      "oas2",
-      "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
       "then": [
@@ -68,10 +59,6 @@
       "description": "A role with forbidden characters may cause problems in some applications.",
       "message": "OAR004: Role should not contain forbidden characters (e.g. special characters like €, *, etc.).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md",
-      "formats": [
-      "oas2",
-      "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
@@ -105,9 +92,6 @@
     "apiq:OAR006": {
       "description": "Routes must define request media types supported by the API.",
       "message": "OAR006: Specify at least one Media Type in the content of the request body.",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR006.md",
       "given": "$.paths[*][post,put,patch]",
@@ -127,9 +111,6 @@
       "message": "OAR007: Specify at least one Media Type in the content of the response body.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR007.md",
       "severity": "error",
-      "formats": [
-        "oas3"
-      ],
       "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
       "then": [
         {
@@ -142,10 +123,6 @@
       "description": "HTTP verbs not encouraged.",
       "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch')]",
       "then": {
@@ -155,9 +132,6 @@
     "apiq:OAR009": {
       "description": "Default request media type should be defined for operations.",
       "message": "OAR009: Default request media type is mandatory.",
-      "formats": [
-        "oas3"
-      ],
       "severity": "error",
       "given": "$..content",
       "then": {
@@ -169,9 +143,6 @@
       "description": "Default response media type should be defined for responses.",
       "message": "OAR010: Default response media type is mandatory.",
       "severity": "warn",
-      "formats": [
-        "oas3"
-      ],
       "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
       "then": {
         "field": "content['application/json']",
@@ -179,28 +150,39 @@
       }
     },
     "apiq:OAR011": {
-      "description": "URLs should follow the specified naming convention.",
-      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
+      "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
+      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
       "severity": "error",
       "given": "$.paths[*]~",
       "then": {
-        "function": "apq-naming-convention",
+        "function": "pattern",
         "functionOptions": {
-          "pattern": "kebabCase"
+          "match": "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+        }
+      }
+    },
+    "apiq:OAR012": {
+      "description": "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase",
+      "message": "OAR012: Path params, query params, object names and property names must follow the configured naming convention.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md",
+      "severity": "warn",
+      "given": [
+        "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name",
+        "$.paths[*][*].parameters[*].schema.properties.*~",
+        "$.paths[*][*].requestBody..schema.properties.*~",
+        "$.paths[*][*].responses..schema.properties.*~",
+        "$.components.schemas.*~"
+      ],
+      "then": {
+        "function": "apq-parameter-naming-convention",
+        "functionOptions": {
+          "namingConvention": "snake_case"
         }
       }
     },
     "apiq:OAR013": {
       "description": "Default response is required for all operations.",
       "message": "OAR013: Default response is required.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].responses",
       "then": {
@@ -211,10 +193,6 @@
     "apiq:OAR014": {
       "description": "Resources depth level should be below the non-suggested range.",
       "message": "OAR014: The number of parts of the path must be less than 4.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "warn",
       "given": "$.paths.*~",
       "then": {
@@ -227,10 +205,6 @@
     "apiq:OAR015": {
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR015: Path exceeds the maximum allowed depth level of 5.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -240,14 +214,49 @@
         }
       }
     },
+    "apiq:OAR016": {
+      "description": "Numeric types requires a valid format.",
+      "message": "OAR016: Numeric types must use a valid format for their type.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
+      "severity": "error",
+      "given": [
+        "$..[?(@.type == 'integer' && @.format)]",
+        "$..[?(@.type == 'number' && @.format)]"
+      ],
+      "then": {
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "oneOf": [
+              {
+                "properties": {
+                  "type": {
+                    "const": "integer"
+                  },
+                  "format": {
+                    "enum": ["int32", "int64"]
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "type": {
+                    "const": "number"
+                  },
+                  "format": {
+                    "enum": ["float", "double"]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
     "apiq:OAR017": {
       "description": "Resources depth level should be smaller than 5.",
       "message": "OAR017: Resource path should alternate static and parametrized parts.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -256,6 +265,19 @@
           "except": [
             "me"
           ]
+        }
+      }
+    },
+    "apiq:OAR018": {
+      "description": "Operation not recommended for resource path depending on HTTP verb",
+      "message": "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md",
+      "severity": "warn",
+      "given": "$.paths",
+      "then": {
+        "function": "apq-resources-by-verb",
+        "functionOptions": {
+          "allowed-resources-paths": ";get:^/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;post:^/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$"
         }
       }
     },
@@ -333,27 +355,20 @@
       "description": "The $total parameter default value should be false.",
       "message": "OAR026: The $total parameter default value should be false.",
       "severity": "error",
-      "given": "$.paths[*][*].parameters[?(@.name == '$total' && @.in == 'query')]",
+      "given": "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]",
       "then": {
-        "field": "schema",
-        "function": "apq-default-value",
-        "functionOptions": {
-          "type": "boolean",
-          "match": "false"
-        }
+        "field": "schema.default",
+        "function": "falsy"
       }
     },
     "apiq:OAR027": {
       "description": "Location header is required in responses with code 201 from POST operations.",
       "message": "OAR027: Location header is required in responses with code 201 from POST operations.",
       "severity": "error",
-      "given": "$.paths[*].post.responses['201']",
+      "given": "$.paths.*.post.responses['201']",
       "then": {
-        "field": "headers",
-        "function": "apq-truthy-insensitive",
-        "functionOptions": {
-          "property": "Location"
-        }
+        "field": "headers.Location.schema.type",
+        "function": "truthy"
       }
     },
     "apiq:OAR028": {
@@ -368,57 +383,50 @@
     },
     "apiq:OAR029": {
       "description": "A response not compliant with the standard may cause application issues.",
-      "message": "OAR029: Response schema must be compliant with the standard.",
+      "message": "OAR029: A response not compliant with the standard may cause application issues.",
       "severity": "error",
-      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "given": "$.components.schemas.errorResponse",
       "then": {
-        "function": "apq-custom-schema",
+        "function": "schema",
         "functionOptions": {
-          "except": [
-            "/status"
-          ],
           "schema": {
             "type": "object",
             "properties": {
-              "status": {
+              "properties": {
                 "type": "object",
                 "properties": {
-                  "code": {
-                    "type": "integer"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "internal_code": {
-                    "type": "string"
-                  },
-                  "errors": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "type": "object",
+                  "error": {
+                    "type": "object",
+                    "properties": {
                       "properties": {
-                        "name": {
-                          "type": "string"
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "type": "string"
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "details": {
+                            "type": "array"
+                          },
+                          "httpStatus": {
+                            "type": "integer"
+                          }
                         },
-                        "value": {
-                          "type": "string"
-                        }
+                        "required": [
+                          "code",
+                          "message",
+                          "httpStatus"
+                        ]
                       }
                     }
                   }
-                },
-                "required": [
-                  "code"
-                ]
-              },
-              "payload": {
-                "type": "object"
+                }
               }
             },
             "required": [
-              "status",
-              "payload"
+              "properties"
             ]
           }
         }
@@ -475,102 +483,25 @@
     },
     "apiq:OAR034": {
       "description": "A paged response not compliant with the standard may cause application issues.",
-      "message": "OAR034 - Paged response schema must be compliant with the standard.",
+      "message": "OAR034: Paged response schema must be compliant with the standard.",
       "severity": "error",
-      "given": "$.paths[*][*].responses[?(@property != '204')]..content..schema",
+      "given": "$.paths[*][*].responses[?(@property != '204' && @property != '304' && @property != 'default')]",
       "then": {
-        "function": "apq-custom-schema",
-        "functionOptions": {
-          "except": [
-            "/status"
-          ],
-          "schema": {
-            "type": "object",
-            "properties": {
-              "numPages": {
-                "type": "integer"
-              },
-              "total": {
-                "type": "integer"
-              },
-              "start": {
-                "type": "integer"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "links": {
-                "type": "object",
-                "properties": {
-                  "next": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "previous": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "last": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "self": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "first": {
-                    "type": "object",
-                    "properties": {
-                      "href": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
-                "required": [
-                  "self",
-                  "previous",
-                  "next"
-                ]
-              }
-            },
-            "required": [
-              "start",
-              "limit",
-              "links"
-            ],
-            "pagingPropertyName": "paging"
-          }
-        }
+        "field": "content",
+        "function": "truthy"
       }
     },
-      "apiq:OAR035": {
-        "description": "Response code 401 must be defined for operations with security schemes defined.",
-        "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
-        "severity": "error",
-        "given": "$.paths[*][*].responses",
-        "then": {
-          "function": "truthy",
-          "field": "401",
-          "message": "Operation must define a 401 Unauthorized response for security schemes."
-        }
-      },
+    "apiq:OAR035": {
+      "description": "Response code 401 must be defined for operations with security schemes defined.",
+      "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
+      "severity": "error",
+      "given": "$.paths[*][*].responses",
+      "then": {
+        "function": "truthy",
+        "field": "401",
+        "message": "Operation must define a 401 Unauthorized response for security schemes."
+      }
+    },
     "apiq:OAR036": {
       "description": "Cookie use is forbidden as a session mechanism.",
       "message": "OAR036: Cookie use is forbidden as a session mechanism.",
@@ -589,32 +520,14 @@
     },
     "apiq:OAR037": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR037: {{error}}",
+      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, or ipv6).",
       "severity": "error",
-      "given": [
-        "$.paths[*].parameters.*.schema",
-        "$.paths[*][*].parameters.*.schema",
-        "$.paths[*][*].requestBody.content.*.schema",
-        "$.paths[*][*].responses.*.content.*.schema"
-      ],
+      "given": "$..schema..[?(@.type=='string')]",
       "then": {
-        "function": "apq-schema-format",
+        "field": "format",
+        "function": "pattern",
         "functionOptions": {
-          "formats": {
-            "string": [
-              "date",
-              "date-time",
-              "password",
-              "byte",
-              "binary",
-              "email",
-              "uuid",
-              "uri",
-              "hostname",
-              "ipv4",
-              "ipv6"
-            ]
-          }
+          "match": "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6)$"
         }
       }
     },
@@ -631,13 +544,25 @@
         }
       }
     },
+    "apiq:OAR039": {
+      "description": "Response codes must be defined according to the standard depending on the HTTP verb and resource path.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR039.md",
+      "severity": "error",
+      "given": "$.paths[*][*]",
+      "then": {
+        "function": "apq-standard-response-codes",
+        "functionOptions": {
+          "resources-exclusions": [
+            "get:/status"
+          ],
+          "required-codes-by-resources-paths": ";get:^/[^/{}]+$:200|206,400,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;post:^/[^/{}]+$:200|201|202,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404;post:^/[^/{}]+/get$:200,404,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/get$:200,404,400,415,500,503;post:^/[^/{}]+/delete$:200,404,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/delete$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503"
+        }
+      }
+    },
     "apiq:OAR040": {
       "description": "A scope name non-compliant with the standard may cause problems at application level.",
       "message": "OAR040: Scope name must follow the 'apfc_sc_' prefix standard.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].name",
       "then": {
@@ -650,10 +575,6 @@
     "apiq:OAR041": {
       "description": "Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.",
       "message": "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": "$.paths['/pets'].get",
       "then": {
@@ -746,6 +667,18 @@
         }
       ]
     },
+    "apiq:OAR048": {
+      "description": "APIs must define at most one body parameter.",
+      "message": "OAR048: An operation can have at most one body parameter",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md",
+      "severity": "error",
+      "formats": ["oas2"],
+      "given": "$.paths[*][*]",
+      "then": {
+        "field": "parameters",
+        "function": "apq-at-most-one-body-parameter"
+      }
+    },
     "apiq:OAR049": {
       "description": "204 No Content MUST NOT return any content.",
       "message": "OAR049: 204 No Content MUST NOT return any content.",
@@ -778,6 +711,17 @@
           "equalTo": "description",
           "result": "falsy"
         }
+      }
+    },
+    "apiq:OAR052": {
+      "description": "Numeric schema types must define a format.",
+      "message": "OAR052: Numeric types requires a format",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
+      "severity": "warn",
+      "given": "$..[?(@.type == 'integer' || @.type == 'number')]",
+      "then": {
+        "field": "format",
+        "function": "truthy"
       }
     },
     "apiq:OAR054": {
@@ -1019,12 +963,11 @@
       "description": "Any param in PATH or QUERY should have a Bad Request (400) response.",
       "message": "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response.",
       "severity": "warn",
-      "given": "$.paths.*.*[parameters]..in[?(@=='query'||@=='path')]~",
+      "given": "$.paths[*][*].responses",
       "then": {
-        "function": "required",
-        "functionOptions": {
-          "path": "$.responses.400"
-        }
+        "function": "truthy",
+        "field": "400",
+        "message": "Operation must define a 400 Bad Request response for parameters in PATH or QUERY."
       }
     },
     "apiq:OAR070": {
@@ -1160,29 +1103,17 @@
     },
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR076: {{error}}",
+      "message": "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'",
       "severity": "error",
-      "given": [
-        "$.paths[*].parameters.*.schema",
-        "$.paths[*][*].parameters.*.schema",
-        "$.paths[*][*].requestBody.content.*.schema",
-        "$.paths[*][*].responses.*.content.*.schema"
-      ],
+      "given": "$..[?(@.type=='number')]",
       "then": {
-        "function": "apq-schema-format",
+        "field": "format",
+        "function": "enumeration",
         "functionOptions": {
-          "formats": {
-            "number": [
-              "int32",
-              "int64",
-              "float",
-              "double"
-            ],
-            "integer": [
-              "int32",
-              "int64"
-            ]
-          }
+          "values": [
+            "float",
+            "double"
+          ]
         }
       }
     },
@@ -1211,25 +1142,12 @@
     },
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
-      "message": "OAR079: Path parameters should have a 404 Not Found response.",
+      "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
       "severity": "warn",
-      "given": "$.paths[*]",
+      "given": "$.paths[*][*]",
       "then": {
-        "function": "apq-responses",
-        "functionOptions": {
-          "verbs": [
-            "get",
-            "put",
-            "patch",
-            "delete"
-          ],
-          "parameters": [
-            "path"
-          ],
-          "responses": [
-            "404"
-          ]
-        }
+        "field": "responses.404",
+        "function": "truthy"
       }
     },
     "apiq:OAR080": {
@@ -1259,21 +1177,15 @@
       }
     },
     "apiq:OAR082": {
-      "description": "The string properties of the specified names must define a byte or binary format.",
+      "description": "The string properties must define a byte or binary format.",
       "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
       "severity": "error",
-      "given": "$..properties[?(@.type == 'string')]",
+      "given": "$..properties.*",
       "then": {
-        "function": "apq-properties-schema-format",
+        "field": "format",
+        "function": "pattern",
         "functionOptions": {
-          "formats": [
-            "byte",
-            "binary"
-          ],
-          "properties": [
-            "image",
-            "file"
-          ]
+          "match": "^(byte|binary)$"
         }
       }
     },
@@ -1451,11 +1363,15 @@
       "description": "API name must start with prefix 'api-'.",
       "message": "OAR099: API name must start with prefix 'api-'.",
       "severity": "error",
-      "given": "$.servers[*].url",
+      "given": [
+        "$.servers[*].url",
+        "$.paths[*]~",
+        "$.basePath"
+      ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^https?://[^/]+/api-[^/]+"
+          "match": ".*?/api-[^/]+/v[0-9]+"
         }
       }
     },
@@ -1505,10 +1421,10 @@
       }
     },
     "apiq:OAR104": {
-      "description": "Post requests are not recommended for resource paths containing 'me'.",
-      "message": "OAR104: Post request should not be used on paths containing 'me'.",
+      "description": "POST requests should not be used on paths ending with 'me' or a templated parameter.",
+      "message": "OAR104: POST requests should not target paths ending in 'me' or a path parameter like '{id}'.",
       "severity": "error",
-      "given": "$.paths[?(@property.match(/(me)/))].post",
+      "given": "$.paths[?(/\\/(me|{[^}]+})$/.test(@property))].post",
       "then": {
         "function": "falsy"
       }
@@ -1543,10 +1459,6 @@
     "apiq:OAR108": {
       "description": "The schemas should match the provided examples.",
       "message": "OAR108: Schema does not match the provided example.",
-      "formats": [
-        "oas2",
-        "oas3"
-      ],
       "severity": "error",
       "given": [
         "$.paths['/item'].get.responses['200'].content['application/json'].example",
@@ -1600,6 +1512,30 @@
         "field": "contact",
         "function": "truthy"
       }
+    },
+    "apiq:OAR114": {
+      "description": "There are mandatory response headers and others that are not allowed.",
+      "message": "OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md",
+      "severity": "error",
+      "given": "$.paths[*][*].responses[*].headers",
+      "then": [
+        {
+          "function": "schema",
+          "functionOptions": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "x-api-key",
+                "x-trace-id"
+              ],
+              "propertyNames": {
+                "pattern": "^(x-api-key|x-trace-id|traceId|dateTime)$"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
