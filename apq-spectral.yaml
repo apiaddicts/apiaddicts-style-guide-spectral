@@ -3,6 +3,10 @@ functions:
   - apq-alternate-paths
   - apq-custom-schema
   - apq-compare-insensitive
+  - apq-parameter-naming-convention
+  - apq-resources-by-verb
+  - apq-at-most-one-body-parameter
+  - apq-standard-response-codes
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -113,6 +117,21 @@ rules:
       function: pattern
       functionOptions:
         match: "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+  apiq:OAR012:
+    description: "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase"
+    message: "OAR012: Path params, query params, object names and property names must follow the configured naming convention."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md"
+    severity: warn
+    given:
+      - "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name"
+      - "$.paths[*][*].parameters[*].schema.properties.*~"
+      - "$.paths[*][*].requestBody..schema.properties.*~"
+      - "$.paths[*][*].responses..schema.properties.*~"
+      - "$.components.schemas.*~"
+    then:
+      function: apq-parameter-naming-convention
+      functionOptions:
+        namingConvention: "snake_case"
   apiq:OAR013:
     description: "Default response is required for all operations."
     message: "OAR013: Default response is required."
@@ -139,16 +158,77 @@ rules:
       function: pattern
       functionOptions:
         match: "^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,4}\/?$"
+  apiq:OAR016:
+    description: "Numeric types requires a valid format."
+    message: "OAR016: Numeric types must use a valid format for their type."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md"
+    severity: error
+    given:
+      - "$..[?(@.type == 'integer' && @.format)]"
+      - "$..[?(@.type == 'number' && @.format)]"
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          oneOf:
+            - properties:
+                type:
+                  const: integer
+                format:
+                  enum: [int32, int64]
+            - properties:
+                type:
+                  const: number
+                format:
+                  enum: [float, double]
   apiq:OAR017:
     description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md"
     severity: error
     given: "$.paths.*~"
     then:
       function: apq-alternate-paths
       functionOptions:
         except: ["me"]
+  apiq:OAR018:
+    description: Operation not recommended for resource path depending on HTTP verb
+    message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md"
+    severity: warn
+    given: "$.paths"
+    then:
+      function: apq-resources-by-verb
+      functionOptions:
+        allowed-resources-paths: |
+          ;get:^/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;post:^/[^/{}]+$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+$
+          ;post:^/[^/{}]+/get$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/get$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/get$
+          ;post:^/[^/{}]+/delete$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/delete$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/delete$
+
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
   apiq:OAR019:
     description: "$select must be defined as a query parameter in all operations."
     message: "OAR019: $select must be defined as a query parameter in this operation."
@@ -350,6 +430,40 @@ rules:
       function: pattern
       functionOptions:
         match: "^data|error$"
+  apiq:OAR039:
+    description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
+    message: "{{error}}"
+    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR039.md
+    severity: error
+    given: "$.paths[*][*]"
+    then:
+      function: apq-standard-response-codes
+      functionOptions:
+        resources-exclusions:
+          - "get:/status"
+        required-codes-by-resources-paths: >
+          ;get:^/[^/{}]+$:200|206,400,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|206,400,500,503,404
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|206,400,500,503,404
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;get:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;post:^/[^/{}]+$:200|201|202,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|201|202,400,415,500,503,404
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+$:200|201|202,400,415,500,503,404
+          ;post:^/[^/{}]+/get$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/get$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/delete$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/delete$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;delete:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,400,404,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
+          ;patch:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
   apiq:OAR040:
     description: "A scope name non-compliant with the standard may cause problems at application level."
     message: "OAR040: Scope name must follow the 'apfc_sc_' prefix standard."
@@ -429,6 +543,17 @@ rules:
                 description:
                   type: string
                   minLength: 1
+  apiq:OAR048:
+    description: APIs must define at most one body parameter.
+    message: "OAR048: An operation can have at most one body parameter"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md"
+    severity: error
+    formats:
+      - oas2
+    given: "$.paths[*][*]"
+    then:
+      field: parameters
+      function: apq-at-most-one-body-parameter
   apiq:OAR049:
     description: "204 No Content MUST NOT return any content."
     message: "OAR049: 204 No Content MUST NOT return any content."
@@ -456,6 +581,15 @@ rules:
         property: summary
         equalTo: description
         result: falsy
+  apiq:OAR052:
+    description: "Numeric schema types must define a format."
+    message: "OAR052: Numeric types requires a format"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md"
+    severity: warn
+    given: "$..[?(@.type == 'integer' || @.type == 'number')]"
+    then:
+      field: format
+      function: truthy
   apiq:OAR054:
     description: "Ensure the host matches the specified format"
     message: "OAR054: Hostname must be a subdomain of the organization's domain name."
@@ -967,3 +1101,19 @@ rules:
     then:
       field: "contact"
       function: truthy
+  apiq:OAR114:
+    description: There are mandatory response headers and others that are not allowed.
+    message: "OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present."
+    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md
+    severity: error
+    given: "$.paths[*][*].responses[*].headers"
+    then:
+      - function: schema
+        functionOptions:
+          schema:
+            type: object
+            required:
+              - x-api-key
+              - x-trace-id
+            propertyNames:
+              pattern: "^(x-api-key|x-trace-id|traceId|dateTime)$"
