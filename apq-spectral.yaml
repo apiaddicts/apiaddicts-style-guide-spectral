@@ -1092,3 +1092,19 @@ rules:
     then:
       field: "contact"
       function: truthy
+  apiq:OAR114:
+    description: There are mandatory response headers and others that are not allowed.
+    message: "OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present."
+    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md
+    severity: error
+    given: "$.paths[*][*].responses[*].headers"
+    then:
+      - function: schema
+        functionOptions:
+          schema:
+            type: object
+            required:
+              - x-api-key
+              - x-trace-id
+            propertyNames:
+              pattern: "^(x-api-key|x-trace-id|traceId|dateTime)$"
