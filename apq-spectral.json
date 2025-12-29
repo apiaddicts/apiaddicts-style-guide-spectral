@@ -713,6 +713,17 @@
         }
       }
     },
+    "apiq:OAR052": {
+      "description": "Numeric schema types must define a format.",
+      "message": "OAR052: Numeric types requires a format",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
+      "severity": "warn",
+      "given": "$..[?(@.type == 'integer' || @.type == 'number')]",
+      "then": {
+        "field": "format",
+        "function": "truthy"
+      }
+    },
     "apiq:OAR054": {
       "description": "Ensure the host matches the specified format",
       "message": "OAR054: Hostname must be a subdomain of the organization's domain name.",
