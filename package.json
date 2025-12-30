@@ -1,12 +1,17 @@
 {
   "name": "api-quality-spectral-ruleset",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Spectral ruleset by API Quality",
   "main": "apq-spectral.yaml",
+  "files": [
+    "apq-spectral.yaml",
+    "functions/"
+  ],
   "scripts": {
     "test": "jest --coverage --detectOpenHandles --no-cache --forceExit",
     "make-badges": "coverage-badges"
   },
+  "keywords": ["spectral", "linter", "openapi"],
   "author": {
     "name": "API Quality"
   },
