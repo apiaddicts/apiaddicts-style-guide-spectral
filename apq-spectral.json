@@ -7,7 +7,8 @@
     "apq-parameter-naming-convention",
     "apq-resources-by-verb",
     "apq-at-most-one-body-parameter",
-    "apq-standard-response-codes"
+    "apq-standard-response-codes",
+    "apq-response-headers"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -723,6 +724,25 @@
         "field": "format",
         "function": "truthy"
       }
+    },
+    "apiq:OAR053": {
+      "description": "There are mandatory response headers and others that are not allowed.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR053.md",
+      "severity": "error",
+      "given": "$.paths[*][*].responses[*]",
+      "then": [
+        {
+          "function": "apq-response-headers",
+          "functionOptions": {
+            "mandatory-headers": "x-trace-id,x-request-id",
+            "allowed-headers": "idcorrelacion,x-correlacionid,x-global-trasaction-id,x-power-by,x-trace-id,x-request-id",
+            "included-response-codes": "*",
+            "excluded-response-codes": "204",
+            "path-exclusions": "/status,/prueba"
+          }
+        }
+      ]
     },
     "apiq:OAR054": {
       "description": "Ensure the host matches the specified format",
@@ -1515,24 +1535,16 @@
     },
     "apiq:OAR114": {
       "description": "There are mandatory response headers and others that are not allowed.",
-      "message": "OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present.",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md",
       "severity": "error",
-      "given": "$.paths[*][*].responses[*].headers",
+      "given": "$.paths[*][*].responses[*]",
       "then": [
         {
-          "function": "schema",
+          "function": "apq-response-headers",
           "functionOptions": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "x-api-key",
-                "x-trace-id"
-              ],
-              "propertyNames": {
-                "pattern": "^(x-api-key|x-trace-id|traceId|dateTime)$"
-              }
-            }
+            "mandatory-headers": "x-api-key,x-trace-id",
+            "allowed-headers": "x-api-key,x-trace-id,traceId,dateTime"
           }
         }
       ]
