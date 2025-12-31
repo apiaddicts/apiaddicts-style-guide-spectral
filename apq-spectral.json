@@ -1164,7 +1164,7 @@
       "description": "Operations with path parameters should include a 404 Not Found response.",
       "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
       "severity": "warn",
-      "given": "$.paths[*][*]",
+      "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
         "field": "responses.404",
         "function": "truthy"
