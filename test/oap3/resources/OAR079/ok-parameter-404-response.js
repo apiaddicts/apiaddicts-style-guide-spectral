@@ -5,14 +5,14 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
-    "/items": {
+    "/items/{id}": {
       "get": {
-        "summary": "Get a list of items",
+        "summary": "Get item by id",
         "parameters": [
           {
-            "name": "param1",
+            "name": "id",
             "in": "path",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -20,20 +20,20 @@ module.exports = {
         ],
         "responses": {
           "200": {
-            "description": "A list of items",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
+            "description": "Item"
           },
           "404": {
             "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create sub-resource",
+        "responses": {
+          "201": {
+            "description": "Created"
           }
         }
       }

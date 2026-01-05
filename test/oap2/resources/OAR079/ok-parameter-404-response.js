@@ -1,5 +1,5 @@
 module.exports = {
-  "openapi": "3.0.0",
+  "swagger": "2.0",
   "info": {
     "version": "1.0.0",
     "title": "Swagger Petstore"
@@ -13,21 +13,22 @@ module.exports = {
             "name": "id",
             "in": "path",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Item"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }
     },
     "/orders": {
       "post": {
-        "summary": "Create order subresource",
+        "summary": "Create sub-resource",
         "responses": {
           "201": {
             "description": "Created"
