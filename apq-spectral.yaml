@@ -8,6 +8,7 @@ functions:
   - apq-at-most-one-body-parameter
   - apq-standard-response-codes
   - apq-response-headers
+  - apq-required-fields-exist
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -1117,13 +1118,23 @@ rules:
       field: "contact"
       function: truthy
   apiq:OAR114:
-    description: There are mandatory response headers and others that are not allowed.
+    description: "There are mandatory response headers and others that are not allowed."
     message: "{{error}}"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md"
-    severity: error
+    severity: "error"
     given: "$.paths[*][*].responses[*]"
     then:
       - function: apq-response-headers
         functionOptions:
           mandatory-headers: "x-api-key,x-trace-id"
           allowed-headers: "x-api-key,x-trace-id,traceId,dateTime"
+  apiq:OAR115:
+    description: "All fields listed in the required array must be defined in the schema properties."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md"
+    severity: warn
+    given:
+      - "$.components.schemas[*]"
+      - "$.definitions[*]"
+    then:
+      function: apq-required-fields-exist
