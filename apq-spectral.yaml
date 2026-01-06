@@ -827,7 +827,7 @@ rules:
       functionOptions:
         match: ^\$?_?[a-z]+(_[a-z]+)*$
   apiq:OAR078:
-    description: "All API operations must define security or inherit it from the global configuration."
+    description: "All API methods must have security defined."
     message: "{{error}}"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md"
     severity: error
