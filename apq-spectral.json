@@ -587,6 +587,21 @@
         "function": "truthy"
       }
     },
+    "apiq:OAR042": {
+      "description": "Base path must be compliant with the standard.",
+      "message": "OAR042: Base path must follow the '/api-<name>/v<version>' standard.",
+      "severity": "error",
+      "given": [
+        "$.basePath",
+        "$.servers[*].url"
+      ],
+      "then": {
+        "function": "pattern",
+        "functionOptions": {
+          "match": "^(/api-[^/]+/v[0-9]+|https?:\\/\\/[^/]+\\/api-[^/]+\\/v[0-9]+)$"
+        }
+      }
+    },
     "apiq:OAR044": {
       "description": "Declared media type should conform to RFC6838 and RFC7231.",
       "message": "OAR044: Declared media type range should conform to RFC7231.",
