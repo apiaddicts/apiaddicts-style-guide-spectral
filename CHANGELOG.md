@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.0] - 2026-01-06
+
+### Added
+
+New rules added
+- OAR053 - ResponseHeaders - There are mandatory response headers and others that are not allowed
+
+### Fixed
+
+- OAR078 - VerbsSecurity
+- OAR079 - PathParameter404
+
 ## [1.0.0] - 2025-12-29
 
 ### Added

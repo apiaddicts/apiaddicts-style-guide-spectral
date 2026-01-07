@@ -9,6 +9,7 @@ functions:
   - apq-standard-response-codes
   - apq-response-headers
   - apq-required-fields-exist
+  - apq-security-check
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -828,12 +829,12 @@ rules:
         match: ^\$?_?[a-z]+(_[a-z]+)*$
   apiq:OAR078:
     description: "All API methods must have security defined."
-    message: "OAR078: The operation '{{property}}' must have security defined."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete]"
+    given: "$"
     then:
-      field: "security"
-      function: truthy
+      function: apq-security-check
   apiq:OAR079:
     description: "Operations with path parameters should include a 404 Not Found response."
     message: "OAR079: Path parameter present, but missing 404 Not Found response."
