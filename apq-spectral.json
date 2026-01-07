@@ -9,6 +9,7 @@
     "apq-at-most-one-body-parameter",
     "apq-standard-response-codes",
     "apq-response-headers",
+    "apq-required-fields-exist",
     "apq-security-check"
   ],
    "extends": [
@@ -1551,6 +1552,19 @@
           }
         }
       ]
+    },
+    "apiq:OAR115": {
+      "description": "All fields listed in the required array must be defined in the schema properties.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md",
+      "severity": "warn",
+      "given": [
+        "$.components.schemas[*]",
+        "$.definitions[*]"
+      ],
+      "then": {
+        "function": "apq-required-fields-exist"
+      }
     }
   }
 }
