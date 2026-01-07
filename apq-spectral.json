@@ -9,6 +9,7 @@
     "apq-at-most-one-body-parameter",
     "apq-standard-response-codes",
     "apq-response-headers",
+    "apq-require-response-on-path-params",
     "apq-required-fields-exist",
     "apq-security-check"
   ],
@@ -1167,11 +1168,14 @@
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
       "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR079.md",
       "severity": "warn",
       "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
-        "field": "responses.404",
-        "function": "truthy"
+        "function": "apq-require-response-on-path-params",
+        "functionOptions": {
+          "response": "404"
+        }
       }
     },
     "apiq:OAR080": {
