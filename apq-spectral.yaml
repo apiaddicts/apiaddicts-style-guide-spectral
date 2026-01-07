@@ -9,6 +9,7 @@ functions:
   - apq-standard-response-codes
   - apq-response-headers
   - apq-security-check
+  - apq-custom-field
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -1117,6 +1118,17 @@ rules:
     then:
       field: "contact"
       function: truthy
+  apiq:OAR113:
+    description: "Field or extension must be at the assigned location"
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR113.md"
+    severity: warn
+    given: "$"
+    then:
+      function: apq-custom-field
+      functionOptions:
+        fieldName: "x-custom-example"
+        fieldLocation: "path,operation_get,response_200"
   apiq:OAR114:
     description: There are mandatory response headers and others that are not allowed.
     message: "{{error}}"
