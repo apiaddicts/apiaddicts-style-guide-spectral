@@ -19,14 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [1.1.0] - 2026-01-06
+## [1.1.0] - 2026-01-07
 
 ### Added
 
 New rules added
+- OAR042 - BasePath - Base path must be compliant with the standard
 - OAR053 - ResponseHeaders - There are mandatory response headers and others that are not allowed
-- OAR115 - VerifyRequiredFields - The data in the required field must exist in schema parameters
 - OAR113 - CustomField - Field or extension must be at the assigned location
+- OAR115 - VerifyRequiredFields - The data in the required field must exist in schema parameters
 
 ### Fixed
 
