@@ -12,8 +12,7 @@ beforeAll(async () => {
 
 test('apiq:OAR114 should find errors', () => {
   return linter.run(oar114fail).then((results) => {
-    expect(results.length).toBeGreaterThanOrEqual(1);
-    expect(results[0].message).toBe("OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present.");
+    expect(results.length).toBe(4);
   });
 });
 

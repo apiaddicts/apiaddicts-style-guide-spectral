@@ -7,6 +7,11 @@ functions:
   - apq-resources-by-verb
   - apq-at-most-one-body-parameter
   - apq-standard-response-codes
+  - apq-response-headers
+  - apq-require-response-on-path-params
+  - apq-required-fields-exist
+  - apq-security-check
+  - apq-custom-field
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -481,6 +486,17 @@ rules:
     then:
       field: "x-aut-type"
       function: truthy
+  apiq:OAR042:
+    description: "Base path must be compliant with the standard."
+    message: "OAR042: Base path must follow the '/api-<name>/v<version>' standard."
+    severity: "error"
+    given:
+      - "$.basePath"
+      - "$.servers[*].url"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(/api-[^/]+/v[0-9]+|https?:\\/\\/[^/]+\\/api-[^/]+\\/v[0-9]+)$"
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
@@ -590,6 +606,20 @@ rules:
     then:
       field: format
       function: truthy
+  apiq:OAR053:
+    description: "There are mandatory response headers and others that are not allowed."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR053.md"
+    severity: error
+    given: "$.paths[*][*].responses[*]"
+    then:
+      - function: apq-response-headers
+        functionOptions:
+          mandatory-headers: "x-trace-id,x-request-id"
+          allowed-headers: "idcorrelacion,x-correlacionid,x-global-trasaction-id,x-power-by,x-trace-id,x-request-id"
+          included-response-codes: "*"
+          excluded-response-codes: "204"
+          path-exclusions: "/status,/prueba"
   apiq:OAR054:
     description: "Ensure the host matches the specified format"
     message: "OAR054: Hostname must be a subdomain of the organization's domain name."
@@ -812,20 +842,22 @@ rules:
         match: ^\$?_?[a-z]+(_[a-z]+)*$
   apiq:OAR078:
     description: "All API methods must have security defined."
-    message: "OAR078: The operation '{{property}}' must have security defined."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete]"
+    given: "$"
     then:
-      field: "security"
-      function: truthy
+      function: apq-security-check
   apiq:OAR079:
     description: "Operations with path parameters should include a 404 Not Found response."
     message: "OAR079: Path parameter present, but missing 404 Not Found response."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR079.md"
     severity: "warn"
-    given: "$.paths[*][*]"
+    given: "$.paths[*][get,post,put,patch,delete]"
     then:
-      field: responses.404
-      function: truthy
+      function: apq-require-response-on-path-params
+      functionOptions:
+        response: "404"
   apiq:OAR080:
     description: "The security scheme must be among those allowed by the organization and must be complete."
     message: "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete."
@@ -1101,19 +1133,35 @@ rules:
     then:
       field: "contact"
       function: truthy
-  apiq:OAR114:
-    description: There are mandatory response headers and others that are not allowed.
-    message: "OAR114: Missing mandatory response x-api-key and x-trace-id headers, or forbidden headers are present."
-    documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md
-    severity: error
-    given: "$.paths[*][*].responses[*].headers"
+  apiq:OAR113:
+    description: "Field or extension must be at the assigned location"
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR113.md"
+    severity: warn
+    given: "$"
     then:
-      - function: schema
+      function: apq-custom-field
+      functionOptions:
+        fieldName: "x-custom-example"
+        fieldLocation: "path,operation_get,response_200"
+  apiq:OAR114:
+    description: "There are mandatory response headers and others that are not allowed."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md"
+    severity: "error"
+    given: "$.paths[*][*].responses[*]"
+    then:
+      - function: apq-response-headers
         functionOptions:
-          schema:
-            type: object
-            required:
-              - x-api-key
-              - x-trace-id
-            propertyNames:
-              pattern: "^(x-api-key|x-trace-id|traceId|dateTime)$"
+          mandatory-headers: "x-api-key,x-trace-id"
+          allowed-headers: "x-api-key,x-trace-id,traceId,dateTime"
+  apiq:OAR115:
+    description: "All fields listed in the required array must be defined in the schema properties."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md"
+    severity: warn
+    given:
+      - "$.components.schemas[*]"
+      - "$.definitions[*]"
+    then:
+      function: apq-required-fields-exist

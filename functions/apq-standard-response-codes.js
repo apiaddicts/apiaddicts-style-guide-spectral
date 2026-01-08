@@ -1,9 +1,14 @@
-module.exports = function apqStandardResponseCodes(targetVal, options, context) {
+/**
+ * @param {object} given
+ * @param {object} options
+ * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
+ */
+module.exports = function apqStandardResponseCodes(given, options, context) {
   const results = [];
 
-  if (!targetVal || !context?.path) return results;
+  if (!given || !context?.path) return results;
 
-  const responses = targetVal.responses;
+  const responses = given.responses;
   if (!responses || typeof responses !== 'object') return results;
 
   const definedCodes = Object.keys(responses);
@@ -17,15 +22,15 @@ module.exports = function apqStandardResponseCodes(targetVal, options, context) 
 
   const exclusions = options?.['resources-exclusions'] || [];
   if (exclusions.some(ex => {
-      const [exVerb, exPath] = ex.split(':');
-      return exVerb.toLowerCase() === verb.toLowerCase() && new RegExp(`^${exPath}$`).test(resourcePath);
-    })) return results;
+    const [exVerb, exPath] = ex.split(':');
+    return exVerb.toLowerCase() === verb.toLowerCase() && new RegExp(`^${exPath}$`).test(resourcePath);
+  })) return results;
 
   const rulesConfig = options?.['required-codes-by-resources-paths'];
   if (!rulesConfig) return results;
 
   const rules = rulesConfig
-    .split(/[\n;]/) 
+    .split(/[\n;]/)
     .map(r => r.trim())
     .filter(Boolean)
     .map(rule => {
@@ -49,19 +54,19 @@ module.exports = function apqStandardResponseCodes(targetVal, options, context) 
 
   if (!matchedRule) return results;
 
-matchedRule.requiredCodes.forEach(ruleCode => {
+  matchedRule.requiredCodes.forEach(respCode => {
     let missing = false;
     let msg = "";
 
-    if (ruleCode.includes('|')) {
-      const alternatives = ruleCode.split('|');
+    if (respCode.includes('|')) {
+      const alternatives = respCode.split('|');
       if (!alternatives.some(c => definedCodes.includes(c))) {
         missing = true;
         msg = `OAR039: Response code ${alternatives.join(' or ')} must be defined.`;
       }
-    } else if (!definedCodes.includes(ruleCode)) {
+    } else if (!definedCodes.includes(respCode)) {
       missing = true;
-      msg = `OAR039: Response code ${ruleCode} must be defined.`;
+      msg = `OAR039: Response code ${respCode} must be defined.`;
     }
 
     if (missing) {
