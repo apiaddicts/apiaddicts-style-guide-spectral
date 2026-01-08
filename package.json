@@ -13,7 +13,7 @@
   },
   "keywords": ["spectral", "linter", "openapi"],
   "author": {
-    "name": "API Quality"
+    "name": "APIQuality"
   },
   "license": "GNU AGPLv3",
   "repository": {
