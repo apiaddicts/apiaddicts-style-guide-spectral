@@ -1,6 +1,6 @@
 {
   "name": "api-quality-spectral-ruleset",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Spectral ruleset by API Quality",
   "main": "apq-spectral.yaml",
   "files": [
@@ -13,7 +13,7 @@
   },
   "keywords": ["spectral", "linter", "openapi"],
   "author": {
-    "name": "API Quality"
+    "name": "APIQuality"
   },
   "license": "GNU AGPLv3",
   "repository": {
