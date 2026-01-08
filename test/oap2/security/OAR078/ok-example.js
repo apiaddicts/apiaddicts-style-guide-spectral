@@ -1,0 +1,44 @@
+module.exports = {
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
+  },
+  "security": [
+    { "apiKey": [] }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      },
+      "post": {
+        "security": [
+          { "oauth2": ["write"] }
+        ],
+        "responses": {
+          "201": { "description": "Created" }
+        }
+      }
+    },
+    "/orders": {
+      "put": {
+        "responses": {
+          "200": { "description": "Updated" }
+        }
+      }
+    },
+    "/products": {
+      "delete": {
+        "security": [
+          { "apiKey": [] }
+        ],
+        "responses": {
+          "204": { "description": "Deleted" }
+        }
+      }
+    }
+  }
+};
