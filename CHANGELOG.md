@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.1] - 2026-02-26
+
+### Fixed
+- OAR031 - Examples - Parameters, Request Body and Responses must have an examples defined
+
 ## [1.1.0] - 2026-01-07
 
 ### Added
