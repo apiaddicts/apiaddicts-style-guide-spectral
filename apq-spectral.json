@@ -12,7 +12,8 @@
     "apq-custom-field",
     "apq-require-response-on-path-params",
     "apq-required-fields-exist",
-    "apq-security-check"
+    "apq-security-check",
+    "apq-check-examples-coverage"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -448,16 +449,16 @@
       }
     },
     "apiq:OAR031": {
-      "description": "The examples can help developers to understand the response data structure and representation.\"",
-      "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
+      "description": "The examples can help developers to understand the response data structure and representation.",
+      "message": "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined.",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*",
-        "$.paths.*.*[responses,requestBody]..content.*"
+        "$.paths.*.*.requestBody",
+        "$.paths.*.*.responses[?(@property !== \"204\")]"
       ],
       "then": {
-        "field": "examples",
-        "function": "truthy"
+        "function": "apq-check-examples-coverage"
       }
     },
     "apiq:OAR032": {
