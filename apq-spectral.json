@@ -225,32 +225,42 @@
       "message": "OAR016: Numeric types must use a valid format for their type.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
-      "given": [
-        "$..[?(@.type == 'integer' && @.format)]",
-        "$..[?(@.type == 'number' && @.format)]"
-      ],
+      "given": "$..[?(@.type=='number' || @.type=='integer')]",
       "then": {
         "function": "schema",
         "functionOptions": {
           "schema": {
-            "oneOf": [
+            "required": ["format"],
+            "allOf": [
               {
-                "properties": {
-                  "type": {
-                    "const": "integer"
-                  },
-                  "format": {
-                    "enum": ["int32", "int64"]
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "integer"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["int32", "int64"]
+                    }
                   }
                 }
               },
               {
-                "properties": {
-                  "type": {
-                    "const": "number"
-                  },
-                  "format": {
-                    "enum": ["float", "double"]
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "number"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["float", "double"]
+                    }
                   }
                 }
               }
@@ -1143,17 +1153,50 @@
     },
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'",
+      "message": "OAR076: Schema should use well-defined type and format.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
-      "given": "$..[?(@.type=='number')]",
+      "given": "$..[?(@.type=='number' || @.type=='integer')]",
       "then": {
-        "field": "format",
-        "function": "enumeration",
+        "function": "schema",
         "functionOptions": {
-          "values": [
-            "float",
-            "double"
-          ]
+          "schema": {
+            "required": ["format"],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "integer"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["int32", "int64"]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "number"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["float", "double"]
+                    }
+                  }
+                }
+              }
+            ]
+          }
         }
       }
     },
