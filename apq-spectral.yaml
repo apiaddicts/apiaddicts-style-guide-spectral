@@ -988,9 +988,12 @@ rules:
   apiq:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR091.md"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[*].$ref"
+    resolved: false
+    given: "$.paths[*][get,post,put,patch,delete].parameters[*]"
     then:
+      field: $ref
       function: truthy
   apiq:OAR092:
     description: "RequestBody must contain a $ref."
