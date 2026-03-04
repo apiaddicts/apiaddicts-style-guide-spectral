@@ -158,12 +158,16 @@
     "apiq:OAR011": {
       "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
       "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR011.md",
       "severity": "error",
-      "given": "$.paths[*]~",
+      "given": [
+        "$.paths[*]~",
+        "$.servers[*].url"
+      ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+          "match": "^(https?:\\/\\/[^\\/]+)?(\\/(?:[a-z0-9]+(?:-[a-z0-9]+)*|\\{[^}]+\\}))*\\/?$"
         }
       }
     },
