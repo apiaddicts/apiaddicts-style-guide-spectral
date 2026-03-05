@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.1] - 2026-03-04
+
+### Fixed
+- OAR016 - NumericFormat - Numeric types must use a valid format for their type
+- OAR031 - Examples - Parameters, Request Body and Responses must have an examples defined
+- OAR076 - NumericFormat - Schema should use well-defined type and format
+- OAR091 - ParamOnlyRef - Parameters must contain only $ref references
+- OAR011 - NamingConvention - The resource names with more than two words must be compliant with the standard naming convention
+
 ## [1.1.0] - 2026-01-07
 
 ### Added

@@ -24,7 +24,7 @@ module.exports = {
                       "properties": {
                         "productId": {
                           "type": "integer",
-                          "format": "big"
+                          "format": "double"
                         }
                       }
                     }

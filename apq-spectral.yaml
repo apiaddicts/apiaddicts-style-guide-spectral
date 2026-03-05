@@ -12,6 +12,7 @@ functions:
   - apq-required-fields-exist
   - apq-security-check
   - apq-custom-field
+  - apq-check-examples-coverage
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -116,12 +117,15 @@ rules:
   apiq:OAR011:
     description: "URLs should follow the specified naming convention: all literal path segments must be in kebab-case."
     message: "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case)."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR011.md"
     severity: error
-    given: "$.paths[*]~"
+    given:
+      - "$.paths[*]~"
+      - "$.servers[*].url"
     then:
       function: pattern
       functionOptions:
-        match: "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+        match: "^(https?:\\/\\/[^\\/]+)?(\\/(?:[a-z0-9]+(?:-[a-z0-9]+)*|\\{[^}]+\\}))*\\/?$"
   apiq:OAR012:
     description: "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase"
     message: "OAR012: Path params, query params, object names and property names must follow the configured naming convention."
@@ -168,24 +172,29 @@ rules:
     message: "OAR016: Numeric types must use a valid format for their type."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md"
     severity: error
-    given:
-      - "$..[?(@.type == 'integer' && @.format)]"
-      - "$..[?(@.type == 'number' && @.format)]"
+    given: "$..[?(@.type=='number' || @.type=='integer')]"
     then:
       function: schema
       functionOptions:
         schema:
-          oneOf:
-            - properties:
-                type:
-                  const: integer
-                format:
-                  enum: [int32, int64]
-            - properties:
-                type:
-                  const: number
-                format:
-                  enum: [float, double]
+          required: [format]
+          allOf:
+            - if:
+                properties:
+                  type:
+                    const: integer
+              then:
+                properties:
+                  format:
+                    enum: [int32, int64]
+            - if:
+                properties:
+                  type:
+                    const: number
+              then:
+                properties:
+                  format:
+                    enum: [float, double]
   apiq:OAR017:
     description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
@@ -358,14 +367,14 @@ rules:
       function: truthy
   apiq:OAR031:
     description: The examples can help developers to understand the response data structure and representation."
-    message: "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined."
+    message: "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined."
     severity: error
     given:
       - $.paths.*.*.parameters.*
-      - $.paths.*.*[responses,requestBody]..content.*
+      - $.paths.*.*.requestBody
+      - $.paths.*.*.responses[?(@property !== "204")]
     then:
-      field: examples
-      function: truthy
+      function: apq-check-examples-coverage
   apiq:OAR032:
     description: "Ambiguous path parts not encouraged."
     message: "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided."
@@ -820,16 +829,32 @@ rules:
                 - required: ["enum"]
   apiq:OAR076:
     description: "Schema should use well-defined type and format."
-    message: "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'"
-    severity: "error"
-    given: "$..[?(@.type=='number')]"
+    message: "OAR076: Schema should use well-defined type and format."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md"
+    severity: error
+    given: "$..[?(@.type=='number' || @.type=='integer')]"
     then:
-      field: format
-      function: enumeration
+      function: schema
       functionOptions:
-        values:
-          - float
-          - double
+        schema:
+          required: [format]
+          allOf:
+            - if:
+                properties:
+                  type:
+                    const: integer
+              then:
+                properties:
+                  format:
+                    enum: [int32, int64]
+            - if:
+                properties:
+                  type:
+                    const: number
+              then:
+                properties:
+                  format:
+                    enum: [float, double]
   apiq:OAR077:
     description: "All parameters in query must be snake_case."
     message: "OAR077: All parameters in query must be snake_case."
@@ -966,9 +991,12 @@ rules:
   apiq:OAR091:
     description: "Parameters must contain only $ref references."
     message: "OAR091: Parameters must contain only $ref references."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR091.md"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[*].$ref"
+    resolved: false
+    given: "$.paths[*][get,post,put,patch,delete].parameters[*]"
     then:
+      field: $ref
       function: truthy
   apiq:OAR092:
     description: "RequestBody must contain a $ref."

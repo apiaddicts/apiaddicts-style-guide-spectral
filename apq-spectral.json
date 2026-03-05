@@ -12,7 +12,8 @@
     "apq-custom-field",
     "apq-require-response-on-path-params",
     "apq-required-fields-exist",
-    "apq-security-check"
+    "apq-security-check",
+    "apq-check-examples-coverage"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -157,12 +158,16 @@
     "apiq:OAR011": {
       "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
       "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR011.md",
       "severity": "error",
-      "given": "$.paths[*]~",
+      "given": [
+        "$.paths[*]~",
+        "$.servers[*].url"
+      ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^(\/|[a-z0-9-]+|{[a-zA-Z0-9_|-]+})+$"
+          "match": "^(https?:\\/\\/[^\\/]+)?(\\/(?:[a-z0-9]+(?:-[a-z0-9]+)*|\\{[^}]+\\}))*\\/?$"
         }
       }
     },
@@ -224,32 +229,42 @@
       "message": "OAR016: Numeric types must use a valid format for their type.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
-      "given": [
-        "$..[?(@.type == 'integer' && @.format)]",
-        "$..[?(@.type == 'number' && @.format)]"
-      ],
+      "given": "$..[?(@.type=='number' || @.type=='integer')]",
       "then": {
         "function": "schema",
         "functionOptions": {
           "schema": {
-            "oneOf": [
+            "required": ["format"],
+            "allOf": [
               {
-                "properties": {
-                  "type": {
-                    "const": "integer"
-                  },
-                  "format": {
-                    "enum": ["int32", "int64"]
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "integer"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["int32", "int64"]
+                    }
                   }
                 }
               },
               {
-                "properties": {
-                  "type": {
-                    "const": "number"
-                  },
-                  "format": {
-                    "enum": ["float", "double"]
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "number"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["float", "double"]
+                    }
                   }
                 }
               }
@@ -448,16 +463,16 @@
       }
     },
     "apiq:OAR031": {
-      "description": "The examples can help developers to understand the response data structure and representation.\"",
-      "message": "OAR031: Examples -  Parameters, Request Body and Responses must have an examples defined.",
+      "description": "The examples can help developers to understand the response data structure and representation.",
+      "message": "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined.",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*",
-        "$.paths.*.*[responses,requestBody]..content.*"
+        "$.paths.*.*.requestBody",
+        "$.paths.*.*.responses[?(@property !== \"204\")]"
       ],
       "then": {
-        "field": "examples",
-        "function": "truthy"
+        "function": "apq-check-examples-coverage"
       }
     },
     "apiq:OAR032": {
@@ -1142,17 +1157,50 @@
     },
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR076: Invalid combination: type '{{value.type}}' with format '{{value.format}}'",
+      "message": "OAR076: Schema should use well-defined type and format.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
-      "given": "$..[?(@.type=='number')]",
+      "given": "$..[?(@.type=='number' || @.type=='integer')]",
       "then": {
-        "field": "format",
-        "function": "enumeration",
+        "function": "schema",
         "functionOptions": {
-          "values": [
-            "float",
-            "double"
-          ]
+          "schema": {
+            "required": ["format"],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "integer"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["int32", "int64"]
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "number"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "format": {
+                      "enum": ["float", "double"]
+                    }
+                  }
+                }
+              }
+            ]
+          }
         }
       }
     },
@@ -1335,9 +1383,12 @@
     "apiq:OAR091": {
       "description": "Parameters must contain only $ref references.",
       "message": "OAR091: Parameters must contain only $ref references.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR091.md",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[*].$ref",
+      "resolved": false,
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[*]",
       "then": {
+        "field": "$ref",
         "function": "truthy"
       }
     },

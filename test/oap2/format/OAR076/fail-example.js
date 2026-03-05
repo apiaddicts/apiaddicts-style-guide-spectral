@@ -1,0 +1,36 @@
+module.exports = {
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
+  },
+  "paths": {
+    "/invoices": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "A invoice.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "price": {
+                  "type": "number",
+                  "format": "double"
+                },
+                "nested": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "number",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+};

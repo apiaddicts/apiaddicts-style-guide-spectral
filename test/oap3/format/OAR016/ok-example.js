@@ -16,7 +16,8 @@ module.exports = {
                   "type": "object",
                   "properties": {
                     "quantity": {
-                      "type": "integer"
+                      "type": "integer",
+                      "format": "int32"
                     },
                     "price": {
                       "type": "number",
