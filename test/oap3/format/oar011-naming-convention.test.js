@@ -2,8 +2,8 @@ const { linterForRule } = require('../../helpers/utils');
 
 let linter;
 
-const oar011fail = require('./OAR011/fail-naming');
-const oar011ok = require('./OAR011/ok-naming');
+const oar011fail = require('./OAR011/fail-example');
+const oar011ok = require('./OAR011/ok-example');
 
 beforeAll(async () => {
   linter = await linterForRule('apiq:OAR011');
@@ -12,7 +12,7 @@ beforeAll(async () => {
 
 test('apiq:OAR011 should find errors', () => {
   return linter.run(oar011fail).then((results) => {
-    expect(results.length).toBeGreaterThanOrEqual(1);
+    expect(results.length).toBe(14);
   });
 });
 
