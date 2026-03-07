@@ -13,6 +13,7 @@ functions:
   - apq-security-check
   - apq-custom-field
   - apq-check-examples-coverage
+  - apq-path-depth
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -151,13 +152,16 @@ rules:
       function: truthy
   apiq:OAR014:
     description: "Resources depth level should be below the non-suggested range."
-    message:     "OAR014: The number of parts of the path must be less than 4."
-    severity:   warn
-    given:      "$.paths.*~"             
+    message: "OAR014: The number of parts of the path must be less than 4."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR014.md"
+    severity: warn
+    given: "$.paths.*~"
     then:
-      function: pattern                     
+      function: apq-path-depth
       functionOptions:
-        notMatch: "^(?:\\/[^\\/]+){4,}"        
+        maxDepth: 3
+        ignoreSegments:
+          - me
   apiq:OAR015:
     description: "Resources depth level should be smaller than 5."
     message: "OAR015: Path exceeds the maximum allowed depth level of 5."
@@ -270,11 +274,30 @@ rules:
   apiq:OAR022:
     description: "$orderby must be defined as a query parameter in all operations."
     message: "OAR022: $orderby must be defined as a query parameter in this operation."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md"
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[*].get"
     then:
-      field: "$[?(@.name == '$orderby' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          if:
+            properties:
+              responses:
+                required: ["206"]
+          then:
+            required: ["parameters"]
+            properties:
+              parameters:
+                type: array
+                contains:
+                  type: object
+                  properties:
+                    name:
+                      const: "$orderby"
+                    in:
+                      const: query
+                  required: [name, in]
   apiq:OAR023:
     description: "$total must be defined as a query parameter in all operations."
     message: "OAR023: $total must be defined as a query parameter in this operation."
@@ -294,11 +317,30 @@ rules:
   apiq:OAR025:
     description: "$limit must be defined as a query parameter in all operations."
     message: "OAR025: $limit must be defined as a query parameter in this operation."
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md"
     severity: error
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[*].get"
     then:
-      field: "$[?(@.name == '$limit' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          if:
+            properties:
+              responses:
+                required: ["206"]
+          then:
+            required: ["parameters"]
+            properties:
+              parameters:
+                type: array
+                contains:
+                  type: object
+                  properties:
+                    name:
+                      const: "$limit"
+                    in:
+                      const: query
+                  required: [name, in]
   apiq:OAR026:
     description: "The $total parameter default value should be false."
     message: "OAR026: The $total parameter default value should be false."

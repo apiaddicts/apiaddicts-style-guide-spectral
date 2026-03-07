@@ -13,7 +13,8 @@
     "apq-require-response-on-path-params",
     "apq-required-fields-exist",
     "apq-security-check",
-    "apq-check-examples-coverage"
+    "apq-check-examples-coverage",
+    "apq-path-depth"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -203,12 +204,16 @@
     "apiq:OAR014": {
       "description": "Resources depth level should be below the non-suggested range.",
       "message": "OAR014: The number of parts of the path must be less than 4.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR014.md",
       "severity": "warn",
       "given": "$.paths.*~",
       "then": {
-        "function": "pattern",
+        "function": "apq-path-depth",
         "functionOptions": {
-          "notMatch": "^(?:\\/[^\\/]+){4,}"
+          "maxDepth": 3,
+          "ignoreSegments": [
+            "me"
+          ]
         }
       }
     },
@@ -334,11 +339,49 @@
     "apiq:OAR022": {
       "description": "$orderby must be defined as a query parameter in all operations.",
       "message": "OAR022: $orderby must be defined as a query parameter in this operation.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[*].get",
       "then": {
-        "field": "$[?(@.name == '$orderby' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "if": {
+              "properties": {
+                "responses": {
+                  "required": [
+                    "206"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "parameters"
+              ],
+              "properties": {
+                "parameters": {
+                  "type": "array",
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "const": "$orderby"
+                      },
+                      "in": {
+                        "const": "query"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "in"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR023": {
@@ -364,11 +407,49 @@
     "apiq:OAR025": {
       "description": "$limit must be defined as a query parameter in all operations.",
       "message": "OAR025: $limit must be defined as a query parameter in this operation.",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[*].get",
       "then": {
-        "field": "$[?(@.name == '$limit' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "if": {
+              "properties": {
+                "responses": {
+                  "required": [
+                    "206"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "parameters"
+              ],
+              "properties": {
+                "parameters": {
+                  "type": "array",
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "const": "$limit"
+                      },
+                      "in": {
+                        "const": "query"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "in"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR026": {
