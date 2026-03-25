@@ -12,6 +12,7 @@
     "apq-custom-field",
     "apq-require-response-on-path-params",
     "apq-required-fields-exist",
+    "apq-response-media-type",
     "apq-security-check",
     "apq-check-examples-coverage",
     "apq-path-depth"
@@ -150,10 +151,9 @@
       "description": "Default response media type should be defined for responses.",
       "message": "OAR010: Default response media type is mandatory.",
       "severity": "warn",
-      "given": "$.paths[*][get,post,put,patch,delete].responses[*]",
+      "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
-        "field": "content['application/json']",
-        "function": "truthy"
+        "function": "apq-response-media-type"
       }
     },
     "apiq:OAR011": {
