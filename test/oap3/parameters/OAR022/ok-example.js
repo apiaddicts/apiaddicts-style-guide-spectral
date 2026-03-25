@@ -8,26 +8,32 @@ module.exports = {
     "/invoices": {
       "get": {
         "parameters": [
-          {
-            "name": "$orderby",
-            "in": "query",
-            "schema": { "type": "string" }
-          }
+          { "name": "$orderby", "in": "query", "schema": { "type": "string" } }
         ],
-        "responses": {
-          "206": {
-            "description": "ok"
-          }
-        }
+        "responses": { "206": { "description": "ok" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "parameters": [
+          { "name": "$orderby", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "206": { "description": "subcollection ok" } }
       }
     },
     "/reports": {
       "get": {
-        "responses": {
-          "200": {
-            "description": "no pagination ok"
-          }
-        }
+        "responses": { "200": { "description": "no pagination ok" } }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "responses": { "206": { "description": "ignored correctly" } }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "responses": { "200": { "description": "ignored correctly" } }
       }
     }
   }

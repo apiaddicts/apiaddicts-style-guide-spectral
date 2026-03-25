@@ -341,7 +341,7 @@
       "message": "OAR022: $orderby must be defined as a query parameter in this operation.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
-      "given": "$.paths[*].get",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -349,16 +349,12 @@
             "if": {
               "properties": {
                 "responses": {
-                  "required": [
-                    "206"
-                  ]
+                  "required": ["206"]
                 }
               }
             },
             "then": {
-              "required": [
-                "parameters"
-              ],
+              "required": ["parameters"],
               "properties": {
                 "parameters": {
                   "type": "array",
@@ -372,10 +368,7 @@
                         "const": "query"
                       }
                     },
-                    "required": [
-                      "name",
-                      "in"
-                    ]
+                    "required": ["name", "in"]
                   }
                 }
               }
@@ -409,7 +402,7 @@
       "message": "OAR025: $limit must be defined as a query parameter in this operation.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
-      "given": "$.paths[*].get",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -417,16 +410,12 @@
             "if": {
               "properties": {
                 "responses": {
-                  "required": [
-                    "206"
-                  ]
+                  "required": ["206"]
                 }
               }
             },
             "then": {
-              "required": [
-                "parameters"
-              ],
+              "required": ["parameters"],
               "properties": {
                 "parameters": {
                   "type": "array",
@@ -440,10 +429,7 @@
                         "const": "query"
                       }
                     },
-                    "required": [
-                      "name",
-                      "in"
-                    ]
+                    "required": ["name", "in"]
                   }
                 }
               }

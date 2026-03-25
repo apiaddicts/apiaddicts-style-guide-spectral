@@ -8,15 +8,22 @@ module.exports = {
     "/orders": {
       "get": {
         "parameters": [
-          {
-            "name": "$limit",
-            "in": "query",
-            "type": "integer"
-          }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
-        "responses": {
-          "206": { "description": "ok pagination" }
-        }
+        "responses": { "206": { "description": "ok pagination" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "parameters": [
+          { "name": "$limit", "in": "query", "type": "integer" }
+        ],
+        "responses": { "206": { "description": "ok subcollection" } }
+      }
+    },
+    "/customers": {
+      "get": {
+        "responses": { "200": { "description": "no pagination ok" } }
       }
     }
   }

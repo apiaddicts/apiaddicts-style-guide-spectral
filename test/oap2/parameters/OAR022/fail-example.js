@@ -7,31 +7,26 @@ module.exports = {
   "paths": {
     "/orders": {
       "get": {
-        "responses": {
-          "206": { "description": "missing orderby" }
-        }
+        "responses": { "206": { "description": "missing orderby" } }
       }
     },
     "/customers": {
       "get": {
         "parameters": [],
-        "responses": {
-          "206": { "description": "empty parameters" }
-        }
+        "responses": { "206": { "description": "empty params" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "responses": { "206": { "description": "subcollection missing orderby" } }
       }
     },
     "/products": {
       "get": {
         "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer"
-          }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
-        "responses": {
-          "206": { "description": "missing orderby" }
-        }
+        "responses": { "206": { "description": "wrong param" } }
       }
     }
   }
