@@ -8,22 +8,22 @@ module.exports = {
     "/orders": {
       "get": {
         "parameters": [
-          {
-            "name": "$orderby",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "$orderby", "in": "query", "type": "string" }
         ],
-        "responses": {
-          "206": { "description": "ok pagination" }
-        }
+        "responses": { "206": { "description": "ok" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "parameters": [
+          { "name": "$orderby", "in": "query", "type": "string" }
+        ],
+        "responses": { "206": { "description": "ok subcollection" } }
       }
     },
     "/customers": {
       "get": {
-        "responses": {
-          "200": { "description": "no pagination ok" }
-        }
+        "responses": { "200": { "description": "no pagination ok" } }
       }
     }
   }

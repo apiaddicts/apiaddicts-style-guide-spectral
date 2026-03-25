@@ -8,19 +8,27 @@ module.exports = {
     "/invoices": {
       "get": {
         "parameters": [
-          {
-            "name": "$limit",
-            "in": "query",
-            "schema": {
-              "type": "integer"
-            }
-          }
+          { "name": "$limit", "in": "query", "schema": { "type": "integer" } }
         ],
-        "responses": {
-          "206": {
-            "description": "ok pagination"
-          }
-        }
+        "responses": { "206": { "description": "ok pagination" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "parameters": [
+          { "name": "$limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "206": { "description": "subcollection ok" } }
+      }
+    },
+    "/reports": {
+      "get": {
+        "responses": { "200": { "description": "no pagination ok" } }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "responses": { "200": { "description": "ignored" } }
       }
     }
   }

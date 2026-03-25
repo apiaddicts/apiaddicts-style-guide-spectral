@@ -7,17 +7,18 @@ module.exports = {
   "paths": {
     "/orders": {
       "get": {
-        "responses": {
-          "206": { "description": "missing limit" }
-        }
+        "responses": { "206": { "description": "missing limit" } }
       }
     },
     "/customers": {
       "get": {
         "parameters": [],
-        "responses": {
-          "206": { "description": "missing limit" }
-        }
+        "responses": { "206": { "description": "empty params" } }
+      }
+    },
+    "/users/{id}/orders": {
+      "get": {
+        "responses": { "206": { "description": "subcollection missing limit" } }
       }
     }
   }
