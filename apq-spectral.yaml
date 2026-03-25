@@ -276,7 +276,7 @@ rules:
     message: "OAR022: $orderby must be defined as a query parameter in this operation."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md"
     severity: warn
-    given: "$.paths[*].get"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get"
     then:
       function: schema
       functionOptions:
@@ -319,7 +319,7 @@ rules:
     message: "OAR025: $limit must be defined as a query parameter in this operation."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md"
     severity: error
-    given: "$.paths[*].get"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get"
     then:
       function: schema
       functionOptions:
