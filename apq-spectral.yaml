@@ -1104,11 +1104,13 @@ rules:
     description: "Last path part must be the API version, indicated with the prefix 'v' and the version number as integer."
     message: "OAR100: Last path part must be the API version, indicated with the prefix 'v' and the version number as integer."
     severity: "error"
-    given: "$.servers[*].url"
+    given:
+      - "$.servers[*].url"
+      - "$.basePath"
     then:
       function: pattern
       functionOptions:
-        match: "^https?://[^/]+/.*/v[0-9]+$"
+        match: "^(https?://[^/]+)?(?:/[^/]+)*/v[0-9]+$"
   apiq:OAR101:
     description: "The first part of the path should be one of the allowed paths (e.g., '/hello')."
     message: "OAR101: The first part of the path should be one of the allowed paths."

@@ -1541,11 +1541,14 @@
       "description": "Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
       "message": "OAR100: Last path part must be the API version, indicated with the prefix 'v' and the version number as integer.",
       "severity": "error",
-      "given": "$.servers[*].url",
+      "given": [
+        "$.servers[*].url",
+        "$.basePath"
+      ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^https?://[^/]+/.*/v[0-9]+$"
+          "match": "^(https?://[^/]+)?(?:/[^/]+)*/v[0-9]+$"
         }
       }
     },
