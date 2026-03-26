@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.2] - 2026-03-25
+
+### Fixed
+- OAR014 - ResourceLevelWithinNonSuggestedRange - The number of parts of the path must be less than 4
+- OAR022 - OrderbyParameter - $orderby must be defined as a query parameter in this operation
+- OAR025 - LimitParameter - $limit must be defined as a query parameter in this operation
+- OAR010 - DefaultResponseMediaType - Default response media type should be defined for responses
+- OAR100 - LastPartBasePath - The last part of the path should be the API version
+
 ## [1.1.1] - 2026-03-04
 
 ### Fixed
