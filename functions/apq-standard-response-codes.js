@@ -22,7 +22,10 @@ module.exports = function apqStandardResponseCodes(given, options, context) {
 
   const exclusions = options?.['resources-exclusions'] || [];
   if (exclusions.some(ex => {
-    const [exVerb, exPath] = ex.split(':');
+    const colonIdx = ex.indexOf(':');
+    if (colonIdx === -1) return false;
+    const exVerb = ex.slice(0, colonIdx);
+    const exPath = ex.slice(colonIdx + 1);
     return exVerb.toLowerCase() === verb.toLowerCase() && new RegExp(`^${exPath}$`).test(resourcePath);
   })) return results;
 
