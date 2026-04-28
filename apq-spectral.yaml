@@ -764,7 +764,10 @@ rules:
     description: "RequestBody and Responses schema property names must be compliant with the snake_case naming convention."
     message: "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention."
     severity: "warn"
-    given: "$.paths.*.*[responses,requestBody]..content..schema..properties.*~"
+    given:
+      - "$.paths.*.*[responses,requestBody]..content..schema..properties.*~"
+      - "$.paths.*.*.parameters[*].schema..properties.*~"
+      - "$.paths.*.*.responses[*].schema..properties.*~"
     then:
       function: casing
       functionOptions:

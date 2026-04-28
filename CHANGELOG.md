@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.1.3] - 2026-04-24
+
+### Fixed
+- OAR066 - OAR066SnakeCaseNamingConvention - RequestBody and Responses schema property names must be compliant with the snake_case naming convention.
+
 ## [1.1.2] - 2026-03-25
 
 ### Fixed
