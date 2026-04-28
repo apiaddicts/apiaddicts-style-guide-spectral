@@ -12,7 +12,7 @@ beforeAll(async () => {
 
 test('apiq:OAR066 should find errors', () => {
   return linter.run(oar066fail).then((results) => {
-    expect(results.length).toBeGreaterThanOrEqual(1);
+    expect(results.length).toBe(10);
   });
 });
 
