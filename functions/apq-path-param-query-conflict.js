@@ -13,23 +13,16 @@ module.exports = (given, options, context) => {
     return errors;
   }
 
-  // Iterate through each path in the paths object
+  const httpMethods = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace'];
+
   for (const [pathKey, pathItem] of Object.entries(given)) {
     if (!pathItem || typeof pathItem !== 'object') {
       continue;
     }
 
-    // Extract path parameters from the path pattern
-    const pathParams = extractPathParameters(pathKey);
-
-    if (pathParams.length === 0) {
-      continue;
-    }
-
-    // Check each operation in this path
     for (const [operationKey, operation] of Object.entries(pathItem)) {
       if (!operation || typeof operation !== 'object' ||
-          !['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace'].includes(operationKey)) {
+          !httpMethods.includes(operationKey)) {
         continue;
       }
 
@@ -39,29 +32,23 @@ module.exports = (given, options, context) => {
         continue;
       }
 
-      // Look for query parameters that match path parameters
-      for (let i = 0; i < parameters.length; i++) {
-        const param = parameters[i];
-        if (param && param.in === 'query' && param.name) {
-          if (pathParams.includes(param.name)) {
-            errors.push({
-              message: `Parameter '${param.name}' appears in both path and query on '${operationKey.toUpperCase()} ${pathKey}'. Path parameters should not be duplicated as query parameters.`,
-              path: [...context.path, pathKey, operationKey, 'parameters', i, 'name']
-            });
-          }
-        }
+      const hasPathOrQueryParams = parameters.some(
+        param => param && (param.in === 'path' || param.in === 'query')
+      );
+
+      if (!hasPathOrQueryParams) {
+        continue;
+      }
+
+      const responses = operation.responses || {};
+      if (!responses['400']) {
+        errors.push({
+          message: `OAR069: Any param in PATH or QUERY, should have bad request (400) response.`,
+          path: [...context.path, pathKey, operationKey, 'responses']
+        });
       }
     }
   }
 
   return errors;
 };
-
-/**
- * Extract parameter names from OpenAPI path pattern
- * Example: /users/{id}/posts/{postId} -> ['id', 'postId']
- */
-function extractPathParameters(pathPattern) {
-  const matches = pathPattern.match(/\{([^}]+)\}/g) || [];
-  return matches.map(match => match.slice(1, -1)); // Remove { and }
-}

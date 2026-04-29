@@ -25,7 +25,7 @@ module.exports = (schema, options = {}, context) => {
 
     // Check if format is byte or binary
     const format = propSchema.format || '';
-    if (format !== 'byte' && format !== 'binary') {
+    if (format && format !== 'byte' && format !== 'binary') {
       results.push({
         message: context.rule.message
           .replace('{{property}}', propName)

@@ -86,6 +86,7 @@ module.exports = (responseNode, options = {}, context) => {
     if (forbidden.length > 0) {
       results.push({
         message: `${ruleCode}: Headers [${forbidden.join(', ')}] are not allowed`,
+        path: [...context.path, 'headers', forbidden[0]],
       });
     }
   }

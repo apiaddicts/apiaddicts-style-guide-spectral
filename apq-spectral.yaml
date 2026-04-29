@@ -514,7 +514,7 @@ rules:
         match: "^data|error$"
   apiq:OAR039:
     description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
-    message: "OAR039: Response code must be defined for this operation."
+    message: "{{error}}"
     documentationUrl: https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR039.md
     severity: error
     given: "$.paths[*][*]"
