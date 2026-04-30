@@ -3,6 +3,7 @@ functions:
   - apq-alternate-paths
   - apq-custom-schema
   - apq-compare-insensitive
+  - apq-has-filter-query-param
   - apq-parameter-naming-convention
   - apq-resources-by-verb
   - apq-at-most-one-body-parameter
@@ -389,8 +390,7 @@ rules:
     severity: warn
     given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
-      field: "$[?(@.name == '$filter' && @.in == 'query')]"
-      function: truthy
+      function: apq-has-filter-query-param
   apiq:OAR029:
     description: "A response not compliant with the standard may cause application issues."
     message: "OAR029: A response not compliant with the standard may cause application issues."
