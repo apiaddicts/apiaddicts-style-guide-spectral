@@ -388,7 +388,7 @@ rules:
     description: "$filter must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
     message: "OAR028: $filter must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
       function: apq-has-filter-query-param
   apiq:OAR029:
