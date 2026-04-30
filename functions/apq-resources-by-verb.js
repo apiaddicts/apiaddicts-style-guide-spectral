@@ -29,7 +29,7 @@ const DEFAULT_ALLOWED_PATTERNS = `
 ;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$
 `;
 
-const SUPPORTED_VERBS = ['get', 'post', 'put', 'patch', 'delete'];
+const SUPPORTED_VERBS = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options'];
 const CONFIG_ERROR_PREFIX = 'OAR018:';
 
 const parseAllowedPatterns = (patterns) => {

@@ -16,11 +16,6 @@ module.exports = {
                   "type": "string"
                 }
               },
-              "x-trace-id": {
-                "schema": {
-                  "type": "string"
-                }
-              },
               "traceId": {
                 "schema": {
                   "type": "string"
