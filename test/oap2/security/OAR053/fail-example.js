@@ -9,15 +9,16 @@ module.exports = {
       "get": {
         "responses": {
           "200": {
-            "description": "OK without headers"
-          },
-          "400": {
-            "description": "Bad Request with forbidden header",
-            "headers": {
-              "authorization": {
-                "type": "string"
-              }
-            }
+            "description": "No headers - missing x-trace-id"
+          }
+        }
+      }
+    },
+    "/users": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "No headers - missing x-trace-id"
           }
         }
       }
@@ -26,12 +27,21 @@ module.exports = {
       "post": {
         "responses": {
           "200": {
-            "description": "Missing mandatory header, extra invalid header",
+            "description": "No headers - missing x-trace-id"
+          }
+        }
+      }
+    },
+    "/items": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "x-trace-id present but also forbidden header",
             "headers": {
-              "x-power-by": {
+              "x-trace-id": {
                 "type": "string"
               },
-              "x-forbidden-header": {
+              "authorization": {
                 "type": "string"
               }
             }
@@ -39,13 +49,33 @@ module.exports = {
         }
       }
     },
-    "/customers": {
-      "get": {
+    "/reports": {
+      "post": {
         "responses": {
           "200": {
-            "description": "Headers defined but missing mandatory",
+            "description": "x-trace-id present but also forbidden header",
             "headers": {
-              "idCorrelacion": {
+              "x-trace-id": {
+                "type": "string"
+              },
+              "server": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoices": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "x-trace-id present but also forbidden header",
+            "headers": {
+              "x-trace-id": {
+                "type": "string"
+              },
+              "content-type": {
                 "type": "string"
               }
             }
