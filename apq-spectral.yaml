@@ -3,6 +3,7 @@ functions:
   - apq-alternate-paths
   - apq-custom-schema
   - apq-compare-insensitive
+  - apq-has-filter-query-param
   - apq-parameter-naming-convention
   - apq-resources-by-verb
   - apq-at-most-one-body-parameter
@@ -15,6 +16,13 @@ functions:
   - apq-custom-field
   - apq-check-examples-coverage
   - apq-path-depth
+  - apq-path-param-query-conflict
+  - apq-security-required-response
+  - apq-check-ambiguous-path
+  - apq-password-format
+  - apq-binary-format-check
+  - apq-paged-response-check
+  - apq-status-endpoint-check
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -190,7 +198,7 @@ rules:
               then:
                 properties:
                   format:
-                    enum: [int32, int64]
+                    enum: [int32, int64, uint32, uint64]
             - if:
                 properties:
                   type:
@@ -198,7 +206,7 @@ rules:
               then:
                 properties:
                   format:
-                    enum: [float, double]
+                    enum: [float, double, decimal]
   apiq:OAR017:
     description: "Resource path should alternate static and parametrized parts."
     message: "OAR017: Resource path should alternate static and parametrized parts."
@@ -247,27 +255,40 @@ rules:
           ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)$
           ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
           ;delete:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)$
+
+          ;post:^/[^/{}]+/archive$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/archive$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/archive$
+          ;post:^/[^/{}]+/clone$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/clone$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/clone$
+          ;post:^/[^/{}]+/restore$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/restore$
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/(\{[^/{}]+\}|me)/[^/{}]+/restore$
+
+          ;head:.*
+          ;options:.*
   apiq:OAR019:
-    description: "$select must be defined as a query parameter in all operations."
+    description: "$select must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR019: $select must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
       field: "$[?(@.name == '$select' && @.in == 'query')]"
       function: truthy
   apiq:OAR020:
-    description: "$expand must be defined as a query parameter in all operations."
+    description: "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR020: $expand must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
       field: "$[?(@.name == '$expand' && @.in == 'query')]"
       function: truthy
   apiq:OAR021:
-    description: "$exclude must be defined as a query parameter in all operations."
+    description: "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR021: $exclude must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
       field: "$[?(@.name == '$exclude' && @.in == 'query')]"
       function: truthy
@@ -299,27 +320,27 @@ rules:
                       const: query
                   required: [name, in]
   apiq:OAR023:
-    description: "$total must be defined as a query parameter in all operations."
+    description: "$total must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
     message: "OAR023: $total must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
       field: "$[?(@.name == '$total' && @.in == 'query')]"
       function: truthy
   apiq:OAR024:
-    description: "$start must be defined as a query parameter in all operations."
+    description: "$start must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
     message: "OAR024: $start must be defined as a query parameter in this operation."
     severity: error
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
     then:
       field: "$[?(@.name == '$start' && @.in == 'query')]"
       function: truthy
   apiq:OAR025:
-    description: "$limit must be defined as a query parameter in all operations."
+    description: "$limit must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
     message: "OAR025: $limit must be defined as a query parameter in this operation."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md"
     severity: error
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
       function: schema
       functionOptions:
@@ -340,7 +361,13 @@ rules:
                       const: "$limit"
                     in:
                       const: query
-                  required: [name, in]
+                    schema:
+                      type: object
+                      properties:
+                        type:
+                          const: integer
+                      required: [type]
+                  required: [name, in, schema]
   apiq:OAR026:
     description: "The $total parameter default value should be false."
     message: "OAR026: The $total parameter default value should be false."
@@ -358,13 +385,12 @@ rules:
       field: "headers.Location.schema.type"
       function: truthy
   apiq:OAR028:
-    description: "$filter must be defined as a query parameter in all operations."
+    description: "$filter must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
     message: "OAR028: $filter must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
-      field: "$[?(@.name == '$filter' && @.in == 'query')]"
-      function: truthy
+      function: apq-has-filter-query-param
   apiq:OAR029:
     description: "A response not compliant with the standard may cause application issues."
     message: "OAR029: A response not compliant with the standard may cause application issues."
@@ -400,13 +426,15 @@ rules:
           required:
             - properties
   apiq:OAR030:
-    description: "The path '/status' must be declared."
-    message: "OAR030: The path '/status' must be declared."
+    description: "The configured status endpoint must be declared with the configured HTTP method."
+    message: "OAR030: The required status endpoint is not declared or does not have the required method."
     severity: error
     given: "$.paths"
     then:
-      field: "/status"
-      function: truthy
+      function: apq-status-endpoint-check
+      functionOptions:
+        status-endpoint: "/status"
+        method: "get"
   apiq:OAR031:
     description: The examples can help developers to understand the response data structure and representation."
     message: "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined."
@@ -423,13 +451,12 @@ rules:
     severity: error
     given: "$.paths.*~"
     then:
-      field: "name"
-      function: pattern
+      function: apq-check-ambiguous-path
       functionOptions:
-        notMatch: "^.*elements|instances|resources|values|terms|objects|items|elements|instances|resources|values.*$"
+        ambiguous-words: "elements,instances,resources,values,terms,objects,items"
   apiq:OAR033:
-    description: "Headers 'Accept', 'Content-Type', and 'Authorization' are not allowed."
-    message: "OAR033: The header '{{value}}' is not allowed."
+    description: "Request operation parameters must not include forbidden headers (Accept, Content-Type, Authorization). Note: This validates REQUEST headers, not response headers (see OAR053/114 for response header validation)."
+    message: "OAR033: The request header parameter '{{value}}' is not allowed in operations."
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]"
     then:
@@ -438,22 +465,21 @@ rules:
       functionOptions:
         notMatch: "^(Accept|Content-Type|Authorization)$"
   apiq:OAR034:
-    description: "A paged response not compliant with the standard may cause application issues."
-    message: "OAR034: Paged response schema must be compliant with the standard."
+    description: "A paged response must comply with the standard paging schema (start, limit, links with self/previous/next, numPages, total)."
+    message: "OAR034: Paged response schema does not match the required standard."
     severity: error
-    given: "$.paths[*][*].responses[?(@property != '204' && @property != '304' && @property != 'default')]"
+    given: "$.paths[*][get].responses[?(@property != '204' && @property != '304' && @property != 'default')]..schema"
     then:
-      field: content
-      function: truthy
+      function: apq-paged-response-check
+      functionOptions:
+        paging-schema: '{"type":"object","properties":{"numPages":{"type":"integer"},"total":{"type":"integer"},"start":{"type":"integer"},"limit":{"type":"integer"},"links":{"type":"object","properties":{"next":{"type":"object","properties":{"href":{"type":"string"}}},"previous":{"type":"object","properties":{"href":{"type":"string"}}},"last":{"type":"object","properties":{"href":{"type":"string"}}},"self":{"type":"object","properties":{"href":{"type":"string"}}},"first":{"type":"object","properties":{"href":{"type":"string"}}}},"required":["self","previous","next"]}},"required":["start","limit","links"],"pagingPropertyName":"paging"}'
   apiq:OAR035:
     description: "Response code 401 must be defined for operations with security schemes defined."
     message: "OAR035: Response code 401 must be defined for operations with security schemes defined."
     severity: "error"
-    given: "$.paths[*][*].responses"
+    given: "$.paths[*][*]"
     then:
-      function: truthy
-      field: "401"
-      message: "Operation must define a 401 Unauthorized response for security schemes."
+      function: apq-security-required-response
   apiq:OAR036:
     description: "Cookie use is forbidden as a session mechanism."
     message: "OAR036: Cookie use is forbidden as a session mechanism."
@@ -468,14 +494,14 @@ rules:
         notMatch: "^(Cookie|Set-Cookie)$"
   apiq:OAR037:
     description: "Schema should use well-defined type and format."
-    message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, or ipv6)."
+    message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, json, xml, or base64)."
     severity: error
-    given: "$..schema..[?(@.type=='string')]"
+    given: "$..schema..[?(@.type=='string' && !@.enum)]"
     then:
       field: format
       function: pattern
       functionOptions:
-        match: "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6)$"
+        match: "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6|HEX|json|xml|base64)$"
   apiq:OAR038:
     description: "Response schema must be compliant with the standard."
     message: "OAR038: Response property is required for status code '{{property}}'."
@@ -511,6 +537,8 @@ rules:
           ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/get$:200,404,400,415,500,503
           ;post:^/[^/{}]+/delete$:200,404,400,415,500,503
           ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/delete$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/get$:200,404,400,415,500,503
+          ;post:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/delete$:200,404,400,415,500,503
           ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
           ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
           ;put:^/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)/[^/{}]+/(\{[^/{}]+\}|\bme\b)$:200,404,400,415,500,503
@@ -533,7 +561,7 @@ rules:
     description: Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.
     message: "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths."
     severity: "error"
-    given: "$.paths['/pets'].get"
+    given: "$.paths[*].get"
     then:
       field: "x-aut-type"
       function: truthy
@@ -554,7 +582,6 @@ rules:
     severity: "error"
     given: "$.paths.*.*.responses.*.content.*~"
     then:
-      field: name
       function: pattern
       functionOptions:
         match: "^application\/[a-zA-Z0-9-_]+$"
@@ -638,16 +665,17 @@ rules:
       field: "summary"
       function: truthy
   apiq:OAR051:
-    description: "Provide a different summary and description for each operation."
-    message: "OAR051: Provide a different summary and description for each operation."
+    description: "Summary and description must be different - not just case variations or semantic duplicates."
+    message: "OAR051: Summary and description must be meaningfully different from each other."
     severity: "error"
-    given: "$.paths[*].*"
+    given: "$.paths[*][get,post,put,patch,delete]"
     then:
       function: apq-compare-insensitive
       functionOptions:
         property: summary
         equalTo: description
         result: falsy
+        threshold: 0.55
   apiq:OAR052:
     description: "Numeric schema types must define a format."
     message: "OAR052: Numeric types requires a format"
@@ -658,19 +686,19 @@ rules:
       field: format
       function: truthy
   apiq:OAR053:
-    description: "There are mandatory response headers and others that are not allowed."
-    message: "{{error}}"
+    description: "Response headers for API observability and tracing must be defined (excluding 204 responses and health endpoints)."
+    message: "OAR053: Response must include mandatory headers and exclude forbidden headers."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR053.md"
     severity: error
     given: "$.paths[*][*].responses[*]"
     then:
       - function: apq-response-headers
         functionOptions:
-          mandatory-headers: "x-trace-id,x-request-id"
+          mandatory-headers: "x-trace-id"
           allowed-headers: "idcorrelacion,x-correlacionid,x-global-trasaction-id,x-power-by,x-trace-id,x-request-id"
           included-response-codes: "*"
           excluded-response-codes: "204"
-          path-exclusions: "/status,/prueba"
+          path-exclusions: "/status"
   apiq:OAR054:
     description: "Ensure the host matches the specified format"
     message: "OAR054: Hostname must be a subdomain of the organization's domain name."
@@ -693,7 +721,7 @@ rules:
     description: "Ensure get have mandatory response codes"
     message: "OAR061: Ensure get have the mandatory response codes"
     severity: error
-    given: "$.paths[?(!(@property === '/status' || @property === '/another'))].get.responses"
+    given: "$.paths[?(@property !== '/status')].get.responses"
     then:
       function: schema
       functionOptions:
@@ -708,7 +736,7 @@ rules:
     description: "Ensure post have mandatory response codes"
     message: "OAR062: Ensure post have the mandatory response codes"
     severity: error
-    given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].post.responses"
+    given: "$.paths[?(@property !== '/status')].post.responses"
     then:
       function: schema
       functionOptions:
@@ -723,7 +751,7 @@ rules:
     description: "Ensure put have mandatory response codes"
     message: "OAR063: Ensure put have the mandatory response codes"
     severity: error
-    given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].put.responses"
+    given: "$.paths[?(@property !== '/status')].put.responses"
     then:
       function: schema
       functionOptions:
@@ -737,7 +765,7 @@ rules:
     description: "Ensure patch have mandatory response codes"
     message: "OAR064: Ensure patch have the mandatory response codes"
     severity: error
-    given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].patch.responses"
+    given: "$.paths[?(@property !== '/status')].patch.responses"
     then:
       function: schema
       functionOptions:
@@ -751,7 +779,7 @@ rules:
     description: "Ensure delete have mandatory response codes"
     message: "OAR065: Ensure delete have the mandatory response codes"
     severity: error
-    given: "$.paths[?(!( @property == '/status' || @property == '/another' ))].delete.responses"
+    given: "$.paths[?(@property !== '/status')].delete.responses"
     then:
       function: schema
       functionOptions:
@@ -764,7 +792,10 @@ rules:
     description: "RequestBody and Responses schema property names must be compliant with the snake_case naming convention."
     message: "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention."
     severity: "warn"
-    given: "$.paths.*.*[responses,requestBody]..content..schema..properties.*~"
+    given:
+      - "$.paths.*.*[responses,requestBody]..content..schema..properties.*~"
+      - "$.paths.*.*.parameters[*].schema..properties.*~"
+      - "$.paths.*.*.responses[*].schema..properties.*~"
     then:
       function: casing
       functionOptions:
@@ -788,14 +819,12 @@ rules:
       functionOptions:
         type: pascal
   apiq:OAR069:
-    description: "Any param in PATH or QUERY should have a Bad Request (400) response."
-    message: "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response."
-    severity: "warn"
-    given: "$.paths[*][*].responses"
+    description: "Path parameters should not appear as query parameters."
+    message: "OAR069: Path parameter should not appear as both path and query parameter."
+    severity: "error"
+    given: "$.paths"
     then:
-      function: truthy
-      field: "400"
-      message: "Operation must define a 400 Bad Request response for parameters in PATH or QUERY."
+      function: apq-path-param-query-conflict
   apiq:OAR070:
     description: "Parameters in path should not be numeric."
     message: "OAR070: Parameters in path should not be numeric."
@@ -829,10 +858,10 @@ rules:
       functionOptions:
         notMatch: "stacktrace"
   apiq:OAR073:
-    description: "API should include a 429 response to indicate rate limiting, except for the /status path."
+    description: "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /ping."
     message: "OAR073: API should include a 429 response to indicate rate limiting."
     severity: error
-    given: "$.paths[?(@ !== '/status')][*].responses"
+    given: "$.paths[?(!(@property.match(/\\/status|health|ping|liveness|readiness/)))][*].responses"
     then:
       field: "429"
       function: truthy
@@ -909,7 +938,7 @@ rules:
         match: ^\$?_?[a-z]+(_[a-z]+)*$
   apiq:OAR078:
     description: "All API methods must have security defined."
-    message: "{{error}}"
+    message: "OAR078: Operation must have security defined."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md"
     severity: error
     given: "$"
@@ -939,22 +968,18 @@ rules:
     description: "Fields of type password should be string with format password."
     message: "OAR081: Fields of type password should be string with format password."
     severity: error
-    given: "$..properties[?(@.type == 'string' && @.format == 'number')]"
+    given: "$..properties"
     then:
-      field: "format"
-      function: pattern
-      functionOptions:
-        match: "^password$"
+      function: apq-password-format
   apiq:OAR082:
-    description: "The string properties must define a byte or binary format."
-    message: "OAR082: The string properties must define a 'byte' or 'binary' format."
+    description: "The string properties 'product', 'line', and 'price' must define a byte or binary format."
+    message: "OAR082: Property '{{property}}' must define a 'byte' or 'binary' format (currently: {{format}})."
     severity: error
-    given: "$..properties.*"
+    given: "$..[?(@.properties)]"
     then:
-      field: format
-      function: pattern
+      function: apq-binary-format-check
       functionOptions:
-        match: "^(byte|binary)$"
+        fields-to-apply: "product,line,price"
   apiq:OAR083:
     description: "Certain parameters (e.g., email, password) should not pass through the querystring."
     message: "OAR083: The parameter '{{value}}' should not pass through the querystring."
@@ -1024,7 +1049,7 @@ rules:
     description: "The $ref of a response must end with the suffix Response."
     message: "OAR090: The $ref of a response must end with the suffix Response"
     severity: error
-    given: "$.paths['/sample'].get.responses['200'].$ref"
+    given: "$.paths[*][*].responses[*].$ref"
     then:
       function: pattern
       functionOptions:
@@ -1207,7 +1232,7 @@ rules:
       function: truthy
   apiq:OAR113:
     description: "Field or extension must be at the assigned location"
-    message: "{{error}}"
+    message: "OAR113: Field or extension x-custom-example must be at the assigned location"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR113.md"
     severity: warn
     given: "$"
@@ -1217,19 +1242,21 @@ rules:
         fieldName: "x-custom-example"
         fieldLocation: "path,operation_get,response_200"
   apiq:OAR114:
-    description: "There are mandatory response headers and others that are not allowed."
-    message: "{{error}}"
+    description: "Response headers for API security and key management must be defined (excluding 204 responses)."
+    message: "OAR114: Response must include mandatory headers and exclude forbidden headers."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md"
     severity: "error"
     given: "$.paths[*][*].responses[*]"
     then:
       - function: apq-response-headers
         functionOptions:
-          mandatory-headers: "x-api-key,x-trace-id"
-          allowed-headers: "x-api-key,x-trace-id,traceId,dateTime"
+          mandatory-headers: "x-api-key"
+          allowed-headers: "x-api-key,traceId,dateTime"
+          excluded-response-codes: "204"
+          path-exclusions: "/status"
   apiq:OAR115:
     description: "All fields listed in the required array must be defined in the schema properties."
-    message: "{{error}}"
+    message: "OAR115: All fields in the required array must be defined in schema properties."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md"
     severity: warn
     given:

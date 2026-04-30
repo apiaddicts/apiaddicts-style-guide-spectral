@@ -89,9 +89,9 @@ module.exports = {
       "get": {
         "responses": {
           "200": {
-            "description": "Excluded path",
+            "description": "Valid headers",
             "headers": {
-              "x-not-allowed": {
+              "x-trace-id": {
                 "schema": {
                   "type": "string"
                 }

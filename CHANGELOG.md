@@ -19,6 +19,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.2.0] - 2026-04-30
+
+### Changed
+- OAR018 - ResourcesByVerb - Added POST patterns for `archive`, `clone` and `restore` actions.
+- OAR019 - SelectParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR020 - ExpandParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR021 - ExcludeParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR023 - TotalParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR024 - StartParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR025 - LimitParameter - Narrowed scope to exclude health check paths; `$limit` parameter now requires `schema.type: integer`
+- OAR030 - StatusEndpoint - Replaced hardcoded `/status` path check with configurable `apq-status-endpoint-check` function
+- OAR032 - AmbiguousElementsPath - Replaced regex pattern with configurable `apq-check-ambiguous-path` function
+- OAR033 - HttpHeaders - Clarified description and message to indicate REQUEST header validation only
+- OAR034 - StandardPagedResponseSchema - Replaced content existence check with `apq-paged-response-check` function validating full paging schema.
+- OAR035 - UnauthorizedResponse - Replaced field-level 401 check with `apq-security-required-response` function
+- OAR037 - StringFormat - Added valid string formats; excluded `enum` fields from format validation
+- OAR051 - DescriptionDiffersSummary - Updated description and message for clarity
+
+### Fixed
+- OAR028 - FilterParameter - $filter must be defined as a query parameter in this operation.
+- OAR066 - SnakeCaseNamingConvention - RequestBody and Responses schema property names must be compliant with the snake_case naming convention.
+
 ## [1.1.2] - 2026-03-25
 
 ### Fixed

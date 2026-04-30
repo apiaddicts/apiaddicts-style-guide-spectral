@@ -4,32 +4,21 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
-  "components": {
-    "responses": {
-      "BadResponse": {
-        "description": "Referenced response without headers"
-      },
-      "ForbiddenHeadersResponse": {
-        "description": "Has forbidden headers",
-        "headers": {
-          "authorization": {
-            "schema": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    }
-  },
   "paths": {
     "/pets": {
       "get": {
         "responses": {
           "200": {
-            "$ref": "#/components/responses/BadResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ForbiddenHeadersResponse"
+            "description": "No headers - missing x-trace-id"
+          }
+        }
+      }
+    },
+    "/users": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "No headers - missing x-trace-id"
           }
         }
       }
@@ -38,9 +27,23 @@ module.exports = {
       "post": {
         "responses": {
           "200": {
-            "description": "Inline headers but missing mandatory",
+            "description": "No headers - missing x-trace-id"
+          }
+        }
+      }
+    },
+    "/items": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "x-trace-id present but also forbidden header",
             "headers": {
-              "x-power-by": {
+              "x-trace-id": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "authorization": {
                 "schema": {
                   "type": "string"
                 }
@@ -50,18 +53,39 @@ module.exports = {
         }
       }
     },
-    "/customers": {
-      "get": {
+    "/reports": {
+      "post": {
         "responses": {
           "200": {
-            "description": "Mixed allowed and forbidden",
+            "description": "x-trace-id present but also forbidden header",
             "headers": {
               "x-trace-id": {
                 "schema": {
                   "type": "string"
                 }
               },
-              "x-not-allowed": {
+              "server": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoices": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "x-trace-id present but also forbidden header",
+            "headers": {
+              "x-trace-id": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "content-type": {
                 "schema": {
                   "type": "string"
                 }
