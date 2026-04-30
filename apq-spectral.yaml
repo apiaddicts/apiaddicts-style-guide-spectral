@@ -3,6 +3,7 @@ functions:
   - apq-alternate-paths
   - apq-custom-schema
   - apq-compare-insensitive
+  - apq-has-filter-query-param
   - apq-parameter-naming-convention
   - apq-resources-by-verb
   - apq-at-most-one-body-parameter
@@ -358,13 +359,12 @@ rules:
       field: "headers.Location.schema.type"
       function: truthy
   apiq:OAR028:
-    description: "$filter must be defined as a query parameter in all operations."
+    description: "$filter must be defined as a query parameter in this operation."
     message: "OAR028: $filter must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[*].get.parameters"
+    given: "$.paths[*].get"
     then:
-      field: "$[?(@.name == '$filter' && @.in == 'query')]"
-      function: truthy
+      function: apq-has-filter-query-param
   apiq:OAR029:
     description: "A response not compliant with the standard may cause application issues."
     message: "OAR029: A response not compliant with the standard may cause application issues."
