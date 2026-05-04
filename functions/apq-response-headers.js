@@ -41,7 +41,7 @@ module.exports = (responseNode, options = {}, context) => {
   const path = context.path?.find(p => typeof p === 'string' && p.startsWith('/'));
   const responseCode = context.path?.[context.path.length - 1];
 
-  if (path && pathExclusions.some(ex => path === ex || path.startsWith(ex + '/'))) {
+  if (path && pathExclusions.includes(path)) {
     return [];
   }
 
@@ -85,8 +85,7 @@ module.exports = (responseNode, options = {}, context) => {
     const forbidden = headerNames.filter(h => !allowedHeaders.includes(h));
     if (forbidden.length > 0) {
       results.push({
-        message: `${ruleCode}: Headers [${forbidden.join(', ')}] are not allowed`,
-        path: [...context.path, 'headers', forbidden[0]],
+        message: `${ruleCode}: Header not allowed`,
       });
     }
   }

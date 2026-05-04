@@ -8,7 +8,7 @@ module.exports = {
     "/orders": {
       "get": {
         "parameters": [
-          { "name": "$limit", "in": "query", "type": "integer", "schema": { "type": "integer" } }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
         "responses": { "206": { "description": "ok pagination" } }
       }
@@ -16,7 +16,7 @@ module.exports = {
     "/users/{id}/orders": {
       "get": {
         "parameters": [
-          { "name": "$limit", "in": "query", "type": "integer", "schema": { "type": "integer" } }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
         "responses": { "206": { "description": "ok subcollection" } }
       }

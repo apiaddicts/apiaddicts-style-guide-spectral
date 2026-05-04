@@ -14,7 +14,7 @@ module.exports = {
               "x-api-key": {
                 "type": "string"
               },
-              "traceId": {
+              "x-trace-id": {
                 "type": "string"
               },
               "dateTime": {

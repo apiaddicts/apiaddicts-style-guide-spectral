@@ -15,7 +15,7 @@ module.exports = {
               "properties": {
                 "amount": {
                   "type": "number",
-                  "format": "int32"
+                  "format": "decimal"
                 },
                 "nested": {
                   "type": "object",
