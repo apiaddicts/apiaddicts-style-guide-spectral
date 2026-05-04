@@ -1,0 +1,42 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet.
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /pets:
+    get:
+      summary: List all pets.
+      parameters:
+        - name: limit
+          in: query
+          description: The number of items to return
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        default:
+          description: the default response

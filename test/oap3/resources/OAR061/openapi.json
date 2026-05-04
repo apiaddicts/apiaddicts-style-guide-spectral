@@ -1,0 +1,52 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Swagger Petstore"
+  },
+  "paths" : {
+    "/pets" : {
+      "post" : {
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many items to return at one time (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "summary" : "create a pet",
+        "description" : "Create a new pet. The pet type is assigned a new unique ID, and can then be referenced in other operations.",
+        "responses" : {
+          "default" : {
+            "description" : "the default response"
+          }
+        }
+      },
+      "get" : {
+        "summary" : "List all pets",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many items to return at one time (max 100)",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses" : {
+          "default" : {
+            "description" : "the default response"
+          }
+        }
+      }
+    }
+  }
+}

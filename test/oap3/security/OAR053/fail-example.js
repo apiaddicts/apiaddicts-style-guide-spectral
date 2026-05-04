@@ -4,21 +4,32 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
+  "components": {
+    "responses": {
+      "BadResponse": {
+        "description": "Referenced response without headers"
+      },
+      "ForbiddenHeadersResponse": {
+        "description": "Has forbidden headers",
+        "headers": {
+          "authorization": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
   "paths": {
     "/pets": {
       "get": {
         "responses": {
           "200": {
-            "description": "No headers - missing x-trace-id"
-          }
-        }
-      }
-    },
-    "/users": {
-      "put": {
-        "responses": {
-          "200": {
-            "description": "No headers - missing x-trace-id"
+            "$ref": "#/components/responses/BadResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ForbiddenHeadersResponse"
           }
         }
       }
@@ -27,65 +38,30 @@ module.exports = {
       "post": {
         "responses": {
           "200": {
-            "description": "No headers - missing x-trace-id"
+            "description": "Inline headers but missing mandatory",
+            "headers": {
+              "x-power-by": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/items": {
+    "/customers": {
       "get": {
         "responses": {
           "200": {
-            "description": "x-trace-id present but also forbidden header",
+            "description": "Mixed allowed and forbidden",
             "headers": {
               "x-trace-id": {
                 "schema": {
                   "type": "string"
                 }
               },
-              "authorization": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/reports": {
-      "post": {
-        "responses": {
-          "200": {
-            "description": "x-trace-id present but also forbidden header",
-            "headers": {
-              "x-trace-id": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "server": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/invoices": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "x-trace-id present but also forbidden header",
-            "headers": {
-              "x-trace-id": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "content-type": {
+              "x-not-allowed": {
                 "schema": {
                   "type": "string"
                 }

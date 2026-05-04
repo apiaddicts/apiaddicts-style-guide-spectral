@@ -9,22 +9,7 @@ module.exports = {
       "get": {
         "responses": {
           "206": {
-            "description": "Ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Ok"
           },
           "204": {
             "description": "No content"

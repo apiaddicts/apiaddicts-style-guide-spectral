@@ -39,18 +39,6 @@ module.exports = (given, options, context) => {
       return checkSchema(schema.items);
     }
 
-    if (schema.allOf && Array.isArray(schema.allOf)) {
-      return schema.allOf.some(subSchema => checkSchema(subSchema));
-    }
-
-    if (schema.oneOf && Array.isArray(schema.oneOf)) {
-      return schema.oneOf.some(subSchema => checkSchema(subSchema));
-    }
-
-    if (schema.anyOf && Array.isArray(schema.anyOf)) {
-      return schema.anyOf.some(subSchema => checkSchema(subSchema));
-    }
-
     return false;
   };
 

@@ -4,7 +4,6 @@
     "apq-alternate-paths",
     "apq-custom-schema",
     "apq-compare-insensitive",
-    "apq-has-filter-query-param",
     "apq-parameter-naming-convention",
     "apq-resources-by-verb",
     "apq-at-most-one-body-parameter",
@@ -460,12 +459,13 @@
       }
     },
     "apiq:OAR028": {
-      "description": "$filter must be defined as a query parameter in this operation.",
+      "description": "$filter must be defined as a query parameter in all operations.",
       "message": "OAR028: $filter must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get",
+      "given": "$.paths[*].get.parameters",
       "then": {
-        "function": "apq-has-filter-query-param"
+        "field": "$[?(@.name == '$filter' && @.in == 'query')]",
+        "function": "truthy"
       }
     },
     "apiq:OAR029": {
@@ -1048,11 +1048,7 @@
       "description": "RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
       "message": "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
       "severity": "warn",
-      "given": [
-        "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
-        "$.paths.*.*.parameters[*].schema..properties.*~",
-        "$.paths.*.*.responses[*].schema..properties.*~"
-      ],
+      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
       "then": {
         "function": "casing",
         "functionOptions": {

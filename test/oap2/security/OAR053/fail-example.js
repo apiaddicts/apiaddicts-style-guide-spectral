@@ -9,38 +9,11 @@ module.exports = {
       "get": {
         "responses": {
           "200": {
-            "description": "No headers - missing x-trace-id"
-          }
-        }
-      }
-    },
-    "/users": {
-      "put": {
-        "responses": {
-          "200": {
-            "description": "No headers - missing x-trace-id"
-          }
-        }
-      }
-    },
-    "/orders": {
-      "post": {
-        "responses": {
-          "200": {
-            "description": "No headers - missing x-trace-id"
-          }
-        }
-      }
-    },
-    "/items": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "x-trace-id present but also forbidden header",
+            "description": "OK without headers"
+          },
+          "400": {
+            "description": "Bad Request with forbidden header",
             "headers": {
-              "x-trace-id": {
-                "type": "string"
-              },
               "authorization": {
                 "type": "string"
               }
@@ -49,16 +22,16 @@ module.exports = {
         }
       }
     },
-    "/reports": {
+    "/orders": {
       "post": {
         "responses": {
           "200": {
-            "description": "x-trace-id present but also forbidden header",
+            "description": "Missing mandatory header, extra invalid header",
             "headers": {
-              "x-trace-id": {
+              "x-power-by": {
                 "type": "string"
               },
-              "server": {
+              "x-forbidden-header": {
                 "type": "string"
               }
             }
@@ -66,16 +39,13 @@ module.exports = {
         }
       }
     },
-    "/invoices": {
-      "delete": {
+    "/customers": {
+      "get": {
         "responses": {
           "200": {
-            "description": "x-trace-id present but also forbidden header",
+            "description": "Headers defined but missing mandatory",
             "headers": {
-              "x-trace-id": {
-                "type": "string"
-              },
-              "content-type": {
+              "idCorrelacion": {
                 "type": "string"
               }
             }

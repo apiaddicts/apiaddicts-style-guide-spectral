@@ -8,8 +8,7 @@ module.exports = (given, { except }, context) => {
   const paths = given || [];
   if (paths.length === 0) return result;
 
-  const parts = paths.substr(1).split('/').filter(p => p.length > 0);
-  if (parts.length === 0) return result;
+  const parts = paths.substr(1).split('/');
   let previousIsVar = isVariable(parts.shift());
   if (previousIsVar) {
     return [{
