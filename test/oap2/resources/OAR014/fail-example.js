@@ -15,19 +15,9 @@ module.exports = {
         "responses": { "200": { "description": "fail depth 4" } }
       }
     },
-    "/shops/{shopId}/products/{productId}/reviews": {
-      "get": {
-        "responses": { "200": { "description": "fail depth 4" } }
-      }
-    },
     "/a/b/c/d/e": {
       "get": {
         "responses": { "200": { "description": "fail depth 5" } }
-      }
-    },
-    "/orders/{orderId}/items/{itemId}/details": {
-      "get": {
-        "responses": { "200": { "description": "fail nested resource" } }
       }
     }
   }

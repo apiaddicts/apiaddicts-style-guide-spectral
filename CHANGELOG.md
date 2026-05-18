@@ -19,6 +19,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0] - 2026-05-18
+
+### Added
+- OAR043  - ParsingError - OpenAPI file cannot be parsed
+
+### Changed
+- OAR031 - Examples - Responses, Request Body, Parameters and Properties must have an example defined
+
+### Fixed
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Resources depth level should be below the non-suggested range
+
 ## [1.2.0] - 2026-04-30
 
 ### Changed
