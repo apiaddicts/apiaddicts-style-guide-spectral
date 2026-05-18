@@ -10,6 +10,7 @@ module.exports = (targetVal, options, context) => {
   const segments = targetVal
     .split('/')
     .filter(Boolean)
+    .filter(segment => !segment.startsWith('{') && !segment.endsWith('}'))
     .filter(segment => !ignore.includes(segment))
 
   if (segments.length > maxDepth) {

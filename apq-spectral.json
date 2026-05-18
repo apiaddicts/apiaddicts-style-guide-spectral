@@ -16,7 +16,8 @@
     "apq-response-media-type",
     "apq-security-check",
     "apq-check-examples-coverage",
-    "apq-path-depth"
+    "apq-path-depth",
+    "apq-validate-structure"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -531,7 +532,7 @@
     },
     "apiq:OAR031": {
       "description": "The examples can help developers to understand the response data structure and representation.",
-      "message": "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined.",
+      "message": "{{error}}",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*",
@@ -682,6 +683,20 @@
         "functionOptions": {
           "match": "^(/api-[^/]+/v[0-9]+|https?:\\/\\/[^/]+\\/api-[^/]+\\/v[0-9]+)$"
         }
+      }
+    },
+    "apiq:OAR043": {
+      "description": "OpenAPI definition contains structural errors that would be detected by a strict parser or validator.",
+      "message": "{{error}}",
+      "severity": "error",
+      "given": [
+        "$.paths.*.*.parameters.*.in",
+        "$.components.parameters.*.in",
+        "$.paths.*.*.parameters.*.schema.type",
+        "$.components.parameters.*.schema.type"
+      ],
+      "then": {
+        "function": "apq-validate-structure"
       }
     },
     "apiq:OAR044": {
