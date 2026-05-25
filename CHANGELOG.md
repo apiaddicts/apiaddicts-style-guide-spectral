@@ -19,10 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-## [1.3.0] - 2026-05-18
+## [1.3.0-beta.1] - 2026-05-20
 
 ### Added
-- OAR043  - ParsingError - OpenAPI file cannot be parsed
+- OAR043 - ParsingError - OpenAPI file cannot be parsed
 
 ### Changed
 - OAR031 - Examples - Responses, Request Body, Parameters and Properties must have an example defined
