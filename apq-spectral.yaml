@@ -23,6 +23,7 @@ functions:
   - apq-binary-format-check
   - apq-paged-response-check
   - apq-status-endpoint-check
+  - apq-validate-structure
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -436,8 +437,8 @@ rules:
         status-endpoint: "/status"
         method: "get"
   apiq:OAR031:
-    description: The examples can help developers to understand the response data structure and representation."
-    message: "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined."
+    description: "The examples can help developers to understand the response data structure and representation."
+    message: "{{error}}"
     severity: error
     given:
       - $.paths.*.*.parameters.*
@@ -576,6 +577,17 @@ rules:
       function: pattern
       functionOptions:
         match: "^(/api-[^/]+/v[0-9]+|https?:\\/\\/[^/]+\\/api-[^/]+\\/v[0-9]+)$"
+  apiq:OAR043:
+    description: "OpenAPI definition contains structural errors that would be detected by a strict parser or validator."
+    message: "{{error}}"
+    severity: error
+    given:
+      - $.paths.*.*.parameters.*.in
+      - $.components.parameters.*.in
+      - $.paths.*.*.parameters.*.schema.type
+      - $.components.parameters.*.schema.type
+    then:
+      function: apq-validate-structure
   apiq:OAR044:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."

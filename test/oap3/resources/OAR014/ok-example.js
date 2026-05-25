@@ -32,6 +32,13 @@ module.exports = {
           "200": { "description": "ok ignoring me" }
         }
       }
+    },
+    "/stores/{storeId}/products/{productId}/reviews": {
+      "get": {
+        "responses": {
+          "200": { "description": "ok: 3 literal segments, path params not counted" }
+        }
+      }
     }
   }
 };
