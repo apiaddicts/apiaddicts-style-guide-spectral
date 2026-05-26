@@ -38,7 +38,7 @@ module.exports = (given, options, context) => {
   };
 
   if (!hasExample(given)) {
-    issues.push({ message: context.rule.message });
+    issues.push({ message: 'OAR031: Must have one or more examples defined' });
   }
 
   if (!isParameter) {
