@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0-beta.2] - 2026-05-26
+
+### Fixed
+- OAR031 - Examples - Fixed error message
+
 ## [1.3.0-beta.1] - 2026-05-20
 
 ### Added
