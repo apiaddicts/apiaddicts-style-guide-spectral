@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0-beta.3] - 2026-05-27
+
+### Fixed
+- OAR004 - ValidWso2ScopesRoles - Updated allowed characters pattern from `^[A-Za-z0-9_]+$` to `^[a-zA-Z0-9_\-., ]+$`, allowing comma-separated roles, dashes and dots.
+- OAR008 - AllowedHttpVerb - Fixed rule logic: replaced incorrect `truthy` check on allowed verbs with `falsy` check on forbidden verbs (`head`, `options`, `trace`).
+- OAR043 - ParsingError - Updating error messages.
+
 ## [1.3.0-beta.2] - 2026-05-26
 
 ### Fixed

@@ -74,7 +74,7 @@
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^[A-Za-z0-9_]+$"
+          "match": "^[a-zA-Z0-9_\\-., ]+$"
         }
       }
     },
@@ -134,9 +134,9 @@
       "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
       "severity": "error",
-      "given": "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch')]",
+      "given": "$.paths[*][head,options,trace]",
       "then": {
-        "function": "truthy"
+        "function": "falsy"
       }
     },
     "apiq:OAR009": {

@@ -6,8 +6,14 @@
 module.exports = (given, options, context) => {
   if (given === null || given === undefined) return [];
 
-  const VALID_IN_VALUES = ['query', 'header', 'path', 'cookie', 'body', 'formData'];
-  const VALID_SCHEMA_TYPES = ['string', 'number', 'integer', 'boolean', 'array', 'object', 'null'];
+  const doc = context.document?.data ?? {};
+  const isOAP2 = typeof doc.swagger === 'string';
+
+  const VALID_IN_VALUES_OAP2 = ['query', 'header', 'path', 'formData', 'body'];
+  const VALID_IN_VALUES_OAP3 = ['path', 'query', 'header', 'cookie'];
+  const VALID_IN_VALUES = isOAP2 ? VALID_IN_VALUES_OAP2 : VALID_IN_VALUES_OAP3;
+
+  const VALID_SCHEMA_TYPES = ['object', 'string', 'number', 'integer', 'boolean', 'array', 'null'];
 
   const nodePath = context.path || [];
   const fieldName = nodePath[nodePath.length - 1];
