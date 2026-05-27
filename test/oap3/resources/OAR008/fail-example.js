@@ -5,11 +5,42 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
-    "/empty-get": {
-      "get": null
-    },
-    "/empty-post": {
-      "post": null
+    "/pets": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "A list of pets."
+          }
+        }
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "object" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pet created."
+          }
+        }
+      },
+      "head": {
+        "responses": {
+          "200": {
+            "description": "Headers only."
+          }
+        }
+      },
+      "options": {
+        "responses": {
+          "200": {
+            "description": "CORS preflight."
+          }
+        }
+      }
     }
   }
 };

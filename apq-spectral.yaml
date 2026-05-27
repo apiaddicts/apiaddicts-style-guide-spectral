@@ -67,7 +67,7 @@ rules:
     then:
       function: "pattern"
       functionOptions:
-        match: "^[A-Za-z0-9_]+$"
+        match: "^[a-zA-Z0-9_\\-., ]+$"
   apiq:OAR005:
     description: "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint."
     message: "OAR005: Scope in the operation must be defined correctly and match an existing scope."
@@ -106,9 +106,9 @@ rules:
     message: "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE)."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md"
     severity: error
-    given: "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch')]"
+    given: "$.paths[*][head,options,trace]"
     then:
-      function: truthy
+      function: falsy
   apiq:OAR009:
     description: "Default request media type should be defined for operations."
     message: "OAR009: Default request media type is mandatory."
