@@ -16,6 +16,7 @@ functions:
   - apq-custom-field
   - apq-check-examples-coverage
   - apq-path-depth
+  - apq-forbidden-characters
   - apq-path-param-query-conflict
   - apq-security-required-response
   - apq-check-ambiguous-path
@@ -65,9 +66,7 @@ rules:
     severity: "error"
     given: "$.x-wso2-security.apim.x-wso2-scopes[*].roles"
     then:
-      function: "pattern"
-      functionOptions:
-        match: "^[a-zA-Z0-9_\\-., ]+$"
+      function: apq-forbidden-characters
   apiq:OAR005:
     description: "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint."
     message: "OAR005: Scope in the operation must be defined correctly and match an existing scope."
@@ -177,9 +176,11 @@ rules:
     severity: error
     given: "$.paths.*~"
     then:
-      function: pattern
+      function: apq-path-depth
       functionOptions:
-        match: "^\/[^\/]*((\/{[^}]*})*\/[^\/]*(\/{[^}]*})*){0,4}\/?$"
+        maxDepth: 5
+        ignoreSegments:
+          - me
   apiq:OAR016:
     description: "Numeric types requires a valid format."
     message: "OAR016: Numeric types must use a valid format for their type."

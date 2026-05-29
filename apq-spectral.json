@@ -17,6 +17,7 @@
     "apq-security-check",
     "apq-check-examples-coverage",
     "apq-path-depth",
+    "apq-forbidden-characters",
     "apq-validate-structure"
   ],
    "extends": [
@@ -72,10 +73,7 @@
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^[a-zA-Z0-9_\\-., ]+$"
-        }
+        "function": "apq-forbidden-characters"
       }
     },
     "apiq:OAR005": {
@@ -225,9 +223,12 @@
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
-        "function": "pattern",
+        "function": "apq-path-depth",
         "functionOptions": {
-          "match": "^/[^/]*((/{[^}]*})*/[^/]*(/{[^}]*})*){0,4}/?$"
+          "maxDepth": 5,
+          "ignoreSegments": [
+            "me"
+          ]
         }
       }
     },
