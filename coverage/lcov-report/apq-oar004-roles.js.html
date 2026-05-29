@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for apq-validate-structure.js</title>
+    <title>Code coverage report for apq-oar004-roles.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> apq-validate-structure.js</h1>
+        <h1><a href="index.html">All files</a> apq-oar004-roles.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5% </span>
+                <span class="strong">9.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/20</span>
+                <span class='fraction'>1/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/18</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">5.26% </span>
+                <span class="strong">9.09% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/19</span>
+                <span class='fraction'>1/11</span>
             </div>
         
             
@@ -86,48 +86,18 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a>
-<a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -140,42 +110,27 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * @param {string} given  - The field value
+ * @param {string|string[]} targetVal
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = <span class="fstat-no" title="function not covered" >(g</span>iven, options, context) =&gt; {
-<span class="cstat-no" title="statement not covered" >  if (given === null || given === undefined) <span class="cstat-no" title="statement not covered" >return [];</span></span>
+module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, _options, context) =&gt; {
+  const pattern = <span class="cstat-no" title="statement not covered" >/^[a-zA-Z0-9_\-., ]+$/;</span>
+  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
 &nbsp;
-  const doc = <span class="cstat-no" title="statement not covered" >context.document?.data ?? {};</span>
-  const isOAP2 = <span class="cstat-no" title="statement not covered" >typeof doc.swagger === 'string';</span>
-&nbsp;
-  const VALID_IN_VALUES_OAP2 = <span class="cstat-no" title="statement not covered" >['query', 'header', 'path', 'formData', 'body'];</span>
-  const VALID_IN_VALUES_OAP3 = <span class="cstat-no" title="statement not covered" >['path', 'query', 'header', 'cookie'];</span>
-  const VALID_IN_VALUES = <span class="cstat-no" title="statement not covered" >isOAP2 ? VALID_IN_VALUES_OAP2 : VALID_IN_VALUES_OAP3;</span>
-&nbsp;
-  const VALID_SCHEMA_TYPES = <span class="cstat-no" title="statement not covered" >['object', 'string', 'number', 'integer', 'boolean', 'array', 'null'];</span>
-&nbsp;
-  const nodePath = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
-  const fieldName = <span class="cstat-no" title="statement not covered" >nodePath[nodePath.length - 1];</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  if (fieldName === 'in') {</span>
-<span class="cstat-no" title="statement not covered" >    if (!VALID_IN_VALUES.includes(String(given))) {</span>
-<span class="cstat-no" title="statement not covered" >      return [{</span>
-        message: `in: Expected one of [${VALID_IN_VALUES.map(<span class="fstat-no" title="function not covered" >v </span>=&gt; <span class="cstat-no" title="statement not covered" >`"${v}"`)</span>.join(', ')}]`,
-      }];
+<span class="cstat-no" title="statement not covered" >  if (typeof targetVal === 'string') {</span>
+<span class="cstat-no" title="statement not covered" >    if (!pattern.test(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >      errors.push({ message: context.rule.message });</span>
     }
+  } else <span class="cstat-no" title="statement not covered" >if (Array.isArray(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >    targetVal.forEach(<span class="fstat-no" title="function not covered" >(r</span>ole, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {</span>
+<span class="cstat-no" title="statement not covered" >        errors.push({ message: context.rule.message, path: [index] });</span>
+      }
+    });
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (fieldName === 'type') {</span>
-<span class="cstat-no" title="statement not covered" >    if (!VALID_SCHEMA_TYPES.includes(String(given))) {</span>
-<span class="cstat-no" title="statement not covered" >      return [{</span>
-        message: `type: Expected one of [${VALID_SCHEMA_TYPES.map(<span class="fstat-no" title="function not covered" >v </span>=&gt; <span class="cstat-no" title="statement not covered" >`"${v}"`)</span>.join(', ')}]`,
-      }];
-    }
-  }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  return [];</span>
+<span class="cstat-no" title="statement not covered" >  return errors;</span>
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -184,7 +139,7 @@ module.exports = <span class="fstat-no" title="function not covered" >(g</span>i
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-29T14:50:52.613Z
+                at 2026-05-29T14:30:40.370Z
             </div>
         <script src="prettify.js"></script>
         <script>

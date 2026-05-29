@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0-beta.4] - 2026-05-29
+
+### Fixed
+
+- OAR004 - ValidWso2ScopesRoles - Fixed false negative where `roles` defined as a YAML/JSON array were not validated element by element. Added custom function to handle both string and array values, reporting an error for each invalid array element individually.
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Updated documentation (`docs/resources/OAR014.md`) to correctly state that path parameters (e.g. `{customerId}`) and special segments (e.g. `me`) are excluded from the depth count — only literal resource names count.
+- OAR015 - ResourceLevelMaxAllowed - Fixed false negative where paths composed entirely of path parameters (e.g. `/{p1}/{p2}/{p3}/{p4}/{p5}/{p6}`) were not detected. Path parameters and `/me` segments are excluded from the depth count, and only literal resource names count toward the limit.
+
 ## [1.3.0-beta.3] - 2026-05-27
 
 ### Fixed

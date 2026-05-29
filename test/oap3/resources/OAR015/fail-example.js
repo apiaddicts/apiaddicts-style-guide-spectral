@@ -12,15 +12,10 @@ module.exports = {
         }
       }
     },
-    "/users/{userId}/orders/{orderId}/items/{itemId}/details": {
+    "/a/{p1}/b/{p2}/c/{p3}/d/{p4}/e/{p5}/f": {
       "get": {
-        "parameters": [
-          { "in": "path", "name": "userId", "required": true, "schema": { "type": "string" } },
-          { "in": "path", "name": "orderId", "required": true, "schema": { "type": "string" } },
-          { "in": "path", "name": "itemId", "required": true, "schema": { "type": "string" } }
-        ],
         "responses": {
-          "200": { "description": "OK" }
+          "200": { "description": "fail: 6 literal segments (params excluded) > 5" }
         }
       }
     }
