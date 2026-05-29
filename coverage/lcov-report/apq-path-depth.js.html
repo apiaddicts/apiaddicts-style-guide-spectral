@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">11.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>1/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">11.11% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>1/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -83,23 +83,25 @@
 <a name='L18'></a><a href='#L18'>18</a>
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">99x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
-<span class="cline-any cline-yes">52x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -108,18 +110,19 @@
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, options, context) =&gt; {
-  const maxDepth = options.maxDepth ?? <span class="branch-1 cbranch-no" title="branch not covered" >3</span>
-  const ignore = options.ignoreSegments ?? <span class="branch-1 cbranch-no" title="branch not covered" >[]</span>
-&nbsp;
-  const segments = targetVal
+module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, options, context) =&gt; {
+  const maxDepth = <span class="cstat-no" title="statement not covered" >options.maxDepth ?? 3</span>
+  const ignore = <span class="cstat-no" title="statement not covered" >options.ignoreSegments ?? []</span>
+  const segments = <span class="cstat-no" title="statement not covered" >targetVal</span>
     .split('/')
     .filter(Boolean)
-    .filter(segment =&gt; !segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))
-    .filter(segment =&gt; !ignore.includes(segment))
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))</span>
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!ignore.includes(segment))</span>
 &nbsp;
-  if (segments.length &gt; maxDepth) {
-    return [
+  const depth = <span class="cstat-no" title="statement not covered" >segments.length;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  if (depth &gt; maxDepth) {</span>
+<span class="cstat-no" title="statement not covered" >    return [</span>
       { message: context.rule.message }
     ]
   }
@@ -130,7 +133,7 @@ module.exports = (targetVal, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-27T14:18:04.082Z
+                at 2026-05-29T14:50:52.613Z
             </div>
         <script src="prettify.js"></script>
         <script>

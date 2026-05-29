@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for apq-required-fields-exist.js</title>
+    <title>Code coverage report for apq-forbidden-characters.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> apq-required-fields-exist.js</h1>
+        <h1><a href="index.html">All files</a> apq-forbidden-characters.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.69% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/13</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>9/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">9.09% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -86,62 +86,53 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a>
-<a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * @param {object} given
+ * @param {string|string[]} targetVal
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = <span class="fstat-no" title="function not covered" >(g</span>iven, options, context) =&gt; {
-  const results = <span class="cstat-no" title="statement not covered" >[];</span>
+module.exports = (targetVal, _options, context) =&gt; {
+  const pattern = /^[a-zA-Z0-9_\-., ]+$/;
+  const errors = [];
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (!given || given.type !== 'object') <span class="cstat-no" title="statement not covered" >return results;</span></span>
-&nbsp;
-  const { required, properties } = <span class="cstat-no" title="statement not covered" >given;</span>
-<span class="cstat-no" title="statement not covered" >  if (!Array.isArray(required)) <span class="cstat-no" title="statement not covered" >return results;</span></span>
-&nbsp;
-  const propertyNames = <span class="cstat-no" title="statement not covered" >new Set(Object.keys(properties || {}));</span>
-  const ruleCode = <span class="cstat-no" title="statement not covered" >context.rule.name.split(':').pop();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >  required.forEach(<span class="fstat-no" title="function not covered" >(f</span>ield, index) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (!propertyNames.has(field)) {</span>
-<span class="cstat-no" title="statement not covered" >      results.push({</span>
-        message: `${ruleCode}: This value does not exist, '${field}' must be defined in the schema properties.`,
-        path: [...context.path, 'required', index]
-      });
+  if (typeof targetVal === 'string') {
+    if (!pattern.test(targetVal)) {
+      errors.push({ message: context.rule.message });
     }
-  });
+  } else <span class="missing-if-branch" title="else path not taken" >E</span>if (Array.isArray(targetVal)) {
+    targetVal.forEach((role, index) =&gt; {
+      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {
+        errors.push({ message: context.rule.message, path: [index] });
+      }
+    });
+  }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return results;</span>
-};</pre></td></tr></table></pre>
+  return errors;
+};
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
