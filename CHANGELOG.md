@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR017 - AlternatePaths - Fixed false positive by checking the first segment against `except` before the loop and treating it as a pseudo-variable when it matches.
 - OAR020 - ExpandParameter - Fixed false negative where GET operations with the `parameters` block entirely absent were not detected.
 - OAR021 - ExcludeParameter - Same fix as OAR020 applied for `$exclude` parameter.
+- OAR037 - StringFormat - Fixed false negative where string schemas without a `format` field were not reported. Replaced built-in `schema` function with custom `apq-schema-format` function that fires for both missing and invalid formats, aligning with Sonar behavior.
+- OAR038 - StandardCreateResponse - New rule: POST 201 responses must have a schema with a `data` or `error` property, each with at least one sub-property defined. Added custom function `apq-valid-response-schema`.
 
 ## [1.3.0-beta.4] - 2026-05-29
 

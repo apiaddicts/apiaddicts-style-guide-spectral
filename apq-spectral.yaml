@@ -17,7 +17,9 @@ functions:
   - apq-check-examples-coverage
   - apq-path-depth
   - apq-forbidden-characters
+  - apq-valid-response-schema
   - apq-path-param-query-conflict
+  - apq-schema-format
   - apq-security-required-response
   - apq-check-ambiguous-path
   - apq-password-format
@@ -526,24 +528,14 @@ rules:
     severity: error
     given: "$..[?(@.type=='string')]"
     then:
-      function: schema
-      functionOptions:
-        schema:
-          required: [format]
-          properties:
-            format:
-              type: string
-              pattern: "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6|HEX|HEX\\(16\\)|json|xml|base64)$"
+      function: apq-schema-format
   apiq:OAR038:
-    description: "Response schema must be compliant with the standard."
-    message: "OAR038: Response property is required for status code '{{property}}'."
+    description: "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property."
+    message: "OAR038: Response property must be named 'data' or 'error'. Got '{{property}}'."
     severity: error
-    given: "$.paths.*.*.responses..content..schema.properties"
+    given: "$.paths.*.post.responses.*.content..schema.properties"
     then:
-      field: "@key"
-      function: pattern
-      functionOptions:
-        match: "^data|error$"
+      function: apq-valid-response-schema
   apiq:OAR039:
     description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
     message: "{{error}}"
