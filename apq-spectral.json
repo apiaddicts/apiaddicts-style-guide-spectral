@@ -645,14 +645,21 @@
     },
     "apiq:OAR037": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, or ipv6).",
+      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64).",
       "severity": "error",
-      "given": "$..schema..[?(@.type=='string')]",
+      "given": "$..[?(@.type=='string')]",
       "then": {
-        "field": "format",
-        "function": "pattern",
+        "function": "schema",
         "functionOptions": {
-          "match": "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6)$"
+          "schema": {
+            "required": ["format"],
+            "properties": {
+              "format": {
+                "type": "string",
+                "pattern": "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6|HEX|HEX\\(16\\)|json|xml|base64)$"
+              }
+            }
+          }
         }
       }
     },
