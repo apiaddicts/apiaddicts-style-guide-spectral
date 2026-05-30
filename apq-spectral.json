@@ -282,7 +282,7 @@
       }
     },
     "apiq:OAR017": {
-      "description": "Resources depth level should be smaller than 5.",
+      "description": "Resource path should alternate static and parametrized parts.",
       "message": "OAR017: Resource path should alternate static and parametrized parts.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
       "severity": "error",
@@ -291,7 +291,9 @@
         "function": "apq-alternate-paths",
         "functionOptions": {
           "except": [
-            "me"
+            "me",
+            "get",
+            "search"
           ]
         }
       }
@@ -320,23 +322,57 @@
       }
     },
     "apiq:OAR020": {
-      "description": "$expand must be defined as a query parameter in all operations.",
+      "description": "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
       "message": "OAR020: $expand must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
       "then": {
-        "field": "$[?(@.name == '$expand' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "required": ["parameters"],
+            "properties": {
+              "parameters": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "const": "$expand" },
+                    "in": { "const": "query" }
+                  },
+                  "required": ["name", "in"]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR021": {
-      "description": "$exclude must be defined as a query parameter in all operations.",
+      "description": "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
       "message": "OAR021: $exclude must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
       "then": {
-        "field": "$[?(@.name == '$exclude' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "required": ["parameters"],
+            "properties": {
+              "parameters": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "const": "$exclude" },
+                    "in": { "const": "query" }
+                  },
+                  "required": ["name", "in"]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR022": {

@@ -218,7 +218,7 @@ rules:
     then:
       function: apq-alternate-paths
       functionOptions:
-        except: ["me"]
+        except: ["me", "get", "search"]
   apiq:OAR018:
     description: Operation not recommended for resource path depending on HTTP verb
     message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
@@ -282,18 +282,44 @@ rules:
     description: "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR020: $expand must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
-      field: "$[?(@.name == '$expand' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          required: ["parameters"]
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                properties:
+                  name:
+                    const: "$expand"
+                  in:
+                    const: query
+                required: [name, in]
   apiq:OAR021:
     description: "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR021: $exclude must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
-      field: "$[?(@.name == '$exclude' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          required: ["parameters"]
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                properties:
+                  name:
+                    const: "$exclude"
+                  in:
+                    const: query
+                required: [name, in]
   apiq:OAR022:
     description: "$orderby must be defined as a query parameter in all operations."
     message: "OAR022: $orderby must be defined as a query parameter in this operation."

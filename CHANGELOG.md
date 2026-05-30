@@ -19,6 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+
+## [1.3.0-beta.5] - 2026-05-30
+
+### Fixed
+
+- OAR017 - AlternatePaths - Fixed false positive by checking the first segment against `except` before the loop and treating it as a pseudo-variable when it matches.
+- OAR020 - ExpandParameter - Fixed false negative where GET operations with the `parameters` block entirely absent were not detected.
+- OAR021 - ExcludeParameter - Same fix as OAR020 applied for `$exclude` parameter.
+
 ## [1.3.0-beta.4] - 2026-05-29
 
 ### Fixed
