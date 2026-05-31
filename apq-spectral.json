@@ -1188,10 +1188,10 @@
       }
     },
     "apiq:OAR073": {
-      "description": "API should include a 429 response to indicate rate limiting, except for the /status path.",
+      "description": "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness.",
       "message": "OAR073: API should include a 429 response to indicate rate limiting.",
       "severity": "error",
-      "given": "$.paths[?(@ !== '/status')][*].responses",
+      "given": "$.paths[?(@property !== '/status' && @property !== '/health' && @property !== '/health-check' && @property !== '/ping' && @property !== '/liveness' && @property !== '/readiness')][*].responses",
       "then": {
         "field": "429",
         "function": "truthy"

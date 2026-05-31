@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
-## [1.3.0-beta.5] - 2026-05-30
+## [1.3.0-beta.5] - 2026-05-31
 
 ### Fixed
 
@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR037 - StringFormat - Fixed false negative where string schemas without a `format` field were not reported. Replaced built-in `schema` function with custom `apq-schema-format` function that fires for both missing and invalid formats, aligning with Sonar behavior.
 - OAR038 - StandardCreateResponse - New rule: POST 201 responses must have a schema with a `data` or `error` property, each with at least one sub-property defined. Added custom function `apq-valid-response-schema`.
 - OAR066 - SnakeCaseNamingConvention - Fixed false positives on industry-standard property name prefixes. Replaced built-in function with `pattern.match` using regex which exempts: `_`-prefixed names, `@`-prefixed names and `x-`-prefixed names.
+- OAR073 - RateLimit - Fixed false positive where health-check paths still triggered the rule. Extended excluded paths to: `/status`, `/health`, `/health-check`, `/ping`, `/liveness`, `/readiness`, aligning with Sonar's default exclusion list.
 
 ## [1.3.0-beta.4] - 2026-05-29
 

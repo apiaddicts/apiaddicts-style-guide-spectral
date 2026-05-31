@@ -51,7 +51,28 @@ module.exports = {
         }
       }
     },
+    "/health-check": {
+      "get": {
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    },
     "/ping": {
+      "get": {
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    },
+    "/liveness": {
+      "get": {
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    },
+    "/readiness": {
       "get": {
         "responses": {
           "200": { "description": "OK" }
