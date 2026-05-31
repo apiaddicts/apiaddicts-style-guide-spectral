@@ -832,9 +832,9 @@ rules:
       - "$.paths.*.*.parameters[*].schema..properties.*~"
       - "$.paths.*.*.responses[*].schema..properties.*~"
     then:
-      function: casing
+      function: pattern
       functionOptions:
-        type: snake
+        match: "^([a-z$][a-z0-9_$]*|_[a-z0-9_]+|@[a-zA-Z][a-zA-Z0-9_]*|x-[a-zA-Z][a-zA-Z0-9_-]*)$"
   apiq:OAR067:
     description: "RequestBody and Responses schema property names must be compliant with the camelCase naming convention."
     message: "OAR067: RequestBody and Responses schema property names must be compliant with the camelCase naming convention."
