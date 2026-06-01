@@ -44,7 +44,13 @@ module.exports = {
                   "properties": {
                     "street_name": { "type": "string" }
                   }
-                }
+                },
+                "_links": { "type": "object" },
+                "_embedded": { "type": "object" },
+                "@context": { "type": "string" },
+                "@type": { "type": "string" },
+                "@id": { "type": "string" },
+                "x-internal": { "type": "boolean" }
               }
             }
           }

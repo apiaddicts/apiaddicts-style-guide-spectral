@@ -17,7 +17,9 @@ functions:
   - apq-check-examples-coverage
   - apq-path-depth
   - apq-forbidden-characters
+  - apq-valid-response-schema
   - apq-path-param-query-conflict
+  - apq-schema-format
   - apq-security-required-response
   - apq-check-ambiguous-path
   - apq-password-format
@@ -218,7 +220,7 @@ rules:
     then:
       function: apq-alternate-paths
       functionOptions:
-        except: ["me"]
+        except: ["me", "get", "search"]
   apiq:OAR018:
     description: Operation not recommended for resource path depending on HTTP verb
     message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
@@ -282,18 +284,44 @@ rules:
     description: "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR020: $expand must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
-      field: "$[?(@.name == '$expand' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          required: ["parameters"]
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                properties:
+                  name:
+                    const: "$expand"
+                  in:
+                    const: query
+                required: [name, in]
   apiq:OAR021:
     description: "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks)."
     message: "OAR021: $exclude must be defined as a query parameter in this operation."
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters"
+    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
     then:
-      field: "$[?(@.name == '$exclude' && @.in == 'query')]"
-      function: truthy
+      function: schema
+      functionOptions:
+        schema:
+          required: ["parameters"]
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                properties:
+                  name:
+                    const: "$exclude"
+                  in:
+                    const: query
+                required: [name, in]
   apiq:OAR022:
     description: "$orderby must be defined as a query parameter in all operations."
     message: "OAR022: $orderby must be defined as a query parameter in this operation."
@@ -496,24 +524,18 @@ rules:
         notMatch: "^(Cookie|Set-Cookie)$"
   apiq:OAR037:
     description: "Schema should use well-defined type and format."
-    message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, json, xml, or base64)."
+    message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64)."
     severity: error
-    given: "$..schema..[?(@.type=='string' && !@.enum)]"
+    given: "$..[?(@.type=='string')]"
     then:
-      field: format
-      function: pattern
-      functionOptions:
-        match: "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6|HEX|json|xml|base64)$"
+      function: apq-schema-format
   apiq:OAR038:
-    description: "Response schema must be compliant with the standard."
-    message: "OAR038: Response property is required for status code '{{property}}'."
+    description: "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property."
+    message: "OAR038: Response property must be named 'data' or 'error'. Got '{{property}}'."
     severity: error
-    given: "$.paths.*.*.responses..content..schema.properties"
+    given: "$.paths.*.post.responses.*.content..schema.properties"
     then:
-      field: "@key"
-      function: pattern
-      functionOptions:
-        match: "^data|error$"
+      function: apq-valid-response-schema
   apiq:OAR039:
     description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
     message: "{{error}}"
@@ -810,9 +832,9 @@ rules:
       - "$.paths.*.*.parameters[*].schema..properties.*~"
       - "$.paths.*.*.responses[*].schema..properties.*~"
     then:
-      function: casing
+      function: pattern
       functionOptions:
-        type: snake
+        match: "^([a-z$][a-z0-9_$]*|_[a-z0-9_]+|@[a-zA-Z][a-zA-Z0-9_]*|x-[a-zA-Z][a-zA-Z0-9_-]*)$"
   apiq:OAR067:
     description: "RequestBody and Responses schema property names must be compliant with the camelCase naming convention."
     message: "OAR067: RequestBody and Responses schema property names must be compliant with the camelCase naming convention."
@@ -871,10 +893,10 @@ rules:
       functionOptions:
         notMatch: "stacktrace"
   apiq:OAR073:
-    description: "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /ping."
+    description: "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness."
     message: "OAR073: API should include a 429 response to indicate rate limiting."
     severity: error
-    given: "$.paths[?(!(@property.match(/\\/status|health|ping|liveness|readiness/)))][*].responses"
+    given: "$.paths[?(@property !== '/status' && @property !== '/health' && @property !== '/health-check' && @property !== '/ping' && @property !== '/liveness' && @property !== '/readiness')][*].responses"
     then:
       field: "429"
       function: truthy

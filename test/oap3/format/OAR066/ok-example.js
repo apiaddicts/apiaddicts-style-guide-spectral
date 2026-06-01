@@ -21,7 +21,13 @@ module.exports = {
                       "street_name": { "type": "string" },
                       "zip_code": { "type": "string" }
                     }
-                  }
+                  },
+                  "_links": { "type": "object" },
+                  "_embedded": { "type": "object" },
+                  "@context": { "type": "string" },
+                  "@type": { "type": "string" },
+                  "@id": { "type": "string" },
+                  "x-internal": { "type": "boolean" }
                 }
               }
             }
