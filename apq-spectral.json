@@ -285,7 +285,7 @@
     },
     "apiq:OAR017": {
       "description": "Resource path should alternate static and parametrized parts.",
-      "message": "OAR017: Resource path should alternate static and parametrized parts.",
+      "message": "OAR017: Resource path should alternate static and parametrized parts",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
       "severity": "error",
       "given": "$.paths.*~",
@@ -1096,7 +1096,7 @@
       "severity": "warn",
       "given": [
         "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
-        "$.paths.*.*.parameters[*].schema..properties.*~",
+        "$.paths.*.*.parameters[?(@.in=='body')].schema..properties.*~",
         "$.paths.*.*.responses[*].schema..properties.*~"
       ],
       "then": {
