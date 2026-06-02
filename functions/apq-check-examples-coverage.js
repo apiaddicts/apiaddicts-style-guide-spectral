@@ -61,7 +61,7 @@ module.exports = (given, options, context) => {
           } else if (propType === 'array') {
             collectPropertyIssues(propSchema, [...path, 'properties', propName]);
           } else {
-            if (propSchema.example === undefined && propSchema.examples === undefined) {
+            if (propType !== undefined && propSchema.example === undefined && propSchema.examples === undefined) {
               issues.push({ message: `OAR031: Property '${propName}' is missing an example.` });
             }
           }

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">5.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/17</span>
+                <span class='fraction'>1/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.77% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/18</span>
+                <span class='fraction'>0/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>0/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">5.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/17</span>
+                <span class='fraction'>1/17</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -107,69 +107,69 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">102x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {object} targetVal
  * @param {object} _options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, _options, context) =&gt; {
-  const errors = [];
-  const VALID_NAMES = ['data', 'error'];
+module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, _options, context) =&gt; {
+  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
+  const VALID_NAMES = <span class="cstat-no" title="statement not covered" >['data', 'error'];</span>
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!targetVal || typeof targetVal !== 'object') {
+<span class="cstat-no" title="statement not covered" >  if (!targetVal || typeof targetVal !== 'object') {</span>
 <span class="cstat-no" title="statement not covered" >    return errors;</span>
   }
 &nbsp;
-  const path = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
-  const responsesIdx = path.lastIndexOf('responses');
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (responsesIdx &gt;= 0 &amp;&amp; path[responsesIdx + 1] !== '201') {
+  const path = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
+  const responsesIdx = <span class="cstat-no" title="statement not covered" >path.lastIndexOf('responses');</span>
+<span class="cstat-no" title="statement not covered" >  if (responsesIdx &gt;= 0 &amp;&amp; path[responsesIdx + 1] !== '201') {</span>
 <span class="cstat-no" title="statement not covered" >    return errors;</span>
   }
 &nbsp;
-  for (const [propName, propValue] of Object.entries(targetVal)) {
-    if (!VALID_NAMES.includes(propName)) {
-      errors.push({
+<span class="cstat-no" title="statement not covered" >  for (const [propName, propValue] of Object.entries(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >    if (!VALID_NAMES.includes(propName)) {</span>
+<span class="cstat-no" title="statement not covered" >      errors.push({</span>
         message: context.rule.message,
         path: [propName]
       });
     } else {
-      const subProps = propValue &amp;&amp; propValue.properties;
-      const hasSubProps = subProps &amp;&amp; Object.keys(subProps).length &gt; 0;
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (!hasSubProps) {
+      const subProps = <span class="cstat-no" title="statement not covered" >propValue &amp;&amp; propValue.properties;</span>
+      const hasSubProps = <span class="cstat-no" title="statement not covered" >subProps &amp;&amp; Object.keys(subProps).length &gt; 0;</span>
+<span class="cstat-no" title="statement not covered" >      if (!hasSubProps) {</span>
 <span class="cstat-no" title="statement not covered" >        errors.push({</span>
           message: `OAR038: Property '${propName}' must have at least one sub-property.`,
           path: [propName]
@@ -178,7 +178,7 @@ module.exports = (targetVal, _options, context) =&gt; {
     }
   }
 &nbsp;
-  return errors;
+<span class="cstat-no" title="statement not covered" >  return errors;</span>
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -187,7 +187,7 @@ module.exports = (targetVal, _options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-31T15:57:58.915Z
+                at 2026-06-02T14:17:07.435Z
             </div>
         <script src="prettify.js"></script>
         <script>

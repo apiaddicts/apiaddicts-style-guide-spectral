@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [1.3.0-beta.6] - 2026-06-02
+
+### Fixed
+
+- OAR017 - AlternatePaths - Aligned rule message. Expanded test coverage from 1 to 3 failing cases covering all three violation types: path starting with parameter (`/{id}`), consecutive static segments (`/a/b`), and consecutive path parameters (`/{a}/{b}`).
+- OAR028 - FilterParameter - Updated `docs/resources/OAR028.md` to correctly show one issue per operation (not per non-`$filter` parameter), reflecting the actual rule behavior.
+- OAR031 - ExamplesCoverage - Fixed false positive where schema properties without an explicit `type` field (e.g. HAL/HATEOAS `_links` sub-properties like `self`, `next`, `previous`) were incorrectly flagged as missing an example. The property-level check now only fires when `type` is explicitly declared, aligning with Sonar's `!type.isMissing()` guard.
+- OAR066 - SnakeCaseNamingConvention - Fixed false positive where non-body parameter schema properties (query/path/header/cookie params in OAP3) were validated for snake_case. Changed the `given` from `parameters[*]` to `parameters[?(@.in=='body')]` so only OAP2 body parameters are checked.
 
 ## [1.3.0-beta.5] - 2026-05-31
 
