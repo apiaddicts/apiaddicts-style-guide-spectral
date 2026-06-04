@@ -7,17 +7,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [1.3.0] - 2026-06-04
 
 ### Added
 
+- OAR038 - StandardCreateResponse - POST 201 responses must have a schema with a `data` or `error` property, each with at least one sub-property defined
+- OAR043 - ParsingError - OpenAPI file cannot be parsed
+
 ### Changed
 
-### Removed
+- OAR031 - ExamplesCoverage - Responses, Request Body, Parameters and Properties must have an example defined
 
 ### Fixed
 
-### Security
+- OAR004 - ValidWso2ScopesRoles - Fixed validation for `roles` defined as YAML/JSON array and updated allowed characters pattern
+- OAR008 - AllowedHttpVerb - Fixed rule logic replacing incorrect `truthy` check with `falsy` check on forbidden verbs
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Fixed depth count to exclude path parameters and special segments
+- OAR015 - ResourceLevelMaxAllowed - Fixed false negative for paths composed entirely of path parameters
+- OAR017 - AlternatePaths - Fixed false positives and aligned rule message; expanded test coverage
+- OAR020 - ExpandParameter - Fixed false negative where GET operations with absent `parameters` block were not detected
+- OAR021 - ExcludeParameter - Fixed false negative where GET operations with absent `parameters` block were not detected
+- OAR028 - FilterParameter - Fixed rule to report one issue per operation
+- OAR031 - ExamplesCoverage - Fixed false positive on schema properties without explicit `type` field; added body-param property check
+- OAR037 - StringFormat - Fixed false negative for string schemas without `format` field; added valid formats and excluded `enum` fields
+- OAR043 - ParsingError - Updated error messages
+- OAR066 - SnakeCaseNamingConvention - Fixed false positives on non-body parameter schema properties and industry-standard name prefixes
+- OAR073 - RateLimit - Fixed false positive for health-check paths; extended excluded paths list
+
 
 ## [1.3.0-beta.6] - 2026-06-02
 
