@@ -8,12 +8,16 @@ module.exports = (given, { except }, context) => {
   const paths = given || [];
   if (paths.length === 0) return result;
 
-  const parts = paths.substr(1).split('/');
-  let previousIsVar = isVariable(parts.shift());
-  if (previousIsVar) {
-    return [{
-      message: context.rule.message,
-    }];
+  const parts = paths.substr(1).split('/').filter(p => p.length > 0);
+  if (parts.length === 0) return result;
+  const firstPart = parts.shift();
+  let previousIsVar;
+  if (except && except.includes(firstPart)) {
+    previousIsVar = true;
+  } else if (isVariable(firstPart)) {
+    return [{ message: context.rule.message }];
+  } else {
+    previousIsVar = false;
   }
 
   for (const part of parts) {

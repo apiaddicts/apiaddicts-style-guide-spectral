@@ -4,6 +4,7 @@
     "apq-alternate-paths",
     "apq-custom-schema",
     "apq-compare-insensitive",
+    "apq-has-filter-query-param",
     "apq-parameter-naming-convention",
     "apq-resources-by-verb",
     "apq-at-most-one-body-parameter",
@@ -15,7 +16,11 @@
     "apq-response-media-type",
     "apq-security-check",
     "apq-check-examples-coverage",
-    "apq-path-depth"
+    "apq-path-depth",
+    "apq-forbidden-characters",
+    "apq-valid-response-schema",
+    "apq-validate-structure",
+    "apq-schema-format"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -70,10 +75,7 @@
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^[A-Za-z0-9_]+$"
-        }
+        "function": "apq-forbidden-characters"
       }
     },
     "apiq:OAR005": {
@@ -132,9 +134,9 @@
       "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
       "severity": "error",
-      "given": "$.paths[*][?(@property == 'get' || @property == 'post' || @property == 'put' || @property == 'delete' || @property == 'patch')]",
+      "given": "$.paths[*][head,options,trace]",
       "then": {
-        "function": "truthy"
+        "function": "falsy"
       }
     },
     "apiq:OAR009": {
@@ -223,9 +225,12 @@
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
-        "function": "pattern",
+        "function": "apq-path-depth",
         "functionOptions": {
-          "match": "^/[^/]*((/{[^}]*})*/[^/]*(/{[^}]*})*){0,4}/?$"
+          "maxDepth": 5,
+          "ignoreSegments": [
+            "me"
+          ]
         }
       }
     },
@@ -279,8 +284,8 @@
       }
     },
     "apiq:OAR017": {
-      "description": "Resources depth level should be smaller than 5.",
-      "message": "OAR017: Resource path should alternate static and parametrized parts.",
+      "description": "Resource path should alternate static and parametrized parts.",
+      "message": "OAR017: Resource path should alternate static and parametrized parts",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
       "severity": "error",
       "given": "$.paths.*~",
@@ -288,7 +293,9 @@
         "function": "apq-alternate-paths",
         "functionOptions": {
           "except": [
-            "me"
+            "me",
+            "get",
+            "search"
           ]
         }
       }
@@ -317,23 +324,57 @@
       }
     },
     "apiq:OAR020": {
-      "description": "$expand must be defined as a query parameter in all operations.",
+      "description": "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
       "message": "OAR020: $expand must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
       "then": {
-        "field": "$[?(@.name == '$expand' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "required": ["parameters"],
+            "properties": {
+              "parameters": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "const": "$expand" },
+                    "in": { "const": "query" }
+                  },
+                  "required": ["name", "in"]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR021": {
-      "description": "$exclude must be defined as a query parameter in all operations.",
+      "description": "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
       "message": "OAR021: $exclude must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
       "then": {
-        "field": "$[?(@.name == '$exclude' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "schema",
+        "functionOptions": {
+          "schema": {
+            "required": ["parameters"],
+            "properties": {
+              "parameters": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "const": "$exclude" },
+                    "in": { "const": "query" }
+                  },
+                  "required": ["name", "in"]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "apiq:OAR022": {
@@ -459,13 +500,12 @@
       }
     },
     "apiq:OAR028": {
-      "description": "$filter must be defined as a query parameter in all operations.",
+      "description": "$filter must be defined as a query parameter in this operation.",
       "message": "OAR028: $filter must be defined as a query parameter in this operation.",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[*].get",
       "then": {
-        "field": "$[?(@.name == '$filter' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "apq-has-filter-query-param"
       }
     },
     "apiq:OAR029": {
@@ -531,7 +571,7 @@
     },
     "apiq:OAR031": {
       "description": "The examples can help developers to understand the response data structure and representation.",
-      "message": "OAR031: Examples - Parameters, Request Body and Responses must have an examples defined.",
+      "message": "{{error}}",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*",
@@ -607,28 +647,20 @@
     },
     "apiq:OAR037": {
       "description": "Schema should use well-defined type and format.",
-      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, or ipv6).",
+      "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64).",
       "severity": "error",
-      "given": "$..schema..[?(@.type=='string')]",
+      "given": "$..[?(@.type=='string')]",
       "then": {
-        "field": "format",
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^(date|date-time|password|byte|binary|email|uuid|uri|hostname|ipv4|ipv6)$"
-        }
+        "function": "apq-schema-format"
       }
     },
     "apiq:OAR038": {
-      "description": "Response schema must be compliant with the standard.",
-      "message": "OAR038: Response property is required for status code '{{property}}'.",
+      "description": "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property.",
+      "message": "OAR038: Response property must be named 'data' or 'error'. Got '{{property}}'.",
       "severity": "error",
-      "given": "$.paths.*.*.responses..content..schema.properties",
+      "given": "$.paths.*.post.responses.*.content..schema.properties",
       "then": {
-        "field": "@key",
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^data|error$"
-        }
+        "function": "apq-valid-response-schema"
       }
     },
     "apiq:OAR039": {
@@ -682,6 +714,20 @@
         "functionOptions": {
           "match": "^(/api-[^/]+/v[0-9]+|https?:\\/\\/[^/]+\\/api-[^/]+\\/v[0-9]+)$"
         }
+      }
+    },
+    "apiq:OAR043": {
+      "description": "OpenAPI definition contains structural errors that would be detected by a strict parser or validator.",
+      "message": "{{error}}",
+      "severity": "error",
+      "given": [
+        "$.paths.*.*.parameters.*.in",
+        "$.components.parameters.*.in",
+        "$.paths.*.*.parameters.*.schema.type",
+        "$.components.parameters.*.schema.type"
+      ],
+      "then": {
+        "function": "apq-validate-structure"
       }
     },
     "apiq:OAR044": {
@@ -1048,11 +1094,15 @@
       "description": "RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
       "message": "OAR066: RequestBody and Responses schema property names must be compliant with the snake_case naming convention.",
       "severity": "warn",
-      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+      "given": [
+        "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+        "$.paths.*.*.parameters[?(@.in=='body')].schema..properties.*~",
+        "$.paths.*.*.responses[*].schema..properties.*~"
+      ],
       "then": {
-        "function": "casing",
+        "function": "pattern",
         "functionOptions": {
-          "type": "snake"
+          "match": "^([a-z$][a-z0-9_$]*|_[a-z0-9_]+|@[a-zA-Z][a-zA-Z0-9_]*|x-[a-zA-Z][a-zA-Z0-9_-]*)$"
         }
       }
     },
@@ -1138,10 +1188,10 @@
       }
     },
     "apiq:OAR073": {
-      "description": "API should include a 429 response to indicate rate limiting, except for the /status path.",
+      "description": "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness.",
       "message": "OAR073: API should include a 429 response to indicate rate limiting.",
       "severity": "error",
-      "given": "$.paths[?(@ !== '/status')][*].responses",
+      "given": "$.paths[?(@property !== '/status' && @property !== '/health' && @property !== '/health-check' && @property !== '/ping' && @property !== '/liveness' && @property !== '/readiness')][*].responses",
       "then": {
         "field": "429",
         "function": "truthy"

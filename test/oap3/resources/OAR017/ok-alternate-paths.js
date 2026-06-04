@@ -5,6 +5,19 @@ module.exports = {
     "version": "1.0.0"
   },
   "paths": {
+    "/me/items/{itemId}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": { "200": { "description": "Ok" } }
+      }
+    },
     "/customers/{customerId}/invoices": {
       "get": {
         "parameters": [

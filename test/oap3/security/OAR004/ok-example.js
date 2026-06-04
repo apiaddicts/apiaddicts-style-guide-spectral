@@ -10,12 +10,17 @@ module.exports = {
                 {
                     "name": "read",
                     "key": "read",
-                    "roles": "READ_ROLE"  // Rol correcto
+                    "roles": "READ_ROLE"
                 },
                 {
                     "name": "write",
                     "key": "write",
-                    "roles": "WRITE_ROLE"  // Rol correcto
+                    "roles": "WRITE_ROLE, ADMIN_ROLE"
+                },
+                {
+                    "name": "admin",
+                    "key": "admin",
+                    "roles": "ROLE-ADMIN.v1"
                 }
             ]
         }

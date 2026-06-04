@@ -26,12 +26,5 @@ module.exports = {
         }
       }
     },
-    "/stores/{storeId}/products/{productId}/reviews": {
-      "get": {
-        "responses": {
-          "200": { "description": "fail deep nesting" }
-        }
-      }
-    }
   }
 };

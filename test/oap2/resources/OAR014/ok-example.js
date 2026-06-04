@@ -19,6 +19,12 @@ module.exports = {
     },
     "/users/me/orders/{orderId}": {
       "get": { "responses": { "200": { "description": "ok depth ignoring me" } } }
+    },
+    "/shops/{shopId}/products/{productId}/reviews": {
+      "get": { "responses": { "200": { "description": "ok: 3 literal segments, path params not counted" } } }
+    },
+    "/orders/{orderId}/items/{itemId}/details": {
+      "get": { "responses": { "200": { "description": "ok: 3 literal segments, path params not counted" } } }
     }
   }
 };

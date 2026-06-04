@@ -16,6 +16,11 @@ module.exports = {
                     "name": "write",
                     "key": "write",
                     "roles": "WR!TE_ROLE"
+                },
+                {
+                    "name": "admin",
+                    "key": "admin",
+                    "roles": ["VALID_ROLE", "R€AD_ROLE"]
                 }
             ]
         }

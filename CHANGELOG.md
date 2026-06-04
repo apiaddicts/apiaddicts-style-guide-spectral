@@ -7,17 +7,107 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [1.3.0] - 2026-06-04
 
 ### Added
 
+- OAR038 - StandardCreateResponse - POST 201 responses must have a schema with a `data` or `error` property, each with at least one sub-property defined
+- OAR043 - ParsingError - OpenAPI file cannot be parsed
+
 ### Changed
 
-### Removed
+- OAR031 - ExamplesCoverage - Responses, Request Body, Parameters and Properties must have an example defined
 
 ### Fixed
 
-### Security
+- OAR004 - ValidWso2ScopesRoles - Fixed validation for `roles` defined as YAML/JSON array and updated allowed characters pattern
+- OAR008 - AllowedHttpVerb - Fixed rule logic replacing incorrect `truthy` check with `falsy` check on forbidden verbs
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Fixed depth count to exclude path parameters and special segments
+- OAR015 - ResourceLevelMaxAllowed - Fixed false negative for paths composed entirely of path parameters
+- OAR017 - AlternatePaths - Fixed false positives and aligned rule message; expanded test coverage
+- OAR020 - ExpandParameter - Fixed false negative where GET operations with absent `parameters` block were not detected
+- OAR021 - ExcludeParameter - Fixed false negative where GET operations with absent `parameters` block were not detected
+- OAR028 - FilterParameter - Fixed rule to report one issue per operation
+- OAR031 - ExamplesCoverage - Fixed false positive on schema properties without explicit `type` field; added body-param property check
+- OAR037 - StringFormat - Fixed false negative for string schemas without `format` field; added valid formats and excluded `enum` fields
+- OAR043 - ParsingError - Updated error messages
+- OAR066 - SnakeCaseNamingConvention - Fixed false positives on non-body parameter schema properties and industry-standard name prefixes
+- OAR073 - RateLimit - Fixed false positive for health-check paths; extended excluded paths list
+
+
+## [1.3.0-beta.6] - 2026-06-02
+
+### Fixed
+
+- OAR017 - AlternatePaths - Aligned rule message. Expanded test coverage from 1 to 3 failing cases covering all three violation types: path starting with parameter (`/{id}`), consecutive static segments (`/a/b`), and consecutive path parameters (`/{a}/{b}`).
+- OAR028 - FilterParameter - Updated `docs/resources/OAR028.md` to correctly show one issue per operation (not per non-`$filter` parameter), reflecting the actual rule behavior.
+- OAR031 - ExamplesCoverage - Fixed false positive where schema properties without an explicit `type` field (e.g. HAL/HATEOAS `_links` sub-properties like `self`, `next`, `previous`) were incorrectly flagged as missing an example. The property-level check now only fires when `type` is explicitly declared, aligning with Sonar's `!type.isMissing()` guard. Body-param property check now also checks properties inside `in: body` parameter schemas.
+- OAR066 - SnakeCaseNamingConvention - Fixed false positive where non-body parameter schema properties (query/path/header/cookie params in OAP3) were validated for snake_case. Changed the `given` from `parameters[*]` to `parameters[?(@.in=='body')]` so only OAP2 body parameters are checked.
+
+## [1.3.0-beta.5] - 2026-05-31
+
+### Fixed
+
+- OAR017 - AlternatePaths - Fixed false positive by checking the first segment against `except` before the loop and treating it as a pseudo-variable when it matches.
+- OAR020 - ExpandParameter - Fixed false negative where GET operations with the `parameters` block entirely absent were not detected.
+- OAR021 - ExcludeParameter - Same fix as OAR020 applied for `$exclude` parameter.
+- OAR037 - StringFormat - Fixed false negative where string schemas without a `format` field were not reported. Replaced built-in `schema` function with custom `apq-schema-format` function that fires for both missing and invalid formats, aligning with Sonar behavior.
+- OAR038 - StandardCreateResponse - New rule: POST 201 responses must have a schema with a `data` or `error` property, each with at least one sub-property defined. Added custom function `apq-valid-response-schema`.
+- OAR066 - SnakeCaseNamingConvention - Fixed false positives on industry-standard property name prefixes. Replaced built-in function with `pattern.match` using regex which exempts: `_`-prefixed names, `@`-prefixed names and `x-`-prefixed names.
+- OAR073 - RateLimit - Fixed false positive where health-check paths still triggered the rule. Extended excluded paths to: `/status`, `/health`, `/health-check`, `/ping`, `/liveness`, `/readiness`, aligning with Sonar's default exclusion list.
+
+## [1.3.0-beta.4] - 2026-05-29
+
+### Fixed
+
+- OAR004 - ValidWso2ScopesRoles - Fixed false negative where `roles` defined as a YAML/JSON array were not validated element by element. Added custom function to handle both string and array values, reporting an error for each invalid array element individually.
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Updated documentation (`docs/resources/OAR014.md`) to correctly state that path parameters (e.g. `{customerId}`) and special segments (e.g. `me`) are excluded from the depth count — only literal resource names count.
+- OAR015 - ResourceLevelMaxAllowed - Fixed false negative where paths composed entirely of path parameters (e.g. `/{p1}/{p2}/{p3}/{p4}/{p5}/{p6}`) were not detected. Path parameters and `/me` segments are excluded from the depth count, and only literal resource names count toward the limit.
+
+## [1.3.0-beta.3] - 2026-05-27
+
+### Fixed
+- OAR004 - ValidWso2ScopesRoles - Updated allowed characters pattern from `^[A-Za-z0-9_]+$` to `^[a-zA-Z0-9_\-., ]+$`, allowing comma-separated roles, dashes and dots.
+- OAR008 - AllowedHttpVerb - Fixed rule logic: replaced incorrect `truthy` check on allowed verbs with `falsy` check on forbidden verbs (`head`, `options`, `trace`).
+- OAR043 - ParsingError - Updating error messages.
+
+## [1.3.0-beta.2] - 2026-05-26
+
+### Fixed
+- OAR031 - Examples - Fixed error message
+
+## [1.3.0-beta.1] - 2026-05-20
+
+### Added
+- OAR043 - ParsingError - OpenAPI file cannot be parsed
+
+### Changed
+- OAR031 - Examples - Responses, Request Body, Parameters and Properties must have an example defined
+
+### Fixed
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Resources depth level should be below the non-suggested range
+
+## [1.2.0] - 2026-04-30
+
+### Changed
+- OAR018 - ResourcesByVerb - Added POST patterns for `archive`, `clone` and `restore` actions.
+- OAR019 - SelectParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR020 - ExpandParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR021 - ExcludeParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR023 - TotalParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR024 - StartParameter - Narrowed scope to collection endpoints, excluding `/me`, detail and health check paths
+- OAR025 - LimitParameter - Narrowed scope to exclude health check paths; `$limit` parameter now requires `schema.type: integer`
+- OAR030 - StatusEndpoint - Replaced hardcoded `/status` path check with configurable `apq-status-endpoint-check` function
+- OAR032 - AmbiguousElementsPath - Replaced regex pattern with configurable `apq-check-ambiguous-path` function
+- OAR033 - HttpHeaders - Clarified description and message to indicate REQUEST header validation only
+- OAR034 - StandardPagedResponseSchema - Replaced content existence check with `apq-paged-response-check` function validating full paging schema.
+- OAR035 - UnauthorizedResponse - Replaced field-level 401 check with `apq-security-required-response` function
+- OAR037 - StringFormat - Added valid string formats; excluded `enum` fields from format validation
+- OAR051 - DescriptionDiffersSummary - Updated description and message for clarity
+
+### Fixed
+- OAR028 - FilterParameter - $filter must be defined as a query parameter in this operation.
+- OAR066 - SnakeCaseNamingConvention - RequestBody and Responses schema property names must be compliant with the snake_case naming convention.
 
 ## [1.1.2] - 2026-03-25
 

@@ -9,12 +9,18 @@ module.exports = {
       "get": {
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "No headers - missing x-api-key"
+          }
+        }
+      }
+    },
+    "/users": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "Only allowed header - still missing x-api-key",
             "headers": {
-              "content-type": {
-                "type": "string"
-              },
-              "authorization": {
+              "dateTime": {
                 "type": "string"
               }
             }
@@ -22,16 +28,33 @@ module.exports = {
         }
       }
     },
-    "/users": {
+    "/orders": {
       "post": {
         "responses": {
-          "201": {
-            "description": "created",
+          "200": {
+            "description": "Has x-api-key but also forbidden header",
             "headers": {
-              "x-apiKey": {
+              "x-api-key": {
                 "type": "string"
               },
-              "dateTime": {
+              "server": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/items": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "Has x-api-key but also forbidden header",
+            "headers": {
+              "x-api-key": {
+                "type": "string"
+              },
+              "authorization": {
                 "type": "string"
               }
             }
