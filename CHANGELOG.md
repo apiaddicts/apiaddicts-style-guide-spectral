@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [Unreleased]
+
+### Added
+
+- OAR031 - ExamplesCoverage - Per-level configuration via `functionOptions` (`validateResponse`, `validateRequestBody`, `validateParameter`, `validateProperty`), all enabled by default; each level can be disabled independently.
+
+### Changed
+
+- OAR031 - ExamplesCoverage - Levels are now validated **independently**, each with a level-specific message and precise (per-property) reporting location. The response/request-body level requires a body-level example (a media-type `example`/`examples` or a root `schema.example`); per-property examples no longer satisfy it. This is stricter than 1.3.0 and may surface new findings on existing specs — recommend a minor (or major) version bump on release.
+
+
 ## [1.3.0] - 2026-06-04
 
 ### Added
