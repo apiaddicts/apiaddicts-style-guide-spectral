@@ -475,6 +475,11 @@ rules:
       - $.paths.*.*.responses[?(@property !== "204")]
     then:
       function: apq-check-examples-coverage
+      functionOptions:
+        validateResponse: true
+        validateRequestBody: true
+        validateParameter: true
+        validateProperty: true
   apiq:OAR032:
     description: "Ambiguous path parts not encouraged."
     message: "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided."

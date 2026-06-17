@@ -28,6 +28,11 @@ module.exports = {
             "description": "Valid example in schema",
             "content": {
               "application/json": {
+                "example": {
+                  "id": 1,
+                  "nested": { "value": "abc" },
+                  "items": ["item1"]
+                },
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -104,6 +109,9 @@ module.exports = {
             "description": "Created",
             "content": {
               "application/json": {
+                "example": {
+                  "name": "Dog"
+                },
                 "schema": {
                   "type": "object",
                   "properties": {
