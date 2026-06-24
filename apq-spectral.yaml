@@ -528,7 +528,7 @@ rules:
       functionOptions:
         notMatch: "^(Cookie|Set-Cookie)$"
   apiq:OAR037:
-    description: "Schema should use well-defined type and format."
+    description: "If a string schema declares a format, it must be a valid format value."
     message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64)."
     severity: error
     given: "$..[?(@.type=='string')]"
@@ -620,11 +620,14 @@ rules:
     description: "Declared media type should conform to RFC6838 and RFC7231."
     message: "OAR044: Declared media type range should conform to RFC7231."
     severity: "error"
-    given: "$.paths.*.*.responses.*.content.*~"
+    given:
+      - "$.paths.*.*.responses.*.content.*~"
+      - "$.paths.*.*.requestBody.content.*~"
+      - "$.components.requestBodies.*.content.*~"
     then:
       function: pattern
       functionOptions:
-        match: "^application\/[a-zA-Z0-9-_]+$"
+        match: "^(\\*|[a-zA-Z0-9][a-zA-Z0-9!#$&\\-^_.+]*)/(\\*|[a-zA-Z0-9][a-zA-Z0-9!#$&\\-^_.+]*)(;\\s*[a-zA-Z0-9]+=[\\w\\-]+)*$"
   apiq:OAR045:
     description: "Response schema is required for responses with status codes 201 and others that return content."
     message: "OAR045: Response schema is required for status code '{{property}}'."

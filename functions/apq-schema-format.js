@@ -6,7 +6,7 @@ const VALID_FORMATS = new Set([
 
 module.exports = (targetVal, _options, context) => {
   const format = targetVal.format;
-  if (format === undefined || format === null || !VALID_FORMATS.has(String(format).toLowerCase())) {
+  if (format !== undefined && format !== null && !VALID_FORMATS.has(String(format).toLowerCase())) {
     return [{ message: context.rule.message }];
   }
   return [];

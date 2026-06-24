@@ -7,11 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.4.0-beta.2] - 2026-06-23
+## [1.4.0-beta.2] - 2026-06-24
+
+### Changed
+
+- OAR037 - StringFormat - Rule no longer fires when a string schema omits the `format` field entirely; it only fires when `format` is present but not a recognized value.
 
 ### Fixed
 
 - OAR017 - AlternatePaths - Added `delete` to the `except` list (default is now `get,me,search,delete`); paths ending with `/delete` are now treated as pseudo-parameters and no longer trigger the alternation rule.
+- OAR044 - MediaType - Fixed overly restrictive regex that rejected valid RFC 6838 media types: vendor-specific types (`application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/vnd.github+json`), structured suffixes (`application/ld+json`), non-`application/` families (`text/csv`, `image/png`, `multipart/form-data`), parameterised types (`text/plain; charset=utf-8`), and wildcards (`*/*`, `image/*`). Extended `given` to also validate `requestBody` content.
 
 ### Added
 
