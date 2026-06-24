@@ -7,6 +7,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.2] - 2026-06-23
+
+### Fixed
+
+- OAR017 - AlternatePaths - Added `delete` to the `except` list (default is now `get,me,search,delete`); paths ending with `/delete` are now treated as pseudo-parameters and no longer trigger the alternation rule.
+
+### Added
+
+- OAR020 - ExpandParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`), `/me` paths, and health-check paths are correctly excluded.
+- OAR021 - ExcludeParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) are correctly excluded from this rule.
+- OAR022 - OrderbyParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
+- OAR025 - LimitParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
+
 ## [1.4.0-beta.1] - 2026-06-15
 
 ### Added

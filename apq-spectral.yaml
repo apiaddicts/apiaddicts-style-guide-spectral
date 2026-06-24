@@ -220,7 +220,7 @@ rules:
     then:
       function: apq-alternate-paths
       functionOptions:
-        except: ["me", "get", "search"]
+        except: ["me", "get", "search", "delete"]
   apiq:OAR018:
     description: Operation not recommended for resource path depending on HTTP verb
     message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"

@@ -20,6 +20,16 @@ module.exports = {
       "get": {
         "responses": { "206": { "description": "subcollection missing limit" } }
       }
+    },
+    "/users/me": {
+      "get": {
+        "responses": { "206": { "description": "ignored" } }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "responses": { "206": { "description": "single resource ignored" } }
+      }
     }
   }
 };

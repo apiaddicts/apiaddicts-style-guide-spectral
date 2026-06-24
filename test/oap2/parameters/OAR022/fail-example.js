@@ -28,6 +28,16 @@ module.exports = {
         ],
         "responses": { "206": { "description": "wrong param" } }
       }
+    },
+    "/users/me": {
+      "get": {
+        "responses": { "206": { "description": "should be ignored" } }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "responses": { "206": { "description": "should be ignored" } }
+      }
     }
   }
 };
