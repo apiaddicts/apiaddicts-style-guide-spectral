@@ -4,17 +4,18 @@ info:
   title: Swagger Petstore
 paths:
   /pets:
-    get:
+    post:
       requestBody:
         content:
           'application': {}
-          'text/*': {}
+          'invalid-no-slash': {}
       responses:
         '200':
           description: some operation
           content:
             'application': {}
-    post:
+            'invalid-no-slash': {}
+    get:
       responses:
-         '200':
-           description: some operation
+        '200':
+          description: some operation

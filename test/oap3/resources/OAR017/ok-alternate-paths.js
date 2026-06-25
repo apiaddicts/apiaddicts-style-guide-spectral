@@ -55,6 +55,37 @@ module.exports = {
           }
         }
       }
+    },
+    "/orders/delete": {
+      "post": {
+        "responses": { "200": { "description": "Ok" } }
+      }
+    },
+    "/customers/{customerId}/orders/delete": {
+      "post": {
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": { "200": { "description": "Ok" } }
+      }
+    },
+    "/orders/{orderId}/delete": {
+      "post": {
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": { "200": { "description": "Ok" } }
+      }
     }
   }
 };

@@ -20,9 +20,6 @@ module.exports = {
                       "date": {
                         "type": "string",
                         "format": "dd/mm/yyyy"
-                      },
-                      "name": {
-                        "type": "string"
                       }
                     }
                   }

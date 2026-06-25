@@ -33,7 +33,7 @@ module.exports = {
     },
     "/users/{id}": {
       "get": {
-        "responses": { "200": { "description": "ignored correctly" } }
+        "responses": { "206": { "description": "single resource with 206 ignored correctly" } }
       }
     }
   }

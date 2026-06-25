@@ -26,9 +26,14 @@ module.exports = {
         "responses": { "200": { "description": "no pagination ok" } }
       }
     },
+    "/users/me": {
+      "get": {
+        "responses": { "206": { "description": "me endpoint ignored correctly" } }
+      }
+    },
     "/users/{id}": {
       "get": {
-        "responses": { "200": { "description": "ignored" } }
+        "responses": { "206": { "description": "single resource with 206 ignored correctly" } }
       }
     }
   }
