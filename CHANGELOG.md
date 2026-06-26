@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.3] - 2026-06-25
+
+### Fixed
+
+- OAR028 - FilterParameter - Fixed false positives in `apq-spectral.json`: the JSON ruleset had `given: "$.paths[*].get"` without the exclusion regex that `apq-spectral.yaml` already carried. Updated eliminating spurious findings on `/me` endpoints, detail endpoints ending with `/{id}`, and health-check paths (`status`, `health`, `ping`).
+
 ## [1.4.0-beta.2] - 2026-06-24
 
 ### Changed
@@ -24,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR021 - ExcludeParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) are correctly excluded from this rule.
 - OAR022 - OrderbyParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
 - OAR025 - LimitParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
+- OAR028 - FilterParameter - Added test coverage for excluded paths (`/users/me`, `/users/me/settings`, `/pets/{petId}`, `/status`, `/health`, `/ping`) to `ok-example.js` for both OAP2 and OAP3, verifying the rule does not fire on these endpoints.
 
 ## [1.4.0-beta.1] - 2026-06-15
 
