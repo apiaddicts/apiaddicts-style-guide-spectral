@@ -295,7 +295,8 @@
           "except": [
             "me",
             "get",
-            "search"
+            "search",
+            "delete"
           ]
         }
       }
@@ -734,12 +735,19 @@
       "description": "Declared media type should conform to RFC6838 and RFC7231.",
       "message": "OAR044: Declared media type range should conform to RFC7231.",
       "severity": "error",
-      "given": "$.paths.*.*.responses.*.content.*~",
+      "given": [
+        "$.paths.*.*.responses[?(@property !== '204')].content.*~",
+        "$.paths.*[post,put,patch].requestBody.content.*~",
+        "$.paths.*.*.parameters[*].content.*~",
+        "$.paths.*.parameters[*].content.*~",
+        "$.components.responses.*.content.*~",
+        "$.components.requestBodies.*.content.*~",
+        "$.components.parameters.*.content.*~"
+      ],
       "then": {
-        "field": "name",
         "function": "pattern",
         "functionOptions": {
-          "match": "^application/[a-zA-Z0-9-_]+$"
+          "match": "^(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+)/(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+(; charset=[a-zA-Z0-9_\\-]+)?)$"
         }
       }
     },

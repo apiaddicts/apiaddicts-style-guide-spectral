@@ -7,6 +7,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.4] - 2026-07-05
+
+### Fixed
+
+- OAR044 - MediaType - Synced the fix into `apq-spectral.json`, which had been missed in 1.4.0-beta.2 (only `apq-spectral.yaml` was updated). The JSON still carried the old regex `^application/[a-zA-Z0-9-_]+$` (rejecting `application/ld+json` and Excel vendor types), a broken `field: "name"`, and a responses-only `given`. Since QA lints against the JSON, valid media types kept being reported as invalid.
+- OAR017 - AlternatePaths - Synced the fix into `apq-spectral.json`, which still had `except: ["me","get","search"]` (missing `delete`) while `apq-spectral.yaml` already carried it. Paths such as `/greetings/delete` no longer trigger the rule when linting with the JSON ruleset.
+
+### Changed
+
+- OAR044 - MediaType - Aligned the Spectral rule **exactly** with the Sonar plugin (`OAR044MediaTypeCheck`) so both tools report the same issues on the same lines. The regex now mirrors Sonar's `MEDIA_RANGE_PATTERN`, and `given` reproduces Sonar's scope: responses **except `204`**, `requestBody` only for `post`/`put`/`patch`, parameter `content`, and `components.responses`/`requestBodies`/`parameters` (Sonar resolves `$ref`s into components). Note this makes charset handling stricter to match Sonar (e.g. `application/json;charset=utf-8` without a space, or non-`charset` parameters, are now flagged by both tools).
+
+### Added
+
+- OAR044 - MediaType - Added the previously missing test suite (`test/oap3/core/oar044-media-type.test.js`): valid/official types produce no errors, invalid types are flagged, plus a Sonar-parity fixture (`OAR044/parity-media-type.yaml`, byte-identical to the Sonar plugin fixture) asserting identical firing lines (12, 17, 24) and a scope fixture (`OAR044/scope-media-type.yaml`) asserting `204` and non-write `requestBody` are skipped.
+
 ## [1.4.0-beta.3] - 2026-06-25
 
 ### Fixed

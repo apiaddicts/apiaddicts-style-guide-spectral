@@ -621,13 +621,17 @@ rules:
     message: "OAR044: Declared media type range should conform to RFC7231."
     severity: "error"
     given:
-      - "$.paths.*.*.responses.*.content.*~"
-      - "$.paths.*.*.requestBody.content.*~"
+      - "$.paths.*.*.responses[?(@property !== '204')].content.*~"
+      - "$.paths.*[post,put,patch].requestBody.content.*~"
+      - "$.paths.*.*.parameters[*].content.*~"
+      - "$.paths.*.parameters[*].content.*~"
+      - "$.components.responses.*.content.*~"
       - "$.components.requestBodies.*.content.*~"
+      - "$.components.parameters.*.content.*~"
     then:
       function: pattern
       functionOptions:
-        match: "^(\\*|[a-zA-Z0-9][a-zA-Z0-9!#$&\\-^_.+]*)/(\\*|[a-zA-Z0-9][a-zA-Z0-9!#$&\\-^_.+]*)(;\\s*[a-zA-Z0-9]+=[\\w\\-]+)*$"
+        match: "^(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+)/(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+(; charset=[a-zA-Z0-9_\\-]+)?)$"
   apiq:OAR045:
     description: "Response schema is required for responses with status codes 201 and others that return content."
     message: "OAR045: Response schema is required for status code '{{property}}'."
