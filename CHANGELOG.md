@@ -7,6 +7,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.4] - 2026-07-06
+
+### Fixed
+
+- OAR044 - MediaType - Synced the fix into `apq-spectral.json`, which had been missed in 1.4.0-beta.2 (only `apq-spectral.yaml` was updated). The JSON still carried the old regex `^application/[a-zA-Z0-9-_]+$` (rejecting `application/ld+json` and Excel vendor types), a broken `field: "name"`, and a responses-only `given`. Since QA lints against the JSON, valid media types kept being reported as invalid.
+- OAR017 - AlternatePaths - Synced the fix into `apq-spectral.json`, which still had `except: ["me","get","search"]` (missing `delete`) while `apq-spectral.yaml` already carried it. Paths such as `/greetings/delete` no longer trigger the rule when linting with the JSON ruleset.
+
+
 ## [1.4.0-beta.3] - 2026-06-25
 
 ### Fixed
