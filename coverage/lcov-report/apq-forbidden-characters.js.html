@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,51 +97,51 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">105x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {string|string[]} targetVal
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, _options, context) =&gt; {
-  const pattern = /^[a-zA-Z0-9_\-., ]+$/;
-  const errors = [];
-  const basePath = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+<span class="cstat-no" title="statement not covered" >module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, _options, context) =&gt; {</span>
+  const pattern = <span class="cstat-no" title="statement not covered" >/^[a-zA-Z0-9_\-., ]+$/;</span>
+  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
+  const basePath = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
 &nbsp;
-  if (typeof targetVal === 'string') {
-    if (!pattern.test(targetVal)) {
-      errors.push({
+<span class="cstat-no" title="statement not covered" >  if (typeof targetVal === 'string') {</span>
+<span class="cstat-no" title="statement not covered" >    if (!pattern.test(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >      errors.push({</span>
         message: context.rule.message,
         path: basePath
       });
     }
-  } else <span class="missing-if-branch" title="else path not taken" >E</span>if (Array.isArray(targetVal)) {
-    targetVal.forEach((role, index) =&gt; {
-      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {
-        errors.push({
+  } else <span class="cstat-no" title="statement not covered" >if (Array.isArray(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >    targetVal.forEach(<span class="fstat-no" title="function not covered" >(r</span>ole, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {</span>
+<span class="cstat-no" title="statement not covered" >        errors.push({</span>
           message: context.rule.message,
           path: [...basePath, index]
         });
@@ -149,7 +149,7 @@ module.exports = (targetVal, _options, context) =&gt; {
     });
   }
 &nbsp;
-  return errors;
+<span class="cstat-no" title="statement not covered" >  return errors;</span>
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -157,7 +157,7 @@ module.exports = (targetVal, _options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-06T01:52:06.489Z
+                at 2026-07-09T02:26:47.950Z
             </div>
         <script src="prettify.js"></script>
         <script>

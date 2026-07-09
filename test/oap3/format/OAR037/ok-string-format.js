@@ -22,7 +22,8 @@ module.exports = {
                         "format": "date"
                       },
                       "name": {
-                        "type": "string"
+                        "type": "string",
+                        "pattern": "^[A-Za-z ]+$"
                       }
                     }
                   }
