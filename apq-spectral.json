@@ -650,6 +650,7 @@
       "description": "String schemas must specify a valid format, or a valid pattern when no format is defined.",
       "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64), or a valid pattern when no format is defined.",
       "severity": "error",
+      "resolved": false,
       "given": "$..[?(@.type=='string')]",
       "then": {
         "function": "apq-schema-format"

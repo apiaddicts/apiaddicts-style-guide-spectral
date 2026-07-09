@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- OAR037 - StringFormat - String schemas must now declare a valid `format`, or — when no `format` is declared — a non-empty, syntactically valid `pattern`; schemas with neither a valid `format` nor a valid `pattern` are reported. Aligns with the equivalent change on the Sonar side (`OAR037StringFormatCheck`, now classified as a security/`VULNERABILITY` rule).
+- OAR037 - StringFormat - String schemas must now declare a valid `format`, or a valid `pattern` when no `format` is defined. Aligns with the equivalent security-classified change on the Sonar side (`OAR037StringFormatCheck`).
 
 ## [1.4.0-beta.4] - 2026-07-06
 
