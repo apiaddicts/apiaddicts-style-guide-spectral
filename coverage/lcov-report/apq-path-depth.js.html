@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/8</span>
+                <span class='fraction'>0/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -89,19 +89,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">105x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">129x</span>
-<span class="cline-any cline-yes">100x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -110,19 +110,19 @@
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, options, context) =&gt; {
-  const maxDepth = options.maxDepth ?? <span class="branch-1 cbranch-no" title="branch not covered" >3</span>
-  const ignore = options.ignoreSegments ?? <span class="branch-1 cbranch-no" title="branch not covered" >[]</span>
-  const segments = targetVal
+<span class="cstat-no" title="statement not covered" >module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, options, context) =&gt; {</span>
+  const maxDepth = <span class="cstat-no" title="statement not covered" >options.maxDepth ?? 3</span>
+  const ignore = <span class="cstat-no" title="statement not covered" >options.ignoreSegments ?? []</span>
+  const segments = <span class="cstat-no" title="statement not covered" >targetVal</span>
     .split('/')
     .filter(Boolean)
-    .filter(segment =&gt; !segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))
-    .filter(segment =&gt; !ignore.includes(segment))
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))</span>
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!ignore.includes(segment))</span>
 &nbsp;
-  const depth = segments.length;
+  const depth = <span class="cstat-no" title="statement not covered" >segments.length;</span>
 &nbsp;
-  if (depth &gt; maxDepth) {
-    return [
+<span class="cstat-no" title="statement not covered" >  if (depth &gt; maxDepth) {</span>
+<span class="cstat-no" title="statement not covered" >    return [</span>
       { message: context.rule.message }
     ]
   }
@@ -133,7 +133,7 @@ module.exports = (targetVal, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-06T01:52:06.489Z
+                at 2026-07-09T02:26:47.950Z
             </div>
         <script src="prettify.js"></script>
         <script>
