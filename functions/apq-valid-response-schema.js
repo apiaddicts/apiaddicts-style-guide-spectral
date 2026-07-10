@@ -21,7 +21,7 @@ module.exports = (targetVal, options, context) => {
   for (const [propName, propValue] of Object.entries(targetVal)) {
     if (!VALID_NAMES.includes(propName)) {
       errors.push({
-        message: context.rule.message.replace('{{allowedName}}', dataProperty),
+        message: `OAR038: Response property must be named '${dataProperty}' or 'error'. Got '${propName}'.`,
         path: [propName]
       });
     } else {

@@ -21,7 +21,9 @@
     "apq-valid-response-schema",
     "apq-valid-openapi-version",
     "apq-validate-structure",
-    "apq-schema-format"
+    "apq-schema-format",
+    "apq-binary-format-check",
+    "apq-collection-query-param-required"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -76,7 +78,10 @@
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
-        "function": "apq-forbidden-characters"
+        "function": "apq-forbidden-characters",
+        "functionOptions": {
+          "pattern": "^[a-zA-Z0-9_\\-., ]+$"
+        }
       }
     },
     "apiq:OAR005": {
@@ -317,66 +322,38 @@
       }
     },
     "apiq:OAR019": {
-      "description": "$select must be defined as a query parameter in all operations.",
-      "message": "OAR019: $select must be defined as a query parameter in this operation.",
+      "description": "$select must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
+      "message": "{{error}}",
       "severity": "warn",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths",
       "then": {
-        "field": "$[?(@.name == '$select' && @.in == 'query')]",
-        "function": "truthy"
+        "function": "apq-collection-query-param-required",
+        "functionOptions": {
+          "parameter-name": "$select"
+        }
       }
     },
     "apiq:OAR020": {
       "description": "$expand must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
-      "message": "OAR020: $expand must be defined as a query parameter in this operation.",
+      "message": "{{error}}",
       "severity": "warn",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "schema": {
-            "required": ["parameters"],
-            "properties": {
-              "parameters": {
-                "type": "array",
-                "contains": {
-                  "type": "object",
-                  "properties": {
-                    "name": { "const": "$expand" },
-                    "in": { "const": "query" }
-                  },
-                  "required": ["name", "in"]
-                }
-              }
-            }
-          }
+          "parameter-name": "$expand"
         }
       }
     },
     "apiq:OAR021": {
       "description": "$exclude must be defined as a query parameter in collection operations (excluding detail endpoints and health checks).",
-      "message": "OAR021: $exclude must be defined as a query parameter in this operation.",
+      "message": "{{error}}",
       "severity": "warn",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "schema": {
-            "required": ["parameters"],
-            "properties": {
-              "parameters": {
-                "type": "array",
-                "contains": {
-                  "type": "object",
-                  "properties": {
-                    "name": { "const": "$exclude" },
-                    "in": { "const": "query" }
-                  },
-                  "required": ["name", "in"]
-                }
-              }
-            }
-          }
+          "parameter-name": "$exclude"
         }
       }
     },
@@ -660,7 +637,7 @@
     },
     "apiq:OAR038": {
       "description": "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property.",
-      "message": "OAR038: Response property must be named '{{allowedName}}' or 'error'. Got '{{property}}'.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths.*.post.responses.*.content..schema.properties",
       "then": {
@@ -1400,15 +1377,14 @@
       }
     },
     "apiq:OAR082": {
-      "description": "The string properties must define a byte or binary format.",
-      "message": "OAR082: The string properties must define a 'byte' or 'binary' format.",
+      "description": "The string properties 'product', 'line', and 'price' must define a byte or binary format.",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$..properties.*",
+      "given": "$..[?(@.properties)]",
       "then": {
-        "field": "format",
-        "function": "pattern",
+        "function": "apq-binary-format-check",
         "functionOptions": {
-          "match": "^(byte|binary)$"
+          "fields-to-apply": "product,line,price"
         }
       }
     },
@@ -1440,7 +1416,7 @@
     },
     "apiq:OAR085": {
       "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
-      "message": "OAR085: The OpenAPI version '{{value}}' is not allowed. Allowed versions: {{allowed}}.",
+      "message": "{{error}}",
       "severity": "warn",
       "given": "$.openapi",
       "then": {

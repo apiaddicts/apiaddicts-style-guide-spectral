@@ -27,9 +27,7 @@ module.exports = (schema, options = {}, context) => {
     const format = propSchema.format || '';
     if (format && format !== 'byte' && format !== 'binary') {
       results.push({
-        message: context.rule.message
-          .replace('{{property}}', propName)
-          .replace('{{format}}', format || 'undefined'),
+        message: `OAR082: Property '${propName}' must define a 'byte' or 'binary' format (currently: ${format}).`,
         path: [...context.path, 'properties', propName],
       });
     }
