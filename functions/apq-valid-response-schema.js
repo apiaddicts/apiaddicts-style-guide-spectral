@@ -1,11 +1,12 @@
 /**
  * @param {object} targetVal
- * @param {object} _options
+ * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, _options, context) => {
+module.exports = (targetVal, options, context) => {
   const errors = [];
-  const VALID_NAMES = ['data', 'error'];
+  const dataProperty = (options && options['data-property']) || 'data';
+  const VALID_NAMES = [dataProperty, 'error'];
 
   if (!targetVal || typeof targetVal !== 'object') {
     return errors;
@@ -20,7 +21,7 @@ module.exports = (targetVal, _options, context) => {
   for (const [propName, propValue] of Object.entries(targetVal)) {
     if (!VALID_NAMES.includes(propName)) {
       errors.push({
-        message: context.rule.message,
+        message: context.rule.message.replace('{{allowedName}}', dataProperty),
         path: [propName]
       });
     } else {

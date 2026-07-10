@@ -4,7 +4,8 @@
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (targetVal, options, context) => {
-  const maxDepth = options.maxDepth ?? 3
+  const minDepth = options['min-level'] ?? options.minDepth ?? null
+  const maxDepth = options['max-level'] ?? options.maxDepth ?? 3
   const ignore = options.ignoreSegments ?? []
   const segments = targetVal
     .split('/')
@@ -14,7 +15,11 @@ module.exports = (targetVal, options, context) => {
 
   const depth = segments.length;
 
-  if (depth > maxDepth) {
+  const isOutOfRange = minDepth != null
+    ? (depth >= minDepth && depth <= maxDepth)
+    : depth > maxDepth
+
+  if (isOutOfRange) {
     return [
       { message: context.rule.message }
     ]

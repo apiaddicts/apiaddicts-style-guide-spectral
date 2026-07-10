@@ -19,6 +19,7 @@
     "apq-path-depth",
     "apq-forbidden-characters",
     "apq-valid-response-schema",
+    "apq-valid-openapi-version",
     "apq-validate-structure",
     "apq-schema-format"
   ],
@@ -212,7 +213,8 @@
       "then": {
         "function": "apq-path-depth",
         "functionOptions": {
-          "maxDepth": 3,
+          "min-level": 4,
+          "max-level": 5,
           "ignoreSegments": [
             "me"
           ]
@@ -658,11 +660,14 @@
     },
     "apiq:OAR038": {
       "description": "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property.",
-      "message": "OAR038: Response property must be named 'data' or 'error'. Got '{{property}}'.",
+      "message": "OAR038: Response property must be named '{{allowedName}}' or 'error'. Got '{{property}}'.",
       "severity": "error",
       "given": "$.paths.*.post.responses.*.content..schema.properties",
       "then": {
-        "function": "apq-valid-response-schema"
+        "function": "apq-valid-response-schema",
+        "functionOptions": {
+          "data-property": "data"
+        }
       }
     },
     "apiq:OAR039": {
@@ -1435,13 +1440,13 @@
     },
     "apiq:OAR085": {
       "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
-      "message": "OAR085: The OpenAPI version '{{value}}' is not allowed. Allowed versions: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
+      "message": "OAR085: The OpenAPI version '{{value}}' is not allowed. Allowed versions: {{allowed}}.",
       "severity": "warn",
       "given": "$.openapi",
       "then": {
-        "function": "pattern",
+        "function": "apq-valid-openapi-version",
         "functionOptions": {
-          "match": "^(2\\.0|3\\.0\\.0|3\\.0\\.1|3\\.0\\.2|3\\.0\\.3|3\\.1\\.0)$"
+          "valid-versions": "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0"
         }
       }
     },
