@@ -639,7 +639,10 @@
       "description": "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property.",
       "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths.*.post.responses.*.content..schema.properties",
+      "given": [
+        "$.paths.*.post.responses.*.content..schema.properties",
+        "$.paths.*.post.responses.*.schema.properties"
+      ],
       "then": {
         "function": "apq-valid-response-schema",
         "functionOptions": {
@@ -665,13 +668,13 @@
     },
     "apiq:OAR040": {
       "description": "A scope name non-compliant with the standard may cause problems at application level.",
-      "message": "OAR040: Scope name must follow the 'apfc_sc_' prefix standard.",
+      "message": "OAR040: Scope name value is non compliant with the standard.",
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].name",
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": "^apfc_sc_.*"
+          "match": "^[a-zA-Z]{4,}_(SC|sc)_[a-zA-Z0-9]{1,}$"
         }
       }
     },
@@ -1418,7 +1421,7 @@
       "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0.",
       "message": "{{error}}",
       "severity": "warn",
-      "given": "$.openapi",
+      "given": ["$.openapi", "$.swagger"],
       "then": {
         "function": "apq-valid-openapi-version",
         "functionOptions": {

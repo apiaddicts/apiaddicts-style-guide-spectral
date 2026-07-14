@@ -1,19 +1,17 @@
-const DEFAULT_PATHS = '\\/me(\\/|$);status|health|ping';
+
+const DEFAULT_PATHS = '/me;/health;/ping;/status';
 const PATH_PARAM_SUFFIX_REGEX = /\/\{[^}]+\}$/;
 const STRATEGY_INCLUDE = 'Include';
 const STRATEGY_EXCLUDE = 'Exclude';
 
-const parsePathPatterns = (paths, ruleCode) => paths
+const escapeRegExp = (segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+
+const parsePathPatterns = (paths) => paths
   .split(/[\n;]/)
   .map((p) => p.trim())
   .filter(Boolean)
-  .map((pattern) => {
-    try {
-      return new RegExp(pattern);
-    } catch (err) {
-      throw new Error(`${ruleCode}: Invalid regex "${pattern}" in "paths": ${err.message}`);
-    }
-  });
+  .map((segment) => new RegExp(`${escapeRegExp(segment)}(/|$)`));
 
 const shouldIncludePath = (path, patterns, strategy) => {
   const matchesList = patterns.some((regex) => regex.test(path));
@@ -45,13 +43,8 @@ module.exports = (given, options = {}, context) => {
     ? STRATEGY_INCLUDE
     : STRATEGY_EXCLUDE;
 
-  let patterns;
-  try {
-    const rawPaths = typeof options.paths === 'string' ? options.paths : DEFAULT_PATHS;
-    patterns = parsePathPatterns(rawPaths, ruleCode);
-  } catch (error) {
-    return [{ message: error.message, path: context.path }];
-  }
+  const rawPaths = typeof options.paths === 'string' ? options.paths : DEFAULT_PATHS;
+  const patterns = parsePathPatterns(rawPaths);
 
   const results = [];
 

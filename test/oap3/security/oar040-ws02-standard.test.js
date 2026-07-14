@@ -13,7 +13,7 @@ beforeAll(async () => {
 test('apiq:OAR040 should find errors', () => {
   return linter.run(oar040fail).then((results) => {
     expect(results.length).toBeGreaterThanOrEqual(1);
-    expect(results[0].message).toBe("OAR040: Scope name must follow the 'apfc_sc_' prefix standard.");
+    expect(results[0].message).toBe('OAR040: Scope name value is non compliant with the standard.');
     expect(results[0].severity).toBe(0);
   });
 });

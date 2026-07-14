@@ -19,7 +19,7 @@ const doc = {
 
 test('apiq:OAR020 custom paths + Exclude only excludes the configured path', async () => {
   const linter = await linterForRule('apiq:OAR020', {
-    functionOptions: { paths: '\\/pets$', pathValidationStrategy: 'Exclude' }
+    functionOptions: { paths: '/pets', pathValidationStrategy: 'Exclude' }
   });
   const results = await linter.run(doc);
   expect(results.map((r) => r.path.join('/'))).toEqual(
@@ -30,7 +30,7 @@ test('apiq:OAR020 custom paths + Exclude only excludes the configured path', asy
 
 test('apiq:OAR020 custom paths + Include only processes the configured path', async () => {
   const linter = await linterForRule('apiq:OAR020', {
-    functionOptions: { paths: '\\/orders$', pathValidationStrategy: 'Include' }
+    functionOptions: { paths: '/orders', pathValidationStrategy: 'Include' }
   });
   const results = await linter.run(doc);
   expect(results.some((r) => r.path.join('/').includes('orders'))).toBe(true);

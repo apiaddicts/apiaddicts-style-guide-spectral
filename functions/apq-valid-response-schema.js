@@ -22,7 +22,7 @@ module.exports = (targetVal, options, context) => {
     if (!VALID_NAMES.includes(propName)) {
       errors.push({
         message: `OAR038: Response property must be named '${dataProperty}' or 'error'. Got '${propName}'.`,
-        path: [propName]
+        path: [...path, propName]
       });
     } else {
       const subProps = propValue && propValue.properties;
@@ -30,7 +30,7 @@ module.exports = (targetVal, options, context) => {
       if (!hasSubProps) {
         errors.push({
           message: `OAR038: Property '${propName}' must have at least one sub-property.`,
-          path: [propName]
+          path: [...path, propName]
         });
       }
     }
