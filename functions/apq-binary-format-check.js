@@ -23,14 +23,11 @@ module.exports = (schema, options = {}, context) => {
       return;
     }
 
-    // Check if format is byte or binary
     const format = propSchema.format || '';
-    if (format && format !== 'byte' && format !== 'binary') {
+    if (format !== 'byte' && format !== 'binary') {
       results.push({
-        message: context.rule.message
-          .replace('{{property}}', propName)
-          .replace('{{format}}', format || 'undefined'),
-        path: [...context.path, 'properties', propName],
+        message: `OAR082: Property '${propName}' must define a 'byte' or 'binary' format (currently: ${format || 'missing'}).`,
+        path: [...context.path, 'properties', propName, 'type'],
       });
     }
   });

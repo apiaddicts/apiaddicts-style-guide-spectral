@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.6] - 2026-07-13
+
+### Fixed
+
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Added `min-level`/`max-level` support; default changed from `maxDepth: 3` to `min-level: 4` / `max-level: 5`, matching the documented "4 and 5" range and the equivalent Sonar rule.
+- OAR038 - StandardCreateResponse - `apq-valid-response-schema` never read its `options` (named `_options`) and hardcoded `'data'` as the only valid top-level property name. Now reads a configurable `data-property` functionOption.
+- OAR085 - OpenAPIVersion - used the core `pattern` function with a hardcoded regex; there was no way to express a configurable version list. Replaced with a new function, `apq-valid-openapi-version`, that reads a `valid-versions` functionOption.
+- OAR004 - ValidWso2ScopesRoles - `apq-forbidden-characters` ignored its `options` entirely and used a hardcoded regex. Now reads a configurable `pattern` functionOption (default unchanged).
+- OAR082 - BinaryOrByteFormat - `apq-spectral.json` was wired to the core `pattern` function against `$..properties.*` instead of `apq-binary-format-check`, which wasn't even registered in its `functions` array. This caused both the reported false positives on unrelated `integer`/`format: int32` properties and the inert `fields-to-apply` option.
+- OAR019/OAR020/OAR021 - $select/$expand/$exclude required as a query parameter - replaced the hardcoded exclusion regexes baked into each rule's `given` with a new shared function, `apq-collection-query-param-required`, exposing `parameter-name` (required), `paths`, and `pathValidationStrategy`.
+
+
 ## [1.4.0-beta.5] - 2026-07-08
 
 ### Changed
