@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR081 - `apq-spectral.json` now uses the `apq-password-format` function over `$..properties`; it carried a stale, incorrect definition (built-in `pattern` over `$..properties[?(@.type == 'string' && @.format == 'number')]`).
 - `apq-binary-format-check` (OAR082) - Guard against a null-valued property schema (e.g. `product: null`) before reading `.type`.
 - `apq-spectral.json` - Registered `apq-security-required-response`, `apq-path-param-query-conflict` and `apq-password-format` in the `functions` array (referenced by rules but not registered).
+- OAR044 - MediaType - Media type parameters now follow RFC 9110 (charset without space, other parameter names, multiple parameters); type/subtype can no longer start with `.`. Synced `apq-spectral.json` with `apq-spectral.yaml` and added the missing `oar044-media-type.test.js` test.
 
 ### Changed
 

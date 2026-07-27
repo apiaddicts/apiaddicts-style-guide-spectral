@@ -621,7 +621,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: "^(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+)/(\\*|[a-zA-Z0-9.][a-zA-Z0-9.!#$&_^+\\-]+(; charset=[a-zA-Z0-9_\\-]+)?)$"
+        match: '^(\*|[a-zA-Z0-9][a-zA-Z0-9.!#$&^_+\-]*)/(\*|[a-zA-Z0-9][a-zA-Z0-9.!#$&^_+\-]*)(?:[ \t]*;[ \t]*[a-zA-Z0-9!#$%&''*+\-.^_`|~]+=(?:[a-zA-Z0-9!#$%&''*+\-.^_`|~]+|"(?:[^"\\]|\\.)*"))*$'
   apiq:OAR045:
     description: "Response schema is required for responses with status codes 201 and others that return content."
     message: "OAR045: Response schema is required for status code '{{property}}'."
