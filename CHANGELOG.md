@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.0-beta.7] - 2026-07-27
+
+### Changed
+
+- OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
+- OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
+
+### Fixed
+
+- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
+- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.
+
 ## [1.4.0-beta.6] - 2026-07-13
 
 ### Fixed
