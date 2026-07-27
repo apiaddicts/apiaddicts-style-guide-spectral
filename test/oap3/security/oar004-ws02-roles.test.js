@@ -13,7 +13,7 @@ beforeAll(async () => {
 test('apiq:OAR004 should find errors', () => {
   return linter.run(oar004fail).then((results) => {
     expect(results.length).toBeGreaterThanOrEqual(1);
-    expect(results[0].message).toBe("OAR004: Role should not contain forbidden characters (e.g. special characters like €, *, etc.).");
+    expect(results[0].message).toContain('does not match the required pattern:');
     expect(results[0].severity).toBe(0);
   });
 });

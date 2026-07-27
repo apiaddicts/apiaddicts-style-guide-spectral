@@ -18,9 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `apq-binary-format-check` (OAR082) - Guard against a null-valued property schema (e.g. `product: null`) before reading `.type`.
 - `apq-spectral.json` - Registered `apq-security-required-response`, `apq-path-param-query-conflict` and `apq-password-format` in the `functions` array (referenced by rules but not registered).
 - OAR044 - MediaType - Media type parameters now follow RFC 9110 (charset without space, other parameter names, multiple parameters); type/subtype can no longer start with `.`. Synced `apq-spectral.json` with `apq-spectral.yaml` and added the missing `oar044-media-type.test.js` test.
+- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
+- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.
 
 ### Changed
 
+- OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
+- OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
 - OAR085 - Added `3.2.0` to the default `valid-versions` (`2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0`).
 - Generalized `apq-security-required-response` with a `response-code` option (default `"401"`), shared by OAR035 (401) and OAR096 (403).
 - Bumped `@stoplight/spectral-core` (`^1.19.5` → `1.23.0`), `@stoplight/spectral-rulesets` (`^1.20.2` → `1.22.2`), `@stoplight/spectral-functions` (`^1.9.0` → `^1.10.5`) and `@stoplight/spectral-ruleset-migrator` (`^1.10.0` → `^1.12.1`) in `devDependencies`.

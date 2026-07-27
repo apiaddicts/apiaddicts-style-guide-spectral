@@ -5,7 +5,7 @@
  */
 module.exports = (targetVal, options, context) => {
   const minDepth = options['min-level'] ?? options.minDepth ?? null
-  const maxDepth = options['max-level'] ?? options.maxDepth ?? 3
+  const maxDepth = options['max-level'] ?? options['max-level-allowed'] ?? options.maxDepth ?? 3
   const ignore = options.ignoreSegments ?? []
   const segments = targetVal
     .split('/')
@@ -20,8 +20,11 @@ module.exports = (targetVal, options, context) => {
     : depth > maxDepth
 
   if (isOutOfRange) {
+    const message = minDepth != null
+      ? `OAR014: Path depth (${depth}) must not fall within the non-suggested range ${minDepth}-${maxDepth}.`
+      : `OAR015: Path depth (${depth}) exceeds the maximum allowed level of ${maxDepth}.`
     return [
-      { message: context.rule.message }
+      { message }
     ]
   }
 }
