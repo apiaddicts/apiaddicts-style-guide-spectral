@@ -21,8 +21,12 @@ module.exports = {
                         "type": "string",
                         "format": "dd/mm/yyyy"
                       },
-                      "name": {
+                      "id": {
                         "type": "string"
+                      },
+                      "code": {
+                        "type": "string",
+                        "pattern": "[a-z"
                       }
                     }
                   }

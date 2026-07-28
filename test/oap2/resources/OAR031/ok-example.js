@@ -42,6 +42,13 @@ module.exports = {
                   }
                 }
               }
+            },
+            "examples": {
+              "application/json": {
+                "id": 1,
+                "nested": { "value": "abc" },
+                "items": ["item1"]
+              }
             }
           },
           "201": {

@@ -3,8 +3,8 @@
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, _options, context) => {
-  const pattern = /^[a-zA-Z0-9_\-., ]+$/;
+module.exports = (targetVal, options, context) => {
+  const pattern = new RegExp((options && options.pattern) || '^[a-zA-Z0-9_\\-., ]+$');
   const errors = [];
   const basePath = context.path || [];
 

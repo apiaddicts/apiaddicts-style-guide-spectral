@@ -22,6 +22,11 @@ module.exports = {
       "get": {
         "responses": { "200": { "description": "OK" } }
       }
+    },
+    "/users/me": {
+      "get": {
+        "responses": { "200": { "description": "OK" } }
+      }
     }
   }
 };

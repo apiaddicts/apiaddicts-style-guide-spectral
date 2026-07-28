@@ -20,6 +20,10 @@ module.exports = {
                       "date": {
                         "type": "string",
                         "format": "date"
+                      },
+                      "name": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z ]+$"
                       }
                     }
                   }

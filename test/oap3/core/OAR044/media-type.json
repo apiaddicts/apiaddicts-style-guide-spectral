@@ -1,31 +1,43 @@
 {
-  "openapi" : "3.0.1",
-  "info" : {
-    "version" : "1.0.0",
-    "title" : "Swagger Petstore"
+  "openapi": "3.0.1",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
   },
-  "paths" : {
-    "/pets" : {
-      "get" : {
-        "requestBody" : {
-          "content" : {
-            "application/json" : { },
-            "text/*" : { }
+  "paths": {
+    "/pets": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {},
+            "text/plain; charset=utf-8": {},
+            "multipart/form-data": {},
+            "application/vnd.ms-excel": {},
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {},
+            "application/ld+json": {},
+            "image/*": {},
+            "*/*": {}
           }
         },
-        "responses" : {
-          "200" : {
-            "description" : "some operation",
-            "content" : {
-              "application/json": { }
+        "responses": {
+          "200": {
+            "description": "some operation",
+            "content": {
+              "application/json": {},
+              "text/csv": {},
+              "image/png": {},
+              "application/vnd.ms-excel": {},
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {},
+              "application/vnd.github+json": {},
+              "text/plain; charset=utf-8": {}
             }
           }
         }
       },
-      "post" : {
-        "responses" : {
-          "200" : {
-            "description" : "some operation"
+      "get": {
+        "responses": {
+          "200": {
+            "description": "some operation"
           }
         }
       }
