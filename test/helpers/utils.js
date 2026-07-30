@@ -7,14 +7,12 @@ const AsyncFunction = (async () => {}).constructor;
 
 const rulesetFile = './apq-spectral.yaml';
 
-async function linterForRule(rule, { namingConvention, functionOptions } = {}) {
-  const linter = new Spectral();
-
+async function loadRuleset(file) {
   const m = {};
-  const paths = [path.dirname(rulesetFile), __dirname, '../..'];
+  const paths = [path.dirname(file), __dirname, '../..'];
   await AsyncFunction(
     'module, require',
-    await migrateRuleset(rulesetFile, {
+    await migrateRuleset(file, {
       format: 'commonjs',
       fs,
     }),
@@ -22,6 +20,13 @@ async function linterForRule(rule, { namingConvention, functionOptions } = {}) {
   )(m, (text) => require(require.resolve(text, { paths })));
   const ruleset = m.exports;
   delete ruleset.extends;
+  return ruleset;
+}
+
+async function linterForRule(rule, { namingConvention, functionOptions } = {}) {
+  const linter = new Spectral();
+
+  const ruleset = await loadRuleset(rulesetFile);
   Object.keys(ruleset.rules).forEach((key) => {
     if (key !== rule) {
       delete ruleset.rules[key];
@@ -43,4 +48,13 @@ async function linterForRule(rule, { namingConvention, functionOptions } = {}) {
   return linter;
 }
 
+// Loads the complete ruleset (all rules + custom functions) from the given file.
+// Used by cross-cutting tests that must run every rule against a document.
+async function fullLinterForRuleset(file = rulesetFile) {
+  const linter = new Spectral();
+  linter.setRuleset(await loadRuleset(file));
+  return linter;
+}
+
 module.exports.linterForRule = linterForRule;
+module.exports.fullLinterForRuleset = fullLinterForRuleset;
