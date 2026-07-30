@@ -24,6 +24,10 @@ module.exports = {
                       "name": {
                         "type": "string",
                         "pattern": "^[A-Za-z ]+$"
+                      },
+                      "channelType": {
+                        "type": "string",
+                        "enum": ["email", "sms"]
                       }
                     }
                   }

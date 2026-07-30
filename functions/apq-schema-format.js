@@ -15,11 +15,17 @@ function isValidPattern(pattern) {
 
 module.exports = (targetVal, _options, context) => {
   const typePath = [...context.path, 'type'];
+
   const format = targetVal.format;
   if (format !== undefined && format !== null) {
     if (!VALID_FORMATS.has(String(format).toLowerCase())) {
       return [{ message: context.rule.message, path: typePath }];
     }
+    return [];
+  }
+
+  const enumValues = targetVal.enum;
+  if (Array.isArray(enumValues) && enumValues.length > 0) {
     return [];
   }
 

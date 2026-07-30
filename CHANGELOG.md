@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.1-beta-1]
+
+### Fixed
+
+- OAR037 - StringFormat - Fixed false positive on string schemas constrained by `enum`. `apq-schema-format` only checked `format`/`pattern`, so a string with a non-empty `enum` and no `format` was wrongly flagged even though the `enum` already constrains the allowed values. When no `format` is declared, a non-empty `enum` now satisfies the rule (like a valid `pattern`); a present-but-invalid `format` still fires even when an `enum` is declared.
+
+
 ## [1.4.0] - 2026-07-28
 
 ### Fixed
