@@ -7,6 +7,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.1-beta.1]
+
+### Fixed
+
+- OAR035 - SecurityRequiredResponse - Synced the fix into `apq-spectral.json`, which had been missed when `apq-spectral.yaml` was refactored to use the `apq-security-required-response` function. The JSON still used the core `truthy` function against `$.paths[*][*].responses`, requiring a 401 response on every operation regardless of whether security was actually defined. Since QA lints against the JSON, this caused false positives on unauthenticated operations.
+- OAR069 - PathParamAndQuery - Aligned the Spectral implementation with Sonar's `OAR069PathParamAndQueryCheck`. It now raises one issue PER offending `path`/`query` parameter, anchored to that parameter's node, instead of a single issue per operation on the `responses` line. Rule `description`/`message` updated to match Sonar's wording ("Any param in PATH or QUERY should have a Bad Request (400) response."). Verified line-for-line against Sonar via cross-engine parity tests (OpenAPI v2 and v3).
+- OAR096 - ForbiddenResponse - Made the 403 requirement conditional on security, matching Sonar's `OAR096ForbiddenResponseCheck` and the rule's own description. Previously the Spectral rule used the core `truthy` function unconditionally, flagging every operation missing a 403 even when no security was defined (a divergence from Sonar). It now reuses `apq-security-required-response` with a `response-code: "403"` option (active only when the operation or the document root declares a non-empty `security`). Verified against Sonar via cross-engine parity tests (v2 and v3).
+- OAR085 - OpenAPIVersion - Added `3.2.0` to the default `valid-versions` (both rulesets and the function default), matching Sonar's default list (`2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0`). Previously a `3.2.0` document was flagged by Spectral but accepted by Sonar.
+- `apq-spectral.json` - Registered `apq-security-required-response` and `apq-path-param-query-conflict` in the `functions` array. They were referenced by OAR035/OAR069/OAR096 but missing from the registration, so loading the JSON ruleset directly would fail to resolve those custom functions.
+- Null-safety in JSONPath `given` expressions (OAR016, OAR037, OAR052, OAR074, OAR075, OAR076, OAR081, OAR082) - A single `null` node anywhere in a document (e.g. `type: null`, `properties: null`, `items: null`, a null property value, or a parameter without `schema`) made the recursive-descent filters `$..[?(@.type==...)]` / `$..[?(@.properties)]` / `parameters[?(@.schema.type==...)]` throw inside nimma (`Cannot read properties of null (reading 'type')`), which aborts the ENTIRE lint run — surfacing to users as "no rules loaded"/empty results in the editor. Added a null guard to each filter (`@ && ...`, `@ && @.schema && ...`) so a null node is simply skipped. Behavior on valid documents is unchanged (a null node was never a valid match). Verified with `@stoplight/spectral-cli` and programmatically against null-prone OpenAPI v2/v3 documents.
+- `apq-binary-format-check` (OAR082) - Guard against a null-valued property schema (e.g. `product: null`) before reading `.type`, so a null property no longer throws.
+
+### Changed
+
+- Generalized `apq-security-required-response` to accept a `response-code` functionOption (default `"401"`), mirroring Sonar's shared `AbstractSecurityResponseCheck`, so OAR035 (401) and OAR096 (403) share one conditional implementation.
+- Bumped `@stoplight/spectral-core` (`^1.19.5` → `1.23.0`) and `@stoplight/spectral-rulesets` (`^1.20.2` → `1.22.2`) in `devDependencies` to match the versions `api-quality-front` actually runs, so this repo's test suite validates rules against the same lint engine used in production. Also bumped `@stoplight/spectral-functions` (`^1.9.0` → `^1.10.5`) and `@stoplight/spectral-ruleset-migrator` (`^1.10.0` → `^1.12.1`) to their latest compatible 1.x releases.
+
+
 ## [1.4.0] - 2026-07-28
 
 ### Fixed

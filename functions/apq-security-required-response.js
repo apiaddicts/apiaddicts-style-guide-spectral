@@ -1,7 +1,6 @@
 /**
- * Validates that operations with security defined include a 401 Unauthorized response
- * @param {object} given - The operation node
- * @param {object} options - Function options
+ * @param {object} given - The operation node ($.paths[*][*])
+ * @param {object} options - Function options ({ 'response-code': '401' | '403' | ... })
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) => {
@@ -15,6 +14,10 @@ module.exports = (given, options, context) => {
   if (!responses || typeof responses !== 'object') {
     return results;
   }
+
+  const expectedCode = (options && options['response-code'])
+    ? String(options['response-code'])
+    : '401';
 
   // Check if this operation has security defined
   const operationHasSecurity = given.security &&
@@ -32,11 +35,10 @@ module.exports = (given, options, context) => {
     // Ignore errors accessing root security
   }
 
-  // Only require 401 if security is defined (operation-level or global)
   if (operationHasSecurity || globalHasSecurity) {
-    if (!responses['401']) {
+    if (!responses[expectedCode]) {
       results.push({
-        message: context.rule.message || 'OAR035: Response code 401 must be defined for operations with security schemes defined.',
+        message: context.rule.message,
         path: [...context.path, 'responses']
       });
     }
