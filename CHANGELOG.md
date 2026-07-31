@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Null-safety in recursive-descent JSONPath `given` expressions (OAR016, OAR037, OAR052, OAR074, OAR075, OAR076, OAR081, OAR082) - A single `null` node in a document (e.g. `type: null`, `properties: null`, `items: null`, a null property value, or a parameter without `schema`) made filters like `$..[?(@.type==...)]` / `$..[?(@.properties)]` / `parameters[?(@.schema.type==...)]` throw and abort the whole lint run. Added a null guard (`@ && ...`) to each filter; behavior on valid documents is unchanged (a null node was never a valid match).
+- OAR074 - NumericParameterIntegrity - Spectral's `anyOf` accepted a lone `minimum` or `maximum` as sufficient. Now requires `minimum` and `maximum` together, or `format` alone. Also extended to OpenAPI 2 parameters and to parameters declared at the path-item and `components`/`parameters` level, not just inline on the operation.
 
 
 ## [1.4.0] - 2026-07-28

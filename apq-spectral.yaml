@@ -29,6 +29,7 @@ functions:
   - apq-paged-response-check
   - apq-status-endpoint-check
   - apq-validate-structure
+  - apq-numeric-parameter-integrity
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -902,21 +903,15 @@ rules:
       field: "429"
       function: truthy
   apiq:OAR074:
-    description: "Numeric parameters should have minimum, maximum, or format restriction."
-    message: "OAR074: Numeric parameter '{{property}}' should have a minimum, maximum, or format restriction."
+    description: "Numeric parameters should define minimum and maximum, or a format restriction."
+    message: "OAR074: Numeric parameter should define both 'minimum' and 'maximum', or a 'format' restriction."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))]"
+    resolved: false
+    given:
+      - "$..[?(@.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema"
+      - "$..[?(@.in && (@.type == 'integer' || @.type == 'number'))]"
     then:
-      function: schema
-      functionOptions:
-        schema:
-          type: object
-          properties:
-            schema:
-              anyOf:
-                - required: ["minimum"]
-                - required: ["maximum"]
-                - required: ["format"]
+      function: apq-numeric-parameter-integrity
   apiq:OAR075:
     description: "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction."
     message: "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction."
