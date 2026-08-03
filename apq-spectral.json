@@ -247,7 +247,7 @@
       "message": "OAR016: Numeric types must use a valid format for their type.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
-      "given": "$..[?(@.type=='number' || @.type=='integer')]",
+      "given": "$..[?(@ && (@.type=='number' || @.type=='integer'))]",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -631,7 +631,7 @@
       "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64), or a valid pattern when no format is defined.",
       "severity": "error",
       "resolved": false,
-      "given": "$..[?(@.type=='string')]",
+      "given": "$..[?(@ && @.type=='string')]",
       "then": {
         "function": "apq-schema-format"
       }
@@ -861,7 +861,7 @@
       "message": "OAR052: Numeric types requires a format",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
       "severity": "warn",
-      "given": "$..[?(@.type == 'integer' || @.type == 'number')]",
+      "given": "$..[?(@ && (@.type == 'integer' || @.type == 'number'))]",
       "then": {
         "field": "format",
         "function": "truthy"
@@ -1209,7 +1209,7 @@
       "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
       "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.schema.type == 'string' && @.in == 'path')]",
+      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && @.schema.type == 'string' && @.in == 'path')]",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -1250,7 +1250,7 @@
       "message": "OAR076: Schema should use well-defined type and format.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
-      "given": "$..[?(@.type=='number' || @.type=='integer')]",
+      "given": "$..[?(@ && (@.type=='number' || @.type=='integer'))]",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -1349,7 +1349,7 @@
       "description": "Fields of type password should be string with format password.",
       "message": "OAR081: Fields of type password should be string with format password.",
       "severity": "error",
-      "given": "$..properties[?(@.type == 'string' && @.format == 'number')]",
+      "given": "$..properties[?(@ && @.type == 'string' && @.format == 'number')]",
       "then": {
         "field": "format",
         "function": "pattern",
@@ -1362,7 +1362,7 @@
       "description": "The string properties 'product', 'line', and 'price' must define a byte or binary format.",
       "message": "{{error}}",
       "severity": "error",
-      "given": "$..[?(@.properties)]",
+      "given": "$..[?(@ && @.properties)]",
       "then": {
         "function": "apq-binary-format-check",
         "functionOptions": {
