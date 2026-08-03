@@ -11,8 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- OAR037 - StringFormat - Fixed false positive on string schemas constrained by `enum`. `apq-schema-format` only checked `format`/`pattern`, so a string with a non-empty `enum` and no `format` was wrongly flagged even though the `enum` already constrains the allowed values. When no `format` is declared, a non-empty `enum` now satisfies the rule (like a valid `pattern`); a present-but-invalid `format` still fires even when an `enum` is declared.
+- OAR037 - StringFormat - Fixed false positive on string schemas constrained by `enum`. `apq-schema-format` only checked `format`/`pattern`, so a string with a non-empty `enum` and no `format` was wrongly flagged even though the `enum` already constrains the allowed values. When no `format` is declared, a non-empty `enum` now satisfies the rule (like a valid `pattern`); a present-but-invalid `format` still fires even when an `enum` is 
+- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
+- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.declared.
 
+### Changed
+
+- OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
+- OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
 
 
 ## [1.4.1-beta.1] - 2026-07-31
