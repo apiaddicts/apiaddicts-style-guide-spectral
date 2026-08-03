@@ -7,17 +7,57 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.4.0-beta.7] - 2026-07-27
+## [1.4.1-beta-2] - 2026-08-03
+
+### Fixed
+
+- OAR037 - StringFormat - Fixed false positive on string schemas constrained by `enum`. `apq-schema-format` only checked `format`/`pattern`, so a string with a non-empty `enum` and no `format` was wrongly flagged even though the `enum` already constrains the allowed values. When no `format` is declared, a non-empty `enum` now satisfies the rule (like a valid `pattern`); a present-but-invalid `format` still fires even when an `enum` is 
+- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
+- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.declared.
 
 ### Changed
 
 - OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
 - OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
 
+
+## [1.4.1-beta.1] - 2026-07-31
+
 ### Fixed
 
-- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
-- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.
+- Null-safety in recursive-descent JSONPath `given` expressions (OAR016, OAR037, OAR052, OAR074, OAR075, OAR076, OAR081, OAR082) - A single `null` node in a document (e.g. `type: null`, `properties: null`, `items: null`, a null property value, or a parameter without `schema`) made filters like `$..[?(@.type==...)]` / `$..[?(@.properties)]` / `parameters[?(@.schema.type==...)]` throw and abort the whole lint run. Added a null guard (`@ && ...`) to each filter; behavior on valid documents is unchanged (a null node was never a valid match).
+
+## [1.4.0] - 2026-07-28
+
+### Fixed
+
+- OAR014 - ResourceLevelWithinNonSuggestedRange - Added `min-level`/`max-level` support; default changed from `maxDepth: 3` to `min-level: 4` / `max-level: 5`, matching the documented "4 and 5" range and the equivalent Sonar rule.
+- OAR038 - StandardCreateResponse - `apq-valid-response-schema` never read its `options` (named `_options`) and hardcoded `'data'` as the only valid top-level property name. Now reads a configurable `data-property` functionOption.
+- OAR085 - OpenAPIVersion - used the core `pattern` function with a hardcoded regex; there was no way to express a configurable version list. Replaced with a new function, `apq-valid-openapi-version`, that reads a `valid-versions` functionOption.
+- OAR004 - ValidWso2ScopesRoles - `apq-forbidden-characters` ignored its `options` entirely and used a hardcoded regex. Now reads a configurable `pattern` functionOption (default unchanged).
+- OAR082 - BinaryOrByteFormat - `apq-spectral.json` was wired to the core `pattern` function against `$..properties.*` instead of `apq-binary-format-check`, which wasn't even registered in its `functions` array. This caused both the reported false positives on unrelated `integer`/`format: int32` properties and the inert `fields-to-apply` option.
+- OAR019/OAR020/OAR021 - $select/$expand/$exclude required as a query parameter - replaced the hardcoded exclusion regexes baked into each rule's `given` with a new shared function, `apq-collection-query-param-required`, exposing `parameter-name` (required), `paths`, and `pathValidationStrategy`.
+- OAR044 - MediaType - Synced the fix into `apq-spectral.json`, which had been missed in 1.4.0-beta.2 (only `apq-spectral.yaml` was updated). The JSON still carried the old regex `^application/[a-zA-Z0-9-_]+$` (rejecting `application/ld+json` and Excel vendor types), a broken `field: "name"`, and a responses-only `given`. Since QA lints against the JSON, valid media types kept being reported as invalid.
+- OAR017 - AlternatePaths - Synced the fix into `apq-spectral.json`, which still had `except: ["me","get","search"]` (missing `delete`) while `apq-spectral.yaml` already carried it. Paths such as `/greetings/delete` no longer trigger the rule when linting with the JSON ruleset.
+- OAR028 - FilterParameter - Fixed false positives in `apq-spectral.json`: the JSON ruleset had `given: "$.paths[*].get"` without the exclusion regex that `apq-spectral.yaml` already carried. Updated eliminating spurious findings on `/me` endpoints, detail endpoints ending with `/{id}`, and health-check paths (`status`, `health`, `ping`).
+- OAR017 - AlternatePaths - Added `delete` to the `except` list (default is now `get,me,search,delete`); paths ending with `/delete` are now treated as pseudo-parameters and no longer trigger the alternation rule.
+- OAR044 - MediaType - Fixed overly restrictive regex that rejected valid RFC 6838 media types: vendor-specific types (`application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, `application/vnd.github+json`), structured suffixes (`application/ld+json`), non-`application/` families (`text/csv`, `image/png`, `multipart/form-data`), parameterised types (`text/plain; charset=utf-8`), and wildcards (`*/*`, `image/*`). Extended `given` to also validate `requestBody` content.
+
+### Changed
+
+- OAR037 - StringFormat - String schemas must now declare a valid `format`, or a valid `pattern` when no `format` is defined. Aligns with the equivalent security-classified change on the Sonar side (`OAR037StringFormatCheck`).
+- OAR037 - StringFormat - Rule no longer fires when a string schema omits the `format` field entirely; it only fires when `format` is present but not a recognized value.
+- OAR031 - ExamplesCoverage - Levels are now validated **independently**, each with a level-specific message and precise (per-property) reporting location. The response/request-body level requires a body-level example (a media-type `example`/`examples` or a root `schema.example`); per-property examples no longer satisfy it. This is stricter than 1.3.0 and may surface new findings on existing specs — recommend a minor (or major) version bump on release.
+
+### Added
+
+- OAR020 - ExpandParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`), `/me` paths, and health-check paths are correctly excluded.
+- OAR021 - ExcludeParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) are correctly excluded from this rule.
+- OAR022 - OrderbyParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
+- OAR025 - LimitParameter - Added test coverage confirming that single-resource paths ending with a path parameter (e.g. `/users/{id}`) with a 206 response are correctly excluded from this rule.
+- OAR028 - FilterParameter - Added test coverage for excluded paths (`/users/me`, `/users/me/settings`, `/pets/{petId}`, `/status`, `/health`, `/ping`) to `ok-example.js` for both OAP2 and OAP3, verifying the rule does not fire on these endpoints.
+- OAR031 - ExamplesCoverage - Per-level configuration via `functionOptions` (`validateResponse`, `validateRequestBody`, `validateParameter`, `validateProperty`), all enabled by default; each level can be disabled independently.
+
 
 ## [1.4.0-beta.6] - 2026-07-13
 
