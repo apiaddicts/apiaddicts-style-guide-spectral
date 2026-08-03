@@ -23,16 +23,28 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">94.11% </span>
                 <span class="quiet">Statements</span>
                 <span class='fraction'>16/17</span>
+=======
+                <span class="strong">93.75% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>15/16</span>
+>>>>>>> 046a552 (fix: tests for oar074)
             </div>
         
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">95.83% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>23/24</span>
+=======
+                <span class="strong">90.9% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>20/22</span>
+>>>>>>> 046a552 (fix: tests for oar074)
             </div>
         
             
@@ -44,9 +56,15 @@
         
             
             <div class='fl pad1y space-right2'>
+<<<<<<< HEAD
                 <span class="strong">94.11% </span>
                 <span class="quiet">Lines</span>
                 <span class='fraction'>16/17</span>
+=======
+                <span class="strong">93.75% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>15/16</span>
+>>>>>>> 046a552 (fix: tests for oar074)
             </div>
         
             
@@ -119,6 +137,7 @@
 <span class="cline-any cline-yes">128x</span>
 <span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<<<<<<< HEAD
 <span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -151,13 +170,51 @@
 <span class="cline-any cline-yes">52x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">24x</span>
+=======
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">21x</span>
+<span class="cline-any cline-yes">1x</span>
+>>>>>>> 046a552 (fix: tests for oar074)
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<<<<<<< HEAD
 <span class="cline-any cline-yes">52x</span>
+=======
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+>>>>>>> 046a552 (fix: tests for oar074)
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {object} given - The operation node ($.paths[*][*])
@@ -196,8 +253,14 @@ module.exports = (given, options, context) =&gt; {
     // Ignore errors accessing root security
   }
 &nbsp;
+<<<<<<< HEAD
   if (operationHasSecurity || globalHasSecurity) {
     if (!responses[expectedCode]) {
+=======
+  // Only require 401 if security is defined (operation-level or global)
+  if (operationHasSecurity || globalHasSecurity) {
+    if (!responses['401']) {
+>>>>>>> 046a552 (fix: tests for oar074)
       results.push({
         message: context.rule.message,
         path: [...context.path, 'responses']
@@ -214,7 +277,11 @@ module.exports = (given, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+<<<<<<< HEAD
                 at 2026-07-31T22:11:56.432Z
+=======
+                at 2026-08-03T16:18:10.394Z
+>>>>>>> 046a552 (fix: tests for oar074)
             </div>
         <script src="prettify.js"></script>
         <script>

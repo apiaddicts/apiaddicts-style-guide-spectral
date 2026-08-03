@@ -908,8 +908,8 @@ rules:
     severity: error
     resolved: false
     given:
-      - "$..[?(@.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema"
-      - "$..[?(@.in && (@.type == 'integer' || @.type == 'number'))]"
+      - "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema"
+      - "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number'))]"
     then:
       function: apq-numeric-parameter-integrity
   apiq:OAR075:
