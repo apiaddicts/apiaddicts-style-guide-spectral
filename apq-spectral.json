@@ -10,25 +10,28 @@
     "apq-at-most-one-body-parameter",
     "apq-standard-response-codes",
     "apq-response-headers",
-    "apq-custom-field",
     "apq-require-response-on-path-params",
     "apq-required-fields-exist",
     "apq-response-media-type",
     "apq-security-check",
+    "apq-custom-field",
     "apq-check-examples-coverage",
     "apq-path-depth",
     "apq-forbidden-characters",
     "apq-valid-response-schema",
     "apq-valid-openapi-version",
-    "apq-validate-structure",
-    "apq-schema-format",
-    "apq-binary-format-check",
     "apq-collection-query-param-required",
-    "apq-security-required-response",
     "apq-path-param-query-conflict",
-    "apq-password-format"
+    "apq-schema-format",
+    "apq-security-required-response",
+    "apq-check-ambiguous-path",
+    "apq-password-format",
+    "apq-binary-format-check",
+    "apq-paged-response-check",
+    "apq-status-endpoint-check",
+    "apq-validate-structure"
   ],
-   "extends": [
+  "extends": [
     "spectral:asyncapi",
     "spectral:oas"
   ],
@@ -254,7 +257,9 @@
         "function": "schema",
         "functionOptions": {
           "schema": {
-            "required": ["format"],
+            "required": [
+              "format"
+            ],
             "allOf": [
               {
                 "if": {
@@ -267,7 +272,12 @@
                 "then": {
                   "properties": {
                     "format": {
-                      "enum": ["int32", "int64"]
+                      "enum": [
+                        "int32",
+                        "int64",
+                        "uint32",
+                        "uint64"
+                      ]
                     }
                   }
                 }
@@ -283,7 +293,11 @@
                 "then": {
                   "properties": {
                     "format": {
-                      "enum": ["float", "double"]
+                      "enum": [
+                        "float",
+                        "double",
+                        "decimal"
+                      ]
                     }
                   }
                 }
@@ -320,7 +334,7 @@
       "then": {
         "function": "apq-resources-by-verb",
         "functionOptions": {
-          "allowed-resources-paths": ";get:^/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;post:^/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$"
+          "allowed-resources-paths": ";get:^/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;get:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;post:^/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+$\n;post:^/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/get$\n;post:^/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/delete$\n\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;put:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;patch:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n;delete:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)$\n\n;post:^/[^/{}]+/archive$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/archive$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/archive$\n;post:^/[^/{}]+/clone$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/clone$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/clone$\n;post:^/[^/{}]+/restore$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/restore$\n;post:^/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/(\\{[^/{}]+\\}|me)/[^/{}]+/restore$\n\n;head:.*\n;options:.*\n"
         }
       }
     },
@@ -373,12 +387,16 @@
             "if": {
               "properties": {
                 "responses": {
-                  "required": ["206"]
+                  "required": [
+                    "206"
+                  ]
                 }
               }
             },
             "then": {
-              "required": ["parameters"],
+              "required": [
+                "parameters"
+              ],
               "properties": {
                 "parameters": {
                   "type": "array",
@@ -392,7 +410,10 @@
                         "const": "query"
                       }
                     },
-                    "required": ["name", "in"]
+                    "required": [
+                      "name",
+                      "in"
+                    ]
                   }
                 }
               }
@@ -402,31 +423,31 @@
       }
     },
     "apiq:OAR023": {
-      "description": "$total must be defined as a query parameter in all operations.",
+      "description": "$total must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks).",
       "message": "OAR023: $total must be defined as a query parameter in this operation.",
       "severity": "error",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters",
       "then": {
         "field": "$[?(@.name == '$total' && @.in == 'query')]",
         "function": "truthy"
       }
     },
     "apiq:OAR024": {
-      "description": "$start must be defined as a query parameter in all operations.",
+      "description": "$start must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks).",
       "message": "OAR024: $start must be defined as a query parameter in this operation.",
       "severity": "error",
-      "given": "$.paths[*].get.parameters",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get.parameters",
       "then": {
         "field": "$[?(@.name == '$start' && @.in == 'query')]",
         "function": "truthy"
       }
     },
     "apiq:OAR025": {
-      "description": "$limit must be defined as a query parameter in all operations.",
+      "description": "$limit must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks).",
       "message": "OAR025: $limit must be defined as a query parameter in this operation.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get",
+      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -434,12 +455,16 @@
             "if": {
               "properties": {
                 "responses": {
-                  "required": ["206"]
+                  "required": [
+                    "206"
+                  ]
                 }
               }
             },
             "then": {
-              "required": ["parameters"],
+              "required": [
+                "parameters"
+              ],
               "properties": {
                 "parameters": {
                   "type": "array",
@@ -451,9 +476,24 @@
                       },
                       "in": {
                         "const": "query"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "const": "integer"
+                          }
+                        },
+                        "required": [
+                          "type"
+                        ]
                       }
                     },
-                    "required": ["name", "in"]
+                    "required": [
+                      "name",
+                      "in",
+                      "schema"
+                    ]
                   }
                 }
               }
@@ -543,13 +583,16 @@
       }
     },
     "apiq:OAR030": {
-      "description": "The path '/status' must be declared.",
-      "message": "OAR030: The path '/status' must be declared.",
+      "description": "The configured status endpoint must be declared with the configured HTTP method.",
+      "message": "OAR030: The required status endpoint is not declared or does not have the required method.",
       "severity": "error",
       "given": "$.paths",
       "then": {
-        "field": "/status",
-        "function": "truthy"
+        "function": "apq-status-endpoint-check",
+        "functionOptions": {
+          "status-endpoint": "/status",
+          "method": "get"
+        }
       }
     },
     "apiq:OAR031": {
@@ -562,7 +605,13 @@
         "$.paths.*.*.responses[?(@property !== \"204\")]"
       ],
       "then": {
-        "function": "apq-check-examples-coverage"
+        "function": "apq-check-examples-coverage",
+        "functionOptions": {
+          "validateResponse": true,
+          "validateRequestBody": true,
+          "validateParameter": true,
+          "validateProperty": true
+        }
       }
     },
     "apiq:OAR032": {
@@ -571,16 +620,15 @@
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
-        "field": "name",
-        "function": "pattern",
+        "function": "apq-check-ambiguous-path",
         "functionOptions": {
-          "notMatch": "^.*elements|instances|resources|values|terms|objects|items|elements|instances|resources|values.*$"
+          "ambiguous-words": "elements,instances,resources,values,terms,objects,items"
         }
       }
     },
     "apiq:OAR033": {
-      "description": "Headers 'Accept', 'Content-Type', and 'Authorization' are not allowed.",
-      "message": "OAR033: The header '{{value}}' is not allowed.",
+      "description": "Request operation parameters must not include forbidden headers (Accept, Content-Type, Authorization). Note: This validates REQUEST headers, not response headers (see OAR053/114 for response header validation).",
+      "message": "OAR033: The request header parameter '{{value}}' is not allowed in operations.",
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'header')]",
       "then": {
@@ -592,22 +640,27 @@
       }
     },
     "apiq:OAR034": {
-      "description": "A paged response not compliant with the standard may cause application issues.",
-      "message": "OAR034: Paged response schema must be compliant with the standard.",
+      "description": "A paged response must comply with the standard paging schema (start, limit, links with self/previous/next, numPages, total).",
+      "message": "OAR034: Paged response schema does not match the required standard.",
       "severity": "error",
-      "given": "$.paths[*][*].responses[?(@property != '204' && @property != '304' && @property != 'default')]",
+      "given": "$.paths[*][get].responses[?(@property != '204' && @property != '304' && @property != 'default')]..schema",
       "then": {
-        "field": "content",
-        "function": "truthy"
+        "function": "apq-paged-response-check",
+        "functionOptions": {
+          "paging-schema": "{\"type\":\"object\",\"properties\":{\"numPages\":{\"type\":\"integer\"},\"total\":{\"type\":\"integer\"},\"start\":{\"type\":\"integer\"},\"limit\":{\"type\":\"integer\"},\"links\":{\"type\":\"object\",\"properties\":{\"next\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"previous\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"last\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"self\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"first\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}}},\"required\":[\"self\",\"previous\",\"next\"]}},\"required\":[\"start\",\"limit\",\"links\"],\"pagingPropertyName\":\"paging\"}"
+        }
       }
     },
     "apiq:OAR035": {
       "description": "Response code 401 must be defined for operations with security schemes defined.",
-      "message": "OAR035: Response code 401 must be defined for operations with security schemes defined.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths[*][*]",
       "then": {
-        "function": "apq-security-required-response"
+        "function": "apq-security-required-response",
+        "functionOptions": {
+          "expected-codes": "401"
+        }
       }
     },
     "apiq:OAR036": {
@@ -663,7 +716,7 @@
           "resources-exclusions": [
             "get:/status"
           ],
-          "required-codes-by-resources-paths": ";get:^/[^/{}]+$:200|206,400,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;post:^/[^/{}]+$:200|201|202,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404;post:^/[^/{}]+/get$:200,404,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/get$:200,404,400,415,500,503;post:^/[^/{}]+/delete$:200,404,400,415,500,503;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/delete$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503"
+          "required-codes-by-resources-paths": ";get:^/[^/{}]+$:200|206,400,500,503 ;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404 ;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|206,400,500,503,404 ;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;get:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;post:^/[^/{}]+$:200|201|202,400,415,500,503 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+$:200|201|202,400,415,500,503,404 ;post:^/[^/{}]+/get$:200,404,400,415,500,503 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/get$:200,404,400,415,500,503 ;post:^/[^/{}]+/delete$:200,404,400,415,500,503 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/delete$:200,404,400,415,500,503 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/get$:200,404,400,415,500,503 ;post:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/delete$:200,404,400,415,500,503 ;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503 ;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503 ;put:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503 ;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;delete:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,400,404,500,503 ;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503 ;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503 ;patch:^/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)/[^/{}]+/(\\{[^/{}]+\\}|\\bme\\b)$:200,404,400,415,500,503\n"
         }
       }
     },
@@ -683,7 +736,7 @@
       "description": "Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.",
       "message": "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths.",
       "severity": "error",
-      "given": "$.paths['/pets'].get",
+      "given": "$.paths[*].get",
       "then": {
         "field": "x-aut-type",
         "function": "truthy"
@@ -764,7 +817,9 @@
         "functionOptions": {
           "schema": {
             "type": "object",
-            "required": ["tags"],
+            "required": [
+              "tags"
+            ],
             "properties": {
               "tags": {
                 "type": "array",
@@ -815,7 +870,9 @@
       "message": "OAR048: An operation can have at most one body parameter",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md",
       "severity": "error",
-      "formats": ["oas2"],
+      "formats": [
+        "oas2"
+      ],
       "given": "$.paths[*][*]",
       "then": {
         "field": "parameters",
@@ -843,16 +900,17 @@
       }
     },
     "apiq:OAR051": {
-      "description": "Provide a different summary and description for each operation.",
-      "message": "OAR051: Provide a different summary and description for each operation.",
+      "description": "Summary and description must be different - not just case variations or semantic duplicates.",
+      "message": "OAR051: Summary and description must be meaningfully different from each other.",
       "severity": "error",
-      "given": "$.paths[*].*",
+      "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
         "function": "apq-compare-insensitive",
         "functionOptions": {
           "property": "summary",
           "equalTo": "description",
-          "result": "falsy"
+          "result": "falsy",
+          "threshold": 0.55
         }
       }
     },
@@ -868,8 +926,8 @@
       }
     },
     "apiq:OAR053": {
-      "description": "There are mandatory response headers and others that are not allowed.",
-      "message": "{{error}}",
+      "description": "Response headers for API observability and tracing must be defined (excluding 204 responses and health endpoints).",
+      "message": "OAR053: Response must include mandatory headers and exclude forbidden headers.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR053.md",
       "severity": "error",
       "given": "$.paths[*][*].responses[*]",
@@ -877,11 +935,11 @@
         {
           "function": "apq-response-headers",
           "functionOptions": {
-            "mandatory-headers": "x-trace-id,x-request-id",
+            "mandatory-headers": "x-trace-id",
             "allowed-headers": "idcorrelacion,x-correlacionid,x-global-trasaction-id,x-power-by,x-trace-id,x-request-id",
             "included-response-codes": "*",
             "excluded-response-codes": "204",
-            "path-exclusions": "/status,/prueba"
+            "path-exclusions": "/status"
           }
         }
       ]
@@ -913,7 +971,7 @@
       "description": "Ensure get have mandatory response codes",
       "message": "OAR061: Ensure get have the mandatory response codes",
       "severity": "error",
-      "given": "$.paths[?(!(@property === '/status' || @property === '/another'))].get.responses",
+      "given": "$.paths[?(@property !== '/status')].get.responses",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -949,7 +1007,7 @@
       "description": "Ensure post have mandatory response codes",
       "message": "OAR062: Ensure post have the mandatory response codes",
       "severity": "error",
-      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].post.responses",
+      "given": "$.paths[?(@property !== '/status')].post.responses",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -989,7 +1047,7 @@
       "description": "Ensure put have mandatory response codes",
       "message": "OAR063: Ensure put have the mandatory response codes",
       "severity": "error",
-      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].put.responses",
+      "given": "$.paths[?(@property !== '/status')].put.responses",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -1024,7 +1082,7 @@
       "description": "Ensure patch have mandatory response codes",
       "message": "OAR064: Ensure patch have the mandatory response codes",
       "severity": "error",
-      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].patch.responses",
+      "given": "$.paths[?(@property !== '/status')].patch.responses",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -1059,7 +1117,7 @@
       "description": "Ensure delete have mandatory response codes",
       "message": "OAR065: Ensure delete have the mandatory response codes",
       "severity": "error",
-      "given": "$.paths[?(!( @property == '/status' || @property == '/another' ))].delete.responses",
+      "given": "$.paths[?(@property !== '/status')].delete.responses",
       "then": {
         "function": "schema",
         "functionOptions": {
@@ -1275,7 +1333,9 @@
         "function": "schema",
         "functionOptions": {
           "schema": {
-            "required": ["format"],
+            "required": [
+              "format"
+            ],
             "allOf": [
               {
                 "if": {
@@ -1288,7 +1348,10 @@
                 "then": {
                   "properties": {
                     "format": {
-                      "enum": ["int32", "int64"]
+                      "enum": [
+                        "int32",
+                        "int64"
+                      ]
                     }
                   }
                 }
@@ -1304,7 +1367,10 @@
                 "then": {
                   "properties": {
                     "format": {
-                      "enum": ["float", "double"]
+                      "enum": [
+                        "float",
+                        "double"
+                      ]
                     }
                   }
                 }
@@ -1329,15 +1395,13 @@
     },
     "apiq:OAR078": {
       "description": "All API methods must have security defined.",
-      "message": "{{error}}",
+      "message": "OAR078: Operation must have security defined.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md",
       "severity": "error",
       "given": "$",
-      "then": [
-        {
-          "function": "apq-security-check"
-        }
-      ]
+      "then": {
+        "function": "apq-security-check"
+      }
     },
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
@@ -1416,7 +1480,10 @@
       "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0, 3.2.0.",
       "message": "{{error}}",
       "severity": "warn",
-      "given": ["$.openapi", "$.swagger"],
+      "given": [
+        "$.openapi",
+        "$.swagger"
+      ],
       "then": {
         "function": "apq-valid-openapi-version",
         "functionOptions": {
@@ -1473,10 +1540,10 @@
       }
     },
     "apiq:OAR090": {
-      "description": "The $ref of a response must end with the suffix Response",
-      "message": "OAR090: The $ref of a response must end with the suffix \"Response\"",
+      "description": "The $ref of a response must end with the suffix Response.",
+      "message": "OAR090: The $ref of a response must end with the suffix Response",
       "severity": "error",
-      "given": "$.paths['/sample'].get.responses['200'].$ref",
+      "given": "$.paths[*][*].responses[*].$ref",
       "then": {
         "function": "pattern",
         "functionOptions": {
@@ -1526,13 +1593,13 @@
     },
     "apiq:OAR096": {
       "description": "Response code 403 must be defined for operations with security schemes defined.",
-      "message": "OAR096: Response code 403 must be defined for operations with security schemes defined.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths[*][*]",
       "then": {
         "function": "apq-security-required-response",
         "functionOptions": {
-          "response-code": "403"
+          "expected-codes": "403"
         }
       }
     },
@@ -1719,7 +1786,7 @@
     },
     "apiq:OAR113": {
       "description": "Field or extension must be at the assigned location",
-      "message": "{{error}}",
+      "message": "OAR113: Field or extension x-custom-example must be at the assigned location",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR113.md",
       "severity": "warn",
       "given": "$",
@@ -1732,8 +1799,8 @@
       }
     },
     "apiq:OAR114": {
-      "description": "There are mandatory response headers and others that are not allowed.",
-      "message": "{{error}}",
+      "description": "Response headers for API security and key management must be defined (excluding 204 responses).",
+      "message": "OAR114: Response must include mandatory headers and exclude forbidden headers.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md",
       "severity": "error",
       "given": "$.paths[*][*].responses[*]",
@@ -1741,15 +1808,17 @@
         {
           "function": "apq-response-headers",
           "functionOptions": {
-            "mandatory-headers": "x-api-key,x-trace-id",
-            "allowed-headers": "x-api-key,x-trace-id,traceId,dateTime"
+            "mandatory-headers": "x-api-key",
+            "allowed-headers": "x-api-key,traceId,dateTime",
+            "excluded-response-codes": "204",
+            "path-exclusions": "/status"
           }
         }
       ]
     },
     "apiq:OAR115": {
       "description": "All fields listed in the required array must be defined in the schema properties.",
-      "message": "{{error}}",
+      "message": "OAR115: All fields in the required array must be defined in schema properties.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md",
       "severity": "warn",
       "given": [

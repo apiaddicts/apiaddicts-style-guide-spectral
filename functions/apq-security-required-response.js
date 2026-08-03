@@ -1,6 +1,6 @@
 /**
  * @param {object} given - The operation node ($.paths[*][*])
- * @param {object} options - Function options ({ 'response-code': '401' | '403' | ... })
+ * @param {object} options - Function options ({ 'expected-codes': '401' | '403' | '401,403' | ... })
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) => {
@@ -15,9 +15,10 @@ module.exports = (given, options, context) => {
     return results;
   }
 
-  const expectedCode = (options && options['response-code'])
-    ? String(options['response-code'])
-    : '401';
+  const raw = (options && options['expected-codes']) || '401';
+  const expectedCodes = (Array.isArray(raw) ? raw : String(raw).split(','))
+    .map((code) => String(code).trim())
+    .filter(Boolean);
 
   // Check if this operation has security defined
   const operationHasSecurity = given.security &&
@@ -35,14 +36,22 @@ module.exports = (given, options, context) => {
     // Ignore errors accessing root security
   }
 
-  if (operationHasSecurity || globalHasSecurity) {
-    if (!responses[expectedCode]) {
+  if (!(operationHasSecurity || globalHasSecurity)) {
+    return results;
+  }
+
+  const ruleName = (context.rule && context.rule.name) || '';
+  const oarId = ruleName.includes(':') ? ruleName.split(':').pop() : ruleName;
+  const prefix = oarId ? `${oarId}: ` : '';
+
+  expectedCodes.forEach((code) => {
+    if (!responses[code]) {
       results.push({
-        message: context.rule.message,
-        path: [...context.path, 'responses']
+        message: `${prefix}Response code ${code} must be defined for operations with security schemes defined.`,
+        path: [...context.path, 'responses'],
       });
     }
-  }
+  });
 
   return results;
 };

@@ -492,11 +492,13 @@ rules:
         paging-schema: '{"type":"object","properties":{"numPages":{"type":"integer"},"total":{"type":"integer"},"start":{"type":"integer"},"limit":{"type":"integer"},"links":{"type":"object","properties":{"next":{"type":"object","properties":{"href":{"type":"string"}}},"previous":{"type":"object","properties":{"href":{"type":"string"}}},"last":{"type":"object","properties":{"href":{"type":"string"}}},"self":{"type":"object","properties":{"href":{"type":"string"}}},"first":{"type":"object","properties":{"href":{"type":"string"}}}},"required":["self","previous","next"]}},"required":["start","limit","links"],"pagingPropertyName":"paging"}'
   apiq:OAR035:
     description: "Response code 401 must be defined for operations with security schemes defined."
-    message: "OAR035: Response code 401 must be defined for operations with security schemes defined."
+    message: "{{error}}"
     severity: "error"
     given: "$.paths[*][*]"
     then:
       function: apq-security-required-response
+      functionOptions:
+        expected-codes: "401"
   apiq:OAR036:
     description: "Cookie use is forbidden as a session mechanism."
     message: "OAR036: Cookie use is forbidden as a session mechanism."
@@ -1124,13 +1126,13 @@ rules:
       function: falsy
   apiq:OAR096:
     description: "Response code 403 must be defined for operations with security schemes defined."
-    message: "OAR096: Response code 403 must be defined for operations with security schemes defined."
+    message: "{{error}}"
     severity: "error"
     given: "$.paths[*][*]"
     then:
       function: apq-security-required-response
       functionOptions:
-        response-code: "403"
+        expected-codes: "403"
   apiq:OAR097:
     description: "The base path must contain at least two parts."
     message: "OAR097: Path has too few parts."
