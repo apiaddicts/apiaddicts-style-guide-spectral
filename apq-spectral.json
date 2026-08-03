@@ -25,7 +25,8 @@
     "apq-binary-format-check",
     "apq-collection-query-param-required",
     "apq-security-required-response",
-    "apq-path-param-query-conflict"
+    "apq-path-param-query-conflict",
+    "apq-password-format"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -1368,13 +1369,9 @@
       "description": "Fields of type password should be string with format password.",
       "message": "OAR081: Fields of type password should be string with format password.",
       "severity": "error",
-      "given": "$..properties[?(@ && @.type == 'string' && @.format == 'number')]",
+      "given": "$..properties",
       "then": {
-        "field": "format",
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^password$"
-        }
+        "function": "apq-password-format"
       }
     },
     "apiq:OAR082": {
