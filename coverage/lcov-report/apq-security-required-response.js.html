@@ -39,7 +39,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
@@ -109,8 +109,18 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -143,6 +153,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">15x</span>
@@ -156,9 +173,8 @@
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * Validates that operations with security defined include a 401 Unauthorized response
- * @param {object} given - The operation node
- * @param {object} options - Function options
+ * @param {object} given - The operation node ($.paths[*][*])
+ * @param {object} options - Function options ({ 'expected-codes': '401' | '403' | '401,403' | ... })
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) =&gt; {
@@ -172,6 +188,11 @@ module.exports = (given, options, context) =&gt; {
   if (!responses || typeof responses !== 'object') {
     return results;
   }
+&nbsp;
+  const raw = (options &amp;&amp; options['expected-codes']) || <span class="branch-2 cbranch-no" title="branch not covered" >'401';</span>
+  const expectedCodes = (Array.isArray(raw) ? <span class="branch-0 cbranch-no" title="branch not covered" >raw </span>: String(raw).split(','))
+    .map((code) =&gt; String(code).trim())
+    .filter(Boolean);
 &nbsp;
   // Check if this operation has security defined
   const operationHasSecurity = given.security &amp;&amp;
@@ -193,11 +214,11 @@ module.exports = (given, options, context) =&gt; {
   if (operationHasSecurity || globalHasSecurity) {
     if (!responses['401']) {
       results.push({
-        message: context.rule.message || <span class="branch-1 cbranch-no" title="branch not covered" >'OAR035: Response code 401 must be defined for operations with security schemes defined.',</span>
-        path: [...context.path, 'responses']
+        message: `${prefix}Response code ${code} must be defined for operations with security schemes defined.`,
+        path: [...context.path, 'responses'],
       });
     }
-  }
+  });
 &nbsp;
   return results;
 };

@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -92,7 +92,9 @@
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -102,17 +104,17 @@
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">62x</span>
-<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,21 +122,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {string|string[]} targetVal
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (targetVal, options, context) =&gt; {
-  const pattern = new RegExp((options &amp;&amp; options.pattern) || <span class="branch-2 cbranch-no" title="branch not covered" >'^[a-zA-Z0-9_\\-., ]+$')</span>;
+  const patternStr = (options &amp;&amp; options.pattern) || <span class="branch-2 cbranch-no" title="branch not covered" >'^[a-zA-Z0-9_\\-., ]+$';</span>
+  const pattern = new RegExp(patternStr);
   const errors = [];
   const basePath = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  const buildMessage = (value) =&gt; `Value '${value}' does not match the required pattern: ${patternStr}.`;
 &nbsp;
   if (typeof targetVal === 'string') {
     if (!pattern.test(targetVal)) {
       errors.push({
-        message: context.rule.message,
+        message: buildMessage(targetVal),
         path: basePath
       });
     }
@@ -142,7 +146,7 @@ module.exports = (targetVal, options, context) =&gt; {
     targetVal.forEach((role, index) =&gt; {
       if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {
         errors.push({
-          message: context.rule.message,
+          message: buildMessage(role),
           path: [...basePath, index]
         });
       }

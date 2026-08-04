@@ -1,9 +1,7 @@
 /**
- * Validates that path parameters don't appear as query parameters
- * This prevents ambiguity and design issues
  *
- * @param {object} given - The paths object
- * @param {object} options - Function options
+ * @param {object} given - The paths object ($.paths)
+ * @param {object} options - Function options (unused)
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) => {
@@ -26,27 +24,25 @@ module.exports = (given, options, context) => {
         continue;
       }
 
-      const parameters = operation.parameters || [];
-
+      const parameters = operation.parameters;
       if (!Array.isArray(parameters)) {
         continue;
       }
 
-      const hasPathOrQueryParams = parameters.some(
-        param => param && (param.in === 'path' || param.in === 'query')
-      );
-
-      if (!hasPathOrQueryParams) {
+      const responses = operation.responses || {};
+      const has400 = Boolean(responses['400']);
+      if (has400) {
         continue;
       }
 
-      const responses = operation.responses || {};
-      if (!responses['400']) {
-        errors.push({
-          message: `OAR069: Any param in PATH or QUERY, should have bad request (400) response.`,
-          path: [...context.path, pathKey, operationKey, 'responses']
-        });
-      }
+      parameters.forEach((param, index) => {
+        if (param && (param.in === 'path' || param.in === 'query')) {
+          errors.push({
+            message: context.rule.message,
+            path: [...context.path, pathKey, operationKey, 'parameters', index]
+          });
+        }
+      });
     }
   }
 

@@ -493,11 +493,13 @@ rules:
         paging-schema: '{"type":"object","properties":{"numPages":{"type":"integer"},"total":{"type":"integer"},"start":{"type":"integer"},"limit":{"type":"integer"},"links":{"type":"object","properties":{"next":{"type":"object","properties":{"href":{"type":"string"}}},"previous":{"type":"object","properties":{"href":{"type":"string"}}},"last":{"type":"object","properties":{"href":{"type":"string"}}},"self":{"type":"object","properties":{"href":{"type":"string"}}},"first":{"type":"object","properties":{"href":{"type":"string"}}}},"required":["self","previous","next"]}},"required":["start","limit","links"],"pagingPropertyName":"paging"}'
   apiq:OAR035:
     description: "Response code 401 must be defined for operations with security schemes defined."
-    message: "OAR035: Response code 401 must be defined for operations with security schemes defined."
+    message: "{{error}}"
     severity: "error"
     given: "$.paths[*][*]"
     then:
       function: apq-security-required-response
+      functionOptions:
+        expected-codes: "401"
   apiq:OAR036:
     description: "Cookie use is forbidden as a session mechanism."
     message: "OAR036: Cookie use is forbidden as a session mechanism."
@@ -854,8 +856,8 @@ rules:
       functionOptions:
         type: pascal
   apiq:OAR069:
-    description: "Path parameters should not appear as query parameters."
-    message: "OAR069: Path parameter should not appear as both path and query parameter."
+    description: "Any param in PATH or QUERY should have a Bad Request (400) response."
+    message: "OAR069: Any param in PATH or QUERY should have a Bad Request (400) response."
     severity: "error"
     given: "$.paths"
     then:
@@ -1030,7 +1032,7 @@ rules:
       functionOptions:
         notMatch: "^password$"
   apiq:OAR085:
-    description: "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0."
+    description: "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0, 3.2.0."
     message: "{{error}}"
     severity: warn
     given:
@@ -1039,7 +1041,7 @@ rules:
     then:
       function: apq-valid-openapi-version
       functionOptions:
-        valid-versions: "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0"
+        valid-versions: "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0"
   apiq:OAR086:
     description: "Descriptions must begin with a capital letter, end with a period, and not be empty."
     message: "OAR086: Descriptions must begin with a capital letter, end with a period, and not be empty."
@@ -1119,13 +1121,13 @@ rules:
       function: falsy
   apiq:OAR096:
     description: "Response code 403 must be defined for operations with security schemes defined."
-    message: "OAR096: Response code 403 must be defined for operations with security schemes defined."
+    message: "{{error}}"
     severity: "error"
-    given: "$.paths[*][*].responses"
+    given: "$.paths[*][*]"
     then:
-      function: truthy
-      field: "403"
-      message: "Operation must define a 403 Unauthorized response for security schemes."
+      function: apq-security-required-response
+      functionOptions:
+        expected-codes: "403"
   apiq:OAR097:
     description: "The base path must contain at least two parts."
     message: "OAR097: Path has too few parts."

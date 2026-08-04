@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
@@ -144,11 +144,17 @@ function isValidPattern(pattern) {
 &nbsp;
 module.exports = (targetVal, _options, context) =&gt; {
   const typePath = [...context.path, 'type'];
+&nbsp;
   const format = targetVal.format;
   if (format !== undefined &amp;&amp; format !== null) {
     if (!VALID_FORMATS.has(String(format).toLowerCase())) {
       return [{ message: context.rule.message, path: typePath }];
     }
+    return [];
+  }
+&nbsp;
+  const enumValues = targetVal.enum;
+  if (Array.isArray(enumValues) &amp;&amp; enumValues.length &gt; 0) {
     return [];
   }
 &nbsp;
