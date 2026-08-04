@@ -21,3 +21,10 @@ test('apiq:OAR015 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR015 message reflects the configured maxDepth', () => {
+  return linter.run(oar015fail).then((results) => {
+    expect(results.length).toBeGreaterThanOrEqual(1);
+    expect(results[0].message).toContain('exceeds the maximum allowed level of 5');
+  });
+});

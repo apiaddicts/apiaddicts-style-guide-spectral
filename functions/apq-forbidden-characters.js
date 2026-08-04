@@ -4,14 +4,16 @@
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (targetVal, options, context) => {
-  const pattern = new RegExp((options && options.pattern) || '^[a-zA-Z0-9_\\-., ]+$');
+  const patternStr = (options && options.pattern) || '^[a-zA-Z0-9_\\-., ]+$';
+  const pattern = new RegExp(patternStr);
   const errors = [];
   const basePath = context.path || [];
+  const buildMessage = (value) => `Value '${value}' does not match the required pattern: ${patternStr}.`;
 
   if (typeof targetVal === 'string') {
     if (!pattern.test(targetVal)) {
       errors.push({
-        message: context.rule.message,
+        message: buildMessage(targetVal),
         path: basePath
       });
     }
@@ -19,7 +21,7 @@ module.exports = (targetVal, options, context) => {
     targetVal.forEach((role, index) => {
       if (typeof role === 'string' && !pattern.test(role)) {
         errors.push({
-          message: context.rule.message,
+          message: buildMessage(role),
           path: [...basePath, index]
         });
       }
