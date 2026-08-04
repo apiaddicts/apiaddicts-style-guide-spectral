@@ -23,7 +23,8 @@
     "apq-validate-structure",
     "apq-schema-format",
     "apq-binary-format-check",
-    "apq-collection-query-param-required"
+    "apq-collection-query-param-required",
+    "apq-numeric-parameter-integrity"
   ],
    "extends": [
     "spectral:asyncapi",
@@ -1192,38 +1193,16 @@
       }
     },
     "apiq:OAR074": {
-      "description": "Numeric parameters should have minimum, maximum, or format restriction.",
-      "message": "OAR074: Numeric parameter '{{property}}' should have a minimum, maximum, or format restriction.",
+      "description": "Numeric parameters should define minimum and maximum, or a format restriction.",
+      "message": "OAR074: Numeric parameter should define both 'minimum' and 'maximum', or a 'format' restriction.",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))]",
+      "resolved": false,
+      "given": [
+        "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema",
+        "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number'))]"
+      ],
       "then": {
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "minimum"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "maximum"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "format"
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        }
+        "function": "apq-numeric-parameter-integrity"
       }
     },
     "apiq:OAR075": {

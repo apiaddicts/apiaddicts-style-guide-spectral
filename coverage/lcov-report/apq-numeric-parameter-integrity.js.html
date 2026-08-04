@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for apq-validate-structure.js</title>
+    <title>Code coverage report for apq-numeric-parameter-integrity.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> apq-validate-structure.js</h1>
+        <h1><a href="index.html">All files</a> apq-numeric-parameter-integrity.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">89.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/20</span>
+                <span class='fraction'>17/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">88.23% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/18</span>
+                <span class='fraction'>15/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -94,88 +94,67 @@
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a>
-<a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">125x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">180x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">60x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * @param {string} given  - The field value
+ * @param {object} node
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (given, options, context) =&gt; {
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (given === null || given === undefined) <span class="cstat-no" title="statement not covered" >return [];</span>
+module.exports = (node, options, context) =&gt; {
+  const results = [];
 &nbsp;
-  const doc = context.document?.data ?? <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
-  const isOAP2 = typeof doc.swagger === 'string';
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!node || typeof node !== 'object') <span class="cstat-no" title="statement not covered" >return results;</span>
 &nbsp;
-  const VALID_IN_VALUES_OAP2 = ['query', 'header', 'path', 'formData', 'body'];
-  const VALID_IN_VALUES_OAP3 = ['path', 'query', 'header', 'cookie'];
-  const VALID_IN_VALUES = isOAP2 ? VALID_IN_VALUES_OAP2 : VALID_IN_VALUES_OAP3;
+  const { type } = node;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (type !== 'integer' &amp;&amp; type !== 'number') <span class="cstat-no" title="statement not covered" >return results;</span>
 &nbsp;
-  const VALID_SCHEMA_TYPES = ['object', 'string', 'number', 'integer', 'boolean', 'array', 'null'];
+  const has = (field) =&gt; Object.prototype.hasOwnProperty.call(node, field);
+  const hasMin = has('minimum');
+  const hasMax = has('maximum');
+  const hasFormat = has('format');
 &nbsp;
-  const nodePath = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
-  const fieldName = nodePath[nodePath.length - 1];
+  const hasBothBounds = hasMin &amp;&amp; hasMax;
+  const formatAlone = hasFormat &amp;&amp; !hasMin &amp;&amp; !hasMax;
 &nbsp;
-  if (fieldName === 'in') {
-    if (!VALID_IN_VALUES.includes(String(given))) {
-      return [{
-        message: `in: Expected one of [${VALID_IN_VALUES.map(v =&gt; `"${v}"`).join(', ')}]`,
-      }];
-    }
-  }
+  if (hasBothBounds || formatAlone) return results;
 &nbsp;
-  if (fieldName === 'type') {
-    if (!VALID_SCHEMA_TYPES.includes(String(given))) {
-      return [{
-        message: `type: Expected one of [${VALID_SCHEMA_TYPES.map(v =&gt; `"${v}"`).join(', ')}]`,
-      }];
-    }
-  }
+  const ruleCode = context.rule.name.split(':').pop();
+  results.push({
+    message: `${ruleCode}: Numeric parameter should define both 'minimum' and 'maximum', or a 'format' restriction.`,
+    path: [...context.path, 'type'],
+  });
 &nbsp;
-  return [];
+  return results;
 };
 &nbsp;</pre></td></tr></table></pre>
 

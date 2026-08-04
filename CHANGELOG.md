@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
 - OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.declared.
 - OAR044 - MediaType - Media type parameters now follow RFC 9110 (charset without space, other parameter names, multiple parameters); type/subtype can no longer start with `.`. Synced `apq-spectral.json` with `apq-spectral.yaml` and added the missing `oar044-media-type.test.js` test.
+- OAR074 - NumericParameterIntegrity - Spectral's `anyOf` accepted a lone `minimum` or `maximum` as sufficient. Now requires `minimum` and `maximum` together, or `format` alone. Also extended to OpenAPI 2 parameters and to parameters declared at the path-item and `components`/`parameters` level, not just inline on the operation.
 
 ### Changed
 
