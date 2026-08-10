@@ -7,6 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.4.1-beta.3]
+
+### Fixed
+
+- OAR035 - Honor an operation-level `security: []` explicit opt-out: the operation is unsecured, so no 401 is required even when document-level security is defined.
+- OAR096 - Same `security: []` opt-out fix (shared `apq-security-required-response` function): no 403 required for opted-out operations.
+
+### Added
+
+- OAR081 - Test coverage pinning the current behavior: only string-typed `password` fields are validated; a non-string `password` (e.g. `type: integer`) is intentionally out of scope.
+
+### Changed
+
+- OAR085 - Refreshed `docs/resources/OAR085.md` to list the current default versions (including `3.1.0` and `3.2.0`).
+
+
 ## [1.4.1-beta.2]
 
 ### Fixed
