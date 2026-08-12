@@ -20,10 +20,13 @@ module.exports = (given, options, context) => {
     .map((code) => String(code).trim())
     .filter(Boolean);
 
+  const operationSecurityDefined = Array.isArray(given.security);
+  if (operationSecurityDefined && given.security.length === 0) {
+    return results;
+  }
+
   // Check if this operation has security defined
-  const operationHasSecurity = given.security &&
-    Array.isArray(given.security) &&
-    given.security.length > 0;
+  const operationHasSecurity = operationSecurityDefined && given.security.length > 0;
 
   // Check if there's global security in the document
   let globalHasSecurity = false;

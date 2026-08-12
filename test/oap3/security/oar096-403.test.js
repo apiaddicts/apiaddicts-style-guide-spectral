@@ -4,6 +4,7 @@ let linter;
 
 const oar096fail = require('./OAR096/fail-403-example');
 const oar096ok   = require('./OAR096/ok-403-example');
+const oar096optout = require('./OAR096/optout-403-example');
 
 beforeAll(async () => {
   linter = await linterForRule('apiq:OAR096');
@@ -20,5 +21,12 @@ test('apiq:OAR096 should report missing 403 responses', () => {
 test('apiq:OAR096 should pass when 403 is defined', () => {
   return linter.run(oar096ok).then((results) => {
     expect(results.length).toBe(0);
+  });
+});
+
+test('apiq:OAR096 should honor an operation-level `security: []` opt-out', () => {
+  return linter.run(oar096optout).then((results) => {
+    expect(results.length).toBe(1);
+    expect(results[0].path.join('.')).toBe('paths./secured.get.responses');
   });
 });
