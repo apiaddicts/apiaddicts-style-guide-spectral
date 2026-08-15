@@ -5,23 +5,18 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
-    "/invoices": {
+    "/examples": {
       "get": {
         "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/transactions": {
+    "/examples/featured": {
       "get": {
         "parameters": [],
         "responses": { "206": { "description": "empty params" } }
       }
     },
-    "/users/{id}/orders": {
-      "get": {
-        "responses": { "206": { "description": "subcollection missing limit" } }
-      }
-    },
-    "/products": {
+    "/catalog/examples": {
       "get": {
         "parameters": [
           { "name": "$orderby", "in": "query", "schema": { "type": "string" } }
@@ -29,14 +24,24 @@ module.exports = {
         "responses": { "206": { "description": "wrong param only" } }
       }
     },
-    "/users/me": {
+    "/examples/archived": {
       "get": {
-        "responses": { "206": { "description": "ignored" } }
+        "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/users/{id}": {
+    "/examples/not-paginated": {
       "get": {
-        "responses": { "206": { "description": "single resource ignored" } }
+        "responses": { "200": { "description": "no 206 -> rule does not apply" } }
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": { "206": { "description": "out of scope (not /examples), ignored" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "responses": { "206": { "description": "detail endpoint, ignored" } }
       }
     }
   }

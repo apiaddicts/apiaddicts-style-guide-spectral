@@ -5,35 +5,43 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
-    "/invoices": {
+    "/examples": {
       "get": {
         "parameters": [
           { "name": "$limit", "in": "query", "schema": { "type": "integer" } }
         ],
-        "responses": { "206": { "description": "ok pagination" } }
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/users/{id}/orders": {
+    "/examples/featured": {
       "get": {
         "parameters": [
           { "name": "$limit", "in": "query", "schema": { "type": "integer" } }
         ],
-        "responses": { "206": { "description": "subcollection ok" } }
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/reports": {
+    "/catalog/examples": {
       "get": {
-        "responses": { "200": { "description": "no pagination ok" } }
+        "parameters": [
+          { "name": "$limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/users/me": {
+    "/examples/not-paginated": {
       "get": {
-        "responses": { "206": { "description": "me endpoint ignored correctly" } }
+        "responses": { "200": { "description": "no 206 -> rule does not apply" } }
       }
     },
-    "/users/{id}": {
+    "/users": {
       "get": {
-        "responses": { "206": { "description": "single resource with 206 ignored correctly" } }
+        "responses": { "206": { "description": "out of scope (not /examples), ignored" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "responses": { "206": { "description": "detail endpoint, ignored" } }
       }
     }
   }
