@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/18</span>
+                <span class='fraction'>19/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">76% </span>
+                <span class="strong">81.25% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/25</span>
+                <span class='fraction'>26/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/18</span>
+                <span class='fraction'>19/22</span>
             </div>
         
             
@@ -103,45 +103,49 @@
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a>
 <a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">116x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">117x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">module.exports = (schema, options = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> context) =&gt; {
   const results = [];
@@ -150,7 +154,6 @@
 <span class="cstat-no" title="statement not covered" >    return results;</span>
   }
 &nbsp;
-  // Fields that must have byte or binary format
   const fieldsToCheck = (options['fields-to-apply'] || <span class="branch-1 cbranch-no" title="branch not covered" >'product,line,price')</span>
     .split(',')
     .map(f =&gt; f.trim().toLowerCase());
@@ -158,7 +161,6 @@
   const properties = schema.properties || <span class="branch-1 cbranch-no" title="branch not covered" >{};</span>
 &nbsp;
   Object.entries(properties).forEach(([propName, propSchema]) =&gt; {
-    // Only check if this property is in our list
     if (!fieldsToCheck.includes(propName.toLowerCase())) {
       return;
     }
@@ -167,13 +169,17 @@
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
-    // Check if it's a string type
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (propSchema.type !== 'string') {
+    const type = propSchema.type;
+    const isStringType = type === 'string' || (Array.isArray(type) &amp;&amp; type.includes('string'));
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!isStringType) {
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
     const format = propSchema.format || '';
-    if (format !== 'byte' &amp;&amp; format !== 'binary') {
+    const hasBinaryFormat = format === 'byte' || format === 'binary';
+    const hasContentEncoding = propSchema.contentEncoding !== undefined
+      || propSchema.contentMediaType !== undefined;
+    if (!hasBinaryFormat &amp;&amp; !hasContentEncoding) {
       results.push({
         message: `OAR082: Property '${propName}' must define a 'byte' or 'binary' format (currently: ${format || 'missing'}).`,
         path: [...context.path, 'properties', propName, 'type'],
@@ -190,7 +196,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-11T12:23:50.366Z
+                at 2026-08-19T00:47:55.059Z
             </div>
         <script src="prettify.js"></script>
         <script>
