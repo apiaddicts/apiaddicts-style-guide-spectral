@@ -360,7 +360,9 @@
       "then": {
         "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "parameter-name": "$expand"
+          "parameterName": "$expand",
+          "paths": "/me,/health,/ping,/status",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -372,55 +374,24 @@
       "then": {
         "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "parameter-name": "$exclude"
+          "parameterName": "$exclude",
+          "paths": "/me,/health,/ping,/status",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR022": {
-      "description": "$orderby must be defined as a query parameter in all operations.",
-      "message": "OAR022: $orderby must be defined as a query parameter in this operation.",
+      "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/))].get",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "schema": {
-            "if": {
-              "properties": {
-                "responses": {
-                  "required": [
-                    "206"
-                  ]
-                }
-              }
-            },
-            "then": {
-              "required": [
-                "parameters"
-              ],
-              "properties": {
-                "parameters": {
-                  "type": "array",
-                  "contains": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "const": "$orderby"
-                      },
-                      "in": {
-                        "const": "query"
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "in"
-                    ]
-                  }
-                }
-              }
-            }
-          }
+          "parameterName": "$orderby",
+          "paths": "/examples",
+          "pathValidationStrategy": "/include"
         }
       }
     },
@@ -445,62 +416,17 @@
       }
     },
     "apiq:OAR025": {
-      "description": "$limit must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks).",
-      "message": "OAR025: $limit must be defined as a query parameter in this operation.",
+      "description": "$limit must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-collection-query-param-required",
         "functionOptions": {
-          "schema": {
-            "if": {
-              "properties": {
-                "responses": {
-                  "required": [
-                    "206"
-                  ]
-                }
-              }
-            },
-            "then": {
-              "required": [
-                "parameters"
-              ],
-              "properties": {
-                "parameters": {
-                  "type": "array",
-                  "contains": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "const": "$limit"
-                      },
-                      "in": {
-                        "const": "query"
-                      },
-                      "schema": {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "const": "integer"
-                          }
-                        },
-                        "required": [
-                          "type"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "name",
-                      "in",
-                      "schema"
-                    ]
-                  }
-                }
-              }
-            }
-          }
+          "parameterName": "$limit",
+          "paths": "/examples",
+          "pathValidationStrategy": "/include"
         }
       }
     },

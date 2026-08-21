@@ -5,30 +5,43 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
-    "/orders": {
+    "/examples": {
       "get": {
         "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/customers": {
+    "/examples/featured": {
       "get": {
         "parameters": [],
         "responses": { "206": { "description": "empty params" } }
       }
     },
-    "/users/{id}/orders": {
+    "/catalog/examples": {
       "get": {
-        "responses": { "206": { "description": "subcollection missing limit" } }
+        "parameters": [
+          { "name": "$orderby", "in": "query", "type": "string" }
+        ],
+        "responses": { "206": { "description": "wrong param only" } }
       }
     },
-    "/users/me": {
+    "/examples/archived": {
       "get": {
-        "responses": { "206": { "description": "ignored" } }
+        "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/users/{id}": {
+    "/examples/not-paginated": {
       "get": {
-        "responses": { "206": { "description": "single resource ignored" } }
+        "responses": { "200": { "description": "no 206 -> rule does not apply" } }
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": { "206": { "description": "out of scope (not /examples), ignored" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "responses": { "206": { "description": "detail endpoint, ignored" } }
       }
     }
   }

@@ -6,12 +6,16 @@ const STRATEGY_EXCLUDE = 'Exclude';
 
 const escapeRegExp = (segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-
 const parsePathPatterns = (paths) => paths
-  .split(/[\n;]/)
+  .split(/[\n;,]/)
   .map((p) => p.trim())
   .filter(Boolean)
   .map((segment) => new RegExp(`${escapeRegExp(segment)}(/|$)`));
+
+const normalizeStrategy = (value) => {
+  const normalized = String(value == null ? '' : value).trim().replace(/^\//, '').toLowerCase();
+  return normalized === 'include' ? STRATEGY_INCLUDE : STRATEGY_EXCLUDE;
+};
 
 const shouldIncludePath = (path, patterns, strategy) => {
   const matchesList = patterns.some((regex) => regex.test(path));
@@ -20,6 +24,15 @@ const shouldIncludePath = (path, patterns, strategy) => {
 
 const hasQueryParameter = (parameters, parameterName) => Array.isArray(parameters)
   && parameters.some((p) => p && !p.$ref && p.name === parameterName && p.in === 'query');
+
+const PAGINATED_RESPONSE_CODE = '206';
+const PAGINATED_RULE_CODES = ['OAR022', 'OAR025'];
+
+const hasResponseCode = (operation, code) => {
+  const responses = operation && operation.responses;
+  return !!responses && typeof responses === 'object'
+    && Object.prototype.hasOwnProperty.call(responses, code);
+};
 
 /**
  * @param {object} given
@@ -31,20 +44,20 @@ module.exports = (given, options = {}, context) => {
 
   const ruleCode = context && context.rule && context.rule.name ? context.rule.name.split(':').pop() : 'apq-collection-query-param-required';
 
-  const parameterName = options['parameter-name'];
+  const parameterName = options.parameterName != null ? options.parameterName : options['parameter-name'];
   if (!parameterName) {
     return [{
-      message: `${ruleCode}: "parameter-name" functionOption is required.`,
+      message: `${ruleCode}: "parameterName" functionOption is required.`,
       path: context.path,
     }];
   }
 
-  const strategy = options.pathValidationStrategy === STRATEGY_INCLUDE
-    ? STRATEGY_INCLUDE
-    : STRATEGY_EXCLUDE;
+  const strategy = normalizeStrategy(options.pathValidationStrategy);
 
   const rawPaths = typeof options.paths === 'string' ? options.paths : DEFAULT_PATHS;
   const patterns = parsePathPatterns(rawPaths);
+
+  const requiresPaginated = PAGINATED_RULE_CODES.includes(ruleCode);
 
   const results = [];
 
@@ -56,6 +69,7 @@ module.exports = (given, options = {}, context) => {
 
     if (PATH_PARAM_SUFFIX_REGEX.test(path)) return;
     if (!shouldIncludePath(path, patterns, strategy)) return;
+    if (requiresPaginated && !hasResponseCode(getOperation, PAGINATED_RESPONSE_CODE)) return;
 
     if (!hasQueryParameter(getOperation.parameters, parameterName)) {
       results.push({
