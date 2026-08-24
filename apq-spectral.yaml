@@ -30,6 +30,7 @@ functions:
   - apq-status-endpoint-check
   - apq-validate-structure
   - apq-numeric-parameter-integrity
+  - apq-query-params-optional
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -716,12 +717,18 @@ rules:
         match: ^(http(s)?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.apiquality.io\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$
   apiq:OAR060:
     description: "All query parameters must be defined as optional."
-    message: "OAR060: All query parameter must be optional (required: false)."
+    message: "{{error}}"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
+    given:
+      - "$.paths[*][get,put,post,delete,options,head,patch,trace].parameters[?(@.in == 'query')]"
+      - "$.paths[*].parameters[?(@.in == 'query')]"
+      - "$.components.parameters[?(@.in == 'query')]"
+      - "$.parameters[?(@.in == 'query')]"
     then:
       field: "required"
-      function: falsy
+      function: apq-query-params-optional
+      functionOptions:
+        path-exclusions: "/status"
   apiq:OAR061:
     description: "Ensure get have mandatory response codes"
     message: "OAR061: Ensure get have the mandatory response codes"

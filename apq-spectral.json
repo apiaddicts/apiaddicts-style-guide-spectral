@@ -30,8 +30,8 @@
     "apq-paged-response-check",
     "apq-status-endpoint-check",
     "apq-validate-structure",
-    "apq-collection-query-param-required",
-    "apq-numeric-parameter-integrity"
+    "apq-numeric-parameter-integrity",
+    "apq-query-params-optional",
   ],
   "extends": [
     "spectral:asyncapi",
@@ -381,7 +381,7 @@
       }
     },
     "apiq:OAR022": {
-      "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
@@ -416,7 +416,7 @@
       }
     },
     "apiq:OAR025": {
-      "description": "$limit must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "description": "$limit must be defined as a query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
@@ -887,12 +887,20 @@
     },
     "apiq:OAR060": {
       "description": "All query parameters must be defined as optional.",
-      "message": "OAR060: All query parameter must be optional (required: false).",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
+      "given": [
+        "$.paths[*][get,put,post,delete,options,head,patch,trace].parameters[?(@.in == 'query')]",
+        "$.paths[*].parameters[?(@.in == 'query')]",
+        "$.components.parameters[?(@.in == 'query')]",
+        "$.parameters[?(@.in == 'query')]"
+      ],
       "then": {
         "field": "required",
-        "function": "falsy"
+        "function": "apq-query-params-optional",
+        "functionOptions": {
+          "path-exclusions": "/status"
+        }
       }
     },
     "apiq:OAR061": {
