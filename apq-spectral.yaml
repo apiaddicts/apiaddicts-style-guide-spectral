@@ -338,7 +338,7 @@ rules:
       field: "$[?(@.name == '$start' && @.in == 'query')]"
       function: truthy
   apiq:OAR025:
-    description: "$limit must be defined as a query parameter in the collection GET operations selected by the configured paths."
+    description: "$limit must be defined as an integer query parameter in the collection GET operations selected by the configured paths."
     message: "{{error}}"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md"
     severity: error

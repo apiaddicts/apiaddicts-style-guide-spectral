@@ -30,7 +30,6 @@
     "apq-paged-response-check",
     "apq-status-endpoint-check",
     "apq-validate-structure",
-    "apq-collection-query-param-required",
     "apq-numeric-parameter-integrity"
   ],
   "extends": [
@@ -381,7 +380,7 @@
       }
     },
     "apiq:OAR022": {
-      "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
@@ -416,7 +415,7 @@
       }
     },
     "apiq:OAR025": {
-      "description": "$limit must be defined as a query parameter in the collection GET operations selected by the configured paths (default: only paths matching /examples).",
+      "description": "$limit must be defined as an integer query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
