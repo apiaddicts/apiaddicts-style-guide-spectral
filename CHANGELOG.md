@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [1.4.1-beta.4]
+## [1.4.1-beta.5] - 2026-08-24
 
 ### Changed
 
@@ -20,7 +20,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR070 - Replaced the `pattern`-on-`schema.type` check with a new `apq-numeric-path-param`.
 
 
-## [1.4.1-beta.3]
+## [1.4.1-beta.4] - 2026-08-14
+
+### Changed
+
+- OAR020 - Renamed the `parameter-name` functionOption to `parameterName` (Sonar-aligned); explicit `paths`/`pathValidationStrategy` defaults (`/me,/health,/ping,/status`, `/exclude`).
+- OAR021 - Same alignment as OAR020 for `$exclude`.
+- OAR022 - Switched from builtin `schema` to `apq-collection-query-param-required`; presence-only over paginated (206) `/examples` collection GETs, with configurable `paths`/`pathValidationStrategy`.
+- OAR025 - Same as OAR022 for `$limit`; dropped the `type: integer` requirement.
+
+
+## [1.4.1-beta.3] - 2026-08-12
 
 ### Fixed
 
@@ -36,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR085 - Refreshed `docs/resources/OAR085.md` to list the current default versions (including `3.1.0` and `3.2.0`).
 
 
-## [1.4.1-beta.2]
+## [1.4.1-beta.2] - 2026-08-05
 
 ### Fixed
 
@@ -64,7 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
 - OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
 
-## [1.4.1-beta.1]
+## [1.4.1-beta.1] - 2026-07-31
 
 ### Fixed
 

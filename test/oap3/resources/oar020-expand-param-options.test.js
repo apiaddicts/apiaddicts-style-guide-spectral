@@ -53,9 +53,9 @@ test('apiq:OAR020 empty paths + Include processes nothing', async () => {
   expect(results.length).toBe(0);
 });
 
-test('apiq:OAR020 custom parameter-name changes which parameter is required', async () => {
+test('apiq:OAR020 custom parameterName changes which parameter is required', async () => {
   const linter = await linterForRule('apiq:OAR020', {
-    functionOptions: { 'parameter-name': '$custom' }
+    functionOptions: { parameterName: '$custom' }
   });
   const results = await linter.run({
     ...doc,
@@ -72,11 +72,11 @@ test('apiq:OAR020 custom parameter-name changes which parameter is required', as
   expect(results.some((r) => r.path.join('/').includes('pets'))).toBe(true);
 });
 
-test('apiq:OAR020 missing parameter-name reports a configuration error', async () => {
+test('apiq:OAR020 missing parameterName reports a configuration error', async () => {
   const linter = await linterForRule('apiq:OAR020', {
-    functionOptions: { 'parameter-name': '' }
+    functionOptions: { parameterName: '' }
   });
   const results = await linter.run(doc);
   expect(results.length).toBeGreaterThanOrEqual(1);
-  expect(results[0].message).toMatch(/parameter-name/);
+  expect(results[0].message).toMatch(/parameterName/);
 });
