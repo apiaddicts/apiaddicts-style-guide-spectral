@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [1.5.0-beta.1] - 2026-08-25
+
+### Fixed
+
+- OAR002 - Rewrote to validate the full `x-wso2-scopes` definition (null/empty container and missing/null/blank or empty-array/object `name`/`key`/`roles`) via new `apq-wso2-scopes-valid`.
+
 ## [1.4.1] - 2026-08-25
 
 
@@ -44,13 +51,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped `@stoplight/spectral-core` (`^1.19.5` → `1.23.0`), `@stoplight/spectral-rulesets` (`^1.20.2` → `1.22.2`), `@stoplight/spectral-functions` (`^1.9.0` → `^1.10.5`) and `@stoplight/spectral-ruleset-migrator` (`^1.10.0` → `^1.12.1`) in `devDependencies`.
 - OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
 - OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
-
-## [1.4.1-beta.6] - 2026-08-25
-
-
-### Fixed
-
-- OAR002 - Rewrote to validate the full `x-wso2-scopes` definition (null/empty container and missing/null/blank or empty-array/object `name`/`key`/`roles`) via new `apq-wso2-scopes-valid`.
 
 
 ## [1.4.1-beta.5] - 2026-08-24
