@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">5.26% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/19</span>
+                <span class='fraction'>1/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.23% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/17</span>
+                <span class='fraction'>0/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">6.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>1/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -99,62 +99,62 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">116x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">48x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {object} node
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (node, options, context) =&gt; {
-  const results = [];
+module.exports = <span class="fstat-no" title="function not covered" >(n</span>ode, options, context) =&gt; {
+  const results = <span class="cstat-no" title="statement not covered" >[];</span>
 &nbsp;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!node || typeof node !== 'object') <span class="cstat-no" title="statement not covered" >return results;</span>
+<span class="cstat-no" title="statement not covered" >  if (!node || typeof node !== 'object') <span class="cstat-no" title="statement not covered" >return results;</span></span>
 &nbsp;
-  const { type } = node;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (type !== 'integer' &amp;&amp; type !== 'number') <span class="cstat-no" title="statement not covered" >return results;</span>
+  const { type } = <span class="cstat-no" title="statement not covered" >node;</span>
+<span class="cstat-no" title="statement not covered" >  if (type !== 'integer' &amp;&amp; type !== 'number') <span class="cstat-no" title="statement not covered" >return results;</span></span>
 &nbsp;
-  const has = (field) =&gt; Object.prototype.hasOwnProperty.call(node, field);
-  const hasMin = has('minimum');
-  const hasMax = has('maximum');
-  const hasFormat = has('format');
+  const has = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(f</span>ield) =&gt; <span class="cstat-no" title="statement not covered" >Object.prototype.hasOwnProperty.call(node, field);</span></span>
+  const hasMin = <span class="cstat-no" title="statement not covered" >has('minimum');</span>
+  const hasMax = <span class="cstat-no" title="statement not covered" >has('maximum');</span>
+  const hasFormat = <span class="cstat-no" title="statement not covered" >has('format');</span>
 &nbsp;
-  const hasBothBounds = hasMin &amp;&amp; hasMax;
-  const formatAlone = hasFormat &amp;&amp; !hasMin &amp;&amp; !hasMax;
+  const hasBothBounds = <span class="cstat-no" title="statement not covered" >hasMin &amp;&amp; hasMax;</span>
+  const formatAlone = <span class="cstat-no" title="statement not covered" >hasFormat &amp;&amp; !hasMin &amp;&amp; !hasMax;</span>
 &nbsp;
-  if (hasBothBounds || formatAlone) return results;
+<span class="cstat-no" title="statement not covered" >  if (hasBothBounds || formatAlone) <span class="cstat-no" title="statement not covered" >return results;</span></span>
 &nbsp;
-  const ruleCode = context.rule.name.split(':').pop();
-  results.push({
+  const ruleCode = <span class="cstat-no" title="statement not covered" >context.rule.name.split(':').pop();</span>
+<span class="cstat-no" title="statement not covered" >  results.push({</span>
     message: `${ruleCode}: Numeric parameter should define both 'minimum' and 'maximum', or a 'format' restriction.`,
     path: [...context.path, 'type'],
   });
 &nbsp;
-  return results;
+<span class="cstat-no" title="statement not covered" >  return results;</span>
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -163,7 +163,7 @@ module.exports = (node, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-11T12:23:50.366Z
+                at 2026-08-17T05:28:13.059Z
             </div>
         <script src="prettify.js"></script>
         <script>

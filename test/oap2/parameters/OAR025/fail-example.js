@@ -4,31 +4,63 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
+  "parameters": {
+    "LimitString": { "name": "$limit", "in": "query", "type": "string" }
+  },
   "paths": {
-    "/orders": {
+    "/examples": {
       "get": {
         "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/customers": {
+    "/examples/featured": {
       "get": {
         "parameters": [],
         "responses": { "206": { "description": "empty params" } }
       }
     },
-    "/users/{id}/orders": {
+    "/catalog/examples": {
       "get": {
-        "responses": { "206": { "description": "subcollection missing limit" } }
+        "parameters": [
+          { "name": "$orderby", "in": "query", "type": "string" }
+        ],
+        "responses": { "206": { "description": "wrong param only" } }
       }
     },
-    "/users/me": {
+    "/examples/archived": {
       "get": {
-        "responses": { "206": { "description": "ignored" } }
+        "responses": { "206": { "description": "missing limit" } }
       }
     },
-    "/users/{id}": {
+    "/examples/wrong-type-inline": {
       "get": {
-        "responses": { "206": { "description": "single resource ignored" } }
+        "parameters": [
+          { "name": "$limit", "in": "query", "type": "string" }
+        ],
+        "responses": { "206": { "description": "present but wrong type (string)" } }
+      }
+    },
+    "/examples/wrong-type-ref": {
+      "get": {
+        "parameters": [
+          { "$ref": "#/parameters/LimitString" }
+        ],
+        "responses": { "206": { "description": "present but wrong type via $ref" } }
+      }
+    },
+    "/examples/not-paginated": {
+      "get": {
+        "responses": { "200": { "description": "no 206 -> rule does not apply" } }
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": { "206": { "description": "out of scope (not /examples), ignored" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "responses": { "206": { "description": "detail endpoint, ignored" } }
       }
     }
   }

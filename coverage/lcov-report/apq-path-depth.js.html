@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">8.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>1/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.21% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>16/19</span>
+                <span class='fraction'>0/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">8.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>1/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,27 +97,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">116x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">159x</span>
-<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -126,27 +126,27 @@
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, options, context) =&gt; {
-  const minDepth = options['min-level'] ?? options.minDepth ?? null
-  const maxDepth = options['max-level'] ?? options['max-level-allowed'] ?? <span class="branch-2 cbranch-no" title="branch not covered" >options.maxDepth </span>?? <span class="branch-3 cbranch-no" title="branch not covered" >3</span>
-  const ignore = options.ignoreSegments ?? <span class="branch-1 cbranch-no" title="branch not covered" >[]</span>
-  const segments = targetVal
+module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, options, context) =&gt; {
+  const minDepth = <span class="cstat-no" title="statement not covered" >options['min-level'] ?? options.minDepth ?? null</span>
+  const maxDepth = <span class="cstat-no" title="statement not covered" >options['max-level'] ?? options['max-level-allowed'] ?? options.maxDepth ?? 3</span>
+  const ignore = <span class="cstat-no" title="statement not covered" >options.ignoreSegments ?? []</span>
+  const segments = <span class="cstat-no" title="statement not covered" >targetVal</span>
     .split('/')
     .filter(Boolean)
-    .filter(segment =&gt; !segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))
-    .filter(segment =&gt; !ignore.includes(segment))
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!segment.startsWith('{') &amp;&amp; !segment.endsWith('}'))</span>
+    .filter(<span class="fstat-no" title="function not covered" >se</span>gment =&gt; <span class="cstat-no" title="statement not covered" >!ignore.includes(segment))</span>
 &nbsp;
-  const depth = segments.length;
+  const depth = <span class="cstat-no" title="statement not covered" >segments.length;</span>
 &nbsp;
-  const isOutOfRange = minDepth != null
+  const isOutOfRange = <span class="cstat-no" title="statement not covered" >minDepth != null</span>
     ? (depth &gt;= minDepth &amp;&amp; depth &lt;= maxDepth)
     : depth &gt; maxDepth
 &nbsp;
-  if (isOutOfRange) {
-    const message = minDepth != null
+<span class="cstat-no" title="statement not covered" >  if (isOutOfRange) {</span>
+    const message = <span class="cstat-no" title="statement not covered" >minDepth != null</span>
       ? `OAR014: Path depth (${depth}) must not fall within the non-suggested range ${minDepth}-${maxDepth}.`
       : `OAR015: Path depth (${depth}) exceeds the maximum allowed level of ${maxDepth}.`
-    return [
+<span class="cstat-no" title="statement not covered" >    return [</span>
       { message }
     ]
   }
@@ -157,7 +157,7 @@ module.exports = (targetVal, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-11T12:23:50.366Z
+                at 2026-08-17T05:28:13.059Z
             </div>
         <script src="prettify.js"></script>
         <script>
