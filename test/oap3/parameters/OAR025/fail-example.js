@@ -4,6 +4,11 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
+  "components": {
+    "parameters": {
+      "LimitString": { "name": "$limit", "in": "query", "schema": { "type": "string" } }
+    }
+  },
   "paths": {
     "/examples": {
       "get": {
@@ -27,6 +32,22 @@ module.exports = {
     "/examples/archived": {
       "get": {
         "responses": { "206": { "description": "missing limit" } }
+      }
+    },
+    "/examples/wrong-type-inline": {
+      "get": {
+        "parameters": [
+          { "name": "$limit", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "206": { "description": "present but wrong type (string)" } }
+      }
+    },
+    "/examples/wrong-type-ref": {
+      "get": {
+        "parameters": [
+          { "$ref": "#/components/parameters/LimitString" }
+        ],
+        "responses": { "206": { "description": "present but wrong type via $ref" } }
       }
     },
     "/examples/not-paginated": {
