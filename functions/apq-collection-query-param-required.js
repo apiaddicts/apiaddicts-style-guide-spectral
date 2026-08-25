@@ -6,20 +6,53 @@ const STRATEGY_EXCLUDE = 'Exclude';
 
 const escapeRegExp = (segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-
 const parsePathPatterns = (paths) => paths
-  .split(/[\n;]/)
+  .split(/[\n;,]/)
   .map((p) => p.trim())
   .filter(Boolean)
   .map((segment) => new RegExp(`${escapeRegExp(segment)}(/|$)`));
+
+const normalizeStrategy = (value) => {
+  const normalized = String(value == null ? '' : value).trim().replace(/^\//, '').toLowerCase();
+  return normalized === 'include' ? STRATEGY_INCLUDE : STRATEGY_EXCLUDE;
+};
 
 const shouldIncludePath = (path, patterns, strategy) => {
   const matchesList = patterns.some((regex) => regex.test(path));
   return strategy === STRATEGY_INCLUDE ? matchesList : !matchesList;
 };
 
-const hasQueryParameter = (parameters, parameterName) => Array.isArray(parameters)
-  && parameters.some((p) => p && !p.$ref && p.name === parameterName && p.in === 'query');
+const resolveRef = (ref, context) => {
+  const root = context && context.document && context.document.resolved;
+  if (!root || typeof ref !== 'string' || !ref.startsWith('#/')) return undefined;
+  return ref.replace(/^#\//, '').split('/')
+    .reduce((node, part) => (node == null ? undefined : node[part]), root);
+};
+
+const resolveParam = (p, context) => (p && p.$ref ? resolveRef(p.$ref, context) : p);
+
+const findQueryParameter = (parameters, parameterName, context) => (Array.isArray(parameters)
+  ? parameters
+    .map((p) => resolveParam(p, context))
+    .find((p) => p && p.name === parameterName && p.in === 'query')
+  : undefined);
+
+const getParameterType = (param) => {
+  if (!param) return undefined;
+  if (param.schema && typeof param.schema === 'object') return param.schema.type;
+  return param.type;
+};
+
+const PAGINATED_RESPONSE_CODE = '206';
+const PAGINATED_RULE_CODES = ['OAR022', 'OAR025'];
+
+const REQUIRED_PARAM_TYPES = { OAR025: 'integer' };
+
+const hasResponseCode = (operation, code) => {
+  const responses = operation && operation.responses;
+  return !!responses && typeof responses === 'object'
+    && Object.prototype.hasOwnProperty.call(responses, code);
+};
 
 /**
  * @param {object} given
@@ -31,20 +64,20 @@ module.exports = (given, options = {}, context) => {
 
   const ruleCode = context && context.rule && context.rule.name ? context.rule.name.split(':').pop() : 'apq-collection-query-param-required';
 
-  const parameterName = options['parameter-name'];
+  const parameterName = options.parameterName != null ? options.parameterName : options['parameter-name'];
   if (!parameterName) {
     return [{
-      message: `${ruleCode}: "parameter-name" functionOption is required.`,
+      message: `${ruleCode}: "parameterName" functionOption is required.`,
       path: context.path,
     }];
   }
 
-  const strategy = options.pathValidationStrategy === STRATEGY_INCLUDE
-    ? STRATEGY_INCLUDE
-    : STRATEGY_EXCLUDE;
+  const strategy = normalizeStrategy(options.pathValidationStrategy);
 
   const rawPaths = typeof options.paths === 'string' ? options.paths : DEFAULT_PATHS;
   const patterns = parsePathPatterns(rawPaths);
+
+  const requiresPaginated = PAGINATED_RULE_CODES.includes(ruleCode);
 
   const results = [];
 
@@ -56,10 +89,21 @@ module.exports = (given, options = {}, context) => {
 
     if (PATH_PARAM_SUFFIX_REGEX.test(path)) return;
     if (!shouldIncludePath(path, patterns, strategy)) return;
+    if (requiresPaginated && !hasResponseCode(getOperation, PAGINATED_RESPONSE_CODE)) return;
 
-    if (!hasQueryParameter(getOperation.parameters, parameterName)) {
+    const param = findQueryParameter(getOperation.parameters, parameterName, context);
+    if (!param) {
       results.push({
         message: `${ruleCode}: ${parameterName} must be defined as a query parameter in this operation.`,
+        path: [...context.path, path, 'get'],
+      });
+      return;
+    }
+
+    const expectedType = REQUIRED_PARAM_TYPES[ruleCode];
+    if (expectedType && getParameterType(param) !== expectedType) {
+      results.push({
+        message: `${ruleCode}: ${parameterName} must be defined as a query parameter of type ${expectedType} in this operation.`,
         path: [...context.path, path, 'get'],
       });
     }

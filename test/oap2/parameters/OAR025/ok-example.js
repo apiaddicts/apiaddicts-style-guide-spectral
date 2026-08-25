@@ -4,36 +4,55 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
+  "parameters": {
+    "LimitInteger": { "name": "$limit", "in": "query", "type": "integer" }
+  },
   "paths": {
-    "/orders": {
+    "/examples": {
       "get": {
         "parameters": [
-          { "name": "$limit", "in": "query", "type": "integer", "schema": { "type": "integer" } }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
-        "responses": { "206": { "description": "ok pagination" } }
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/users/{id}/orders": {
+    "/examples/featured": {
       "get": {
         "parameters": [
-          { "name": "$limit", "in": "query", "type": "integer", "schema": { "type": "integer" } }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
-        "responses": { "206": { "description": "ok subcollection" } }
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/customers": {
+    "/catalog/examples": {
       "get": {
-        "responses": { "200": { "description": "no pagination ok" } }
+        "parameters": [
+          { "name": "$limit", "in": "query", "type": "integer" }
+        ],
+        "responses": { "206": { "description": "ok" } }
       }
     },
-    "/users/me": {
+    "/examples/ref-ok": {
       "get": {
-        "responses": { "206": { "description": "me endpoint ignored correctly" } }
+        "parameters": [
+          { "$ref": "#/parameters/LimitInteger" }
+        ],
+        "responses": { "206": { "description": "present integer via $ref" } }
       }
     },
-    "/users/{id}": {
+    "/examples/not-paginated": {
       "get": {
-        "responses": { "206": { "description": "single resource with 206 ignored correctly" } }
+        "responses": { "200": { "description": "no 206 -> rule does not apply" } }
+      }
+    },
+    "/users": {
+      "get": {
+        "responses": { "206": { "description": "out of scope (not /examples), ignored" } }
+      }
+    },
+    "/examples/{id}": {
+      "get": {
+        "responses": { "206": { "description": "detail endpoint, ignored" } }
       }
     }
   }

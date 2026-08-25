@@ -12,8 +12,12 @@ beforeAll(async () => {
 
 test('apiq:OAR069 should find errors', () => {
   return linter.run(oar069fail).then((results) => {
-    expect(results.length).toBe(1);  
-    expect(results[0].path.join('.')).toBe('paths./pets.get.responses');
+    expect(results.length).toBe(3);
+    expect(results.map((r) => r.path.join('.'))).toEqual([
+      'paths./pets.get.parameters.0',
+      'paths./pets.get.parameters.1',
+      'paths./pets.get.parameters.2',
+    ]);
   });
 });
 

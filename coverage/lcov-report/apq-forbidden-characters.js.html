@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">6.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>1/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/15</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">7.14% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>1/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -92,64 +92,70 @@
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
-<a name='L30'></a><a href='#L30'>30</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">116x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">62x</span>
-<span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">47x</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * @param {string|string[]} targetVal
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = (targetVal, options, context) =&gt; {
-  const pattern = new RegExp((options &amp;&amp; options.pattern) || <span class="branch-2 cbranch-no" title="branch not covered" >'^[a-zA-Z0-9_\\-., ]+$')</span>;
-  const errors = [];
-  const basePath = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+module.exports = <span class="fstat-no" title="function not covered" >(t</span>argetVal, options, context) =&gt; {
+  const patternStr = <span class="cstat-no" title="statement not covered" >(options &amp;&amp; options.pattern) || '^[a-zA-Z0-9_\\-., ]+$';</span>
+  const pattern = <span class="cstat-no" title="statement not covered" >new RegExp(patternStr);</span>
+  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
+  const basePath = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
+  const buildMessage = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(v</span>alue) =&gt; <span class="cstat-no" title="statement not covered" >`Value '${value}' does not match the required pattern: ${patternStr}.`;</span></span>
 &nbsp;
-  if (typeof targetVal === 'string') {
-    if (!pattern.test(targetVal)) {
-      errors.push({
-        message: context.rule.message,
+<span class="cstat-no" title="statement not covered" >  if (typeof targetVal === 'string') {</span>
+<span class="cstat-no" title="statement not covered" >    if (!pattern.test(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >      errors.push({</span>
+        message: buildMessage(targetVal),
         path: basePath
       });
     }
-  } else <span class="missing-if-branch" title="else path not taken" >E</span>if (Array.isArray(targetVal)) {
-    targetVal.forEach((role, index) =&gt; {
-      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {
-        errors.push({
-          message: context.rule.message,
+  } else <span class="cstat-no" title="statement not covered" >if (Array.isArray(targetVal)) {</span>
+<span class="cstat-no" title="statement not covered" >    targetVal.forEach(<span class="fstat-no" title="function not covered" >(r</span>ole, index) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      if (typeof role === 'string' &amp;&amp; !pattern.test(role)) {</span>
+<span class="cstat-no" title="statement not covered" >        errors.push({</span>
+          message: buildMessage(role),
           path: [...basePath, index]
         });
       }
     });
   }
 &nbsp;
-  return errors;
+<span class="cstat-no" title="statement not covered" >  return errors;</span>
 };</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -157,7 +163,7 @@ module.exports = (targetVal, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-13T21:03:50.193Z
+                at 2026-08-17T05:28:13.059Z
             </div>
         <script src="prettify.js"></script>
         <script>

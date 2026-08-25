@@ -1,7 +1,6 @@
 /**
- * Validates that operations with security defined include a 401 Unauthorized response
- * @param {object} given - The operation node
- * @param {object} options - Function options
+ * @param {object} given - The operation node ($.paths[*][*])
+ * @param {object} options - Function options ({ 'expected-codes': '401' | '403' | '401,403' | ... })
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) => {
@@ -16,10 +15,18 @@ module.exports = (given, options, context) => {
     return results;
   }
 
+  const raw = (options && options['expected-codes']) || '401';
+  const expectedCodes = (Array.isArray(raw) ? raw : String(raw).split(','))
+    .map((code) => String(code).trim())
+    .filter(Boolean);
+
+  const operationSecurityDefined = Array.isArray(given.security);
+  if (operationSecurityDefined && given.security.length === 0) {
+    return results;
+  }
+
   // Check if this operation has security defined
-  const operationHasSecurity = given.security &&
-    Array.isArray(given.security) &&
-    given.security.length > 0;
+  const operationHasSecurity = operationSecurityDefined && given.security.length > 0;
 
   // Check if there's global security in the document
   let globalHasSecurity = false;
@@ -32,15 +39,22 @@ module.exports = (given, options, context) => {
     // Ignore errors accessing root security
   }
 
-  // Only require 401 if security is defined (operation-level or global)
-  if (operationHasSecurity || globalHasSecurity) {
-    if (!responses['401']) {
+  if (!(operationHasSecurity || globalHasSecurity)) {
+    return results;
+  }
+
+  const ruleName = (context.rule && context.rule.name) || '';
+  const oarId = ruleName.includes(':') ? ruleName.split(':').pop() : ruleName;
+  const prefix = oarId ? `${oarId}: ` : '';
+
+  expectedCodes.forEach((code) => {
+    if (!responses[code]) {
       results.push({
-        message: context.rule.message || 'OAR035: Response code 401 must be defined for operations with security schemes defined.',
-        path: [...context.path, 'responses']
+        message: `${prefix}Response code ${code} must be defined for operations with security schemes defined.`,
+        path: [...context.path, 'responses'],
       });
     }
-  }
+  });
 
   return results;
 };

@@ -18,6 +18,10 @@ module.exports = (schema, options = {}, context) => {
       return;
     }
 
+    if (!propSchema || typeof propSchema !== 'object') {
+      return;
+    }
+
     // Check if it's a string type
     if (propSchema.type !== 'string') {
       return;

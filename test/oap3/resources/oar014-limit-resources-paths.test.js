@@ -21,3 +21,12 @@ test('apiq:OAR014 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR014 message reflects the configured min/max-level range', async () => {
+  const customLinter = await linterForRule('apiq:OAR014', {
+    functionOptions: { 'min-level': 4, 'max-level': 6, ignoreSegments: ['me'] },
+  });
+  const results = await customLinter.run(oar014fail);
+  expect(results.length).toBeGreaterThanOrEqual(1);
+  expect(results[0].message).toContain('range 4-6');
+});
