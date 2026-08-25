@@ -6,6 +6,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-08-25
+
+
+### Added
+
+- OAR081 - Test coverage pinning the current behavior: only string-typed `password` fields are validated; a non-string `password` (e.g. `type: integer`) is intentionally out of scope.
+
+### Fixed
+
+- OAR035 - Honor an operation-level `security: []` explicit opt-out: the operation is unsecured, so no 401 is required even when document-level security is defined.
+- OAR096 - Same `security: []` opt-out fix (shared `apq-security-required-response` function): no 403 required for opted-out operations.
+- OAR035 - `apq-spectral.json` now uses the `apq-security-required-response` function; it still used the core `truthy` over `$.paths[*][*].responses`, requiring a 401 on every operation regardless of whether security was defined.
+- OAR069 - Now raises one issue per offending `path`/`query` parameter, anchored to the parameter, instead of a single issue per operation on the `responses` line; `description`/`message` updated to reference the required Bad Request (400) response.
+- OAR096 - The 403 requirement is now conditional on security; it previously used the core `truthy` and flagged every operation missing a 403. Reuses `apq-security-required-response` with a `response-code: "403"` option.
+- OAR081 - `apq-spectral.json` now uses the `apq-password-format` function over `$..properties`; it carried a stale, incorrect definition (built-in `pattern` over `$..properties[?(@.type == 'string' && @.format == 'number')]`).
+- `apq-binary-format-check` (OAR082) - Guard against a null-valued property schema (e.g. `product: null`) before reading `.type`.
+- `apq-spectral.json` - Registered `apq-security-required-response`, `apq-path-param-query-conflict` and `apq-password-format` in the `functions` array (referenced by rules but not registered).
+- OAR044 - MediaType - Media type parameters now follow RFC 9110 (charset without space, other parameter names, multiple parameters); type/subtype can no longer start with `.`. Synced `apq-spectral.json` with `apq-spectral.yaml` and added the missing `oar044-media-type.test.js` test.
+- OAR074 - NumericParameterIntegrity - Spectral's `anyOf` accepted a lone `minimum` or `maximum` as sufficient. Now requires `minimum` and `maximum` together, or `format` alone. Also extended to OpenAPI 2 parameters and to parameters declared at the path-item and `components`/`parameters` level, not just inline on the operation.
+- OAR014 / OAR015 - ResourceLevel - Issue message now shows the configured min/max-level values instead of a hardcoded number.
+- OAR004 / OAR040 - Wso2Scopes - Issue message now shows the configured `pattern` instead of a static text.
+- Null-safety in recursive-descent JSONPath `given` expressions (OAR016, OAR037, OAR052, OAR074, OAR075, OAR076, OAR081, OAR082) - A single `null` node in a document (e.g. `type: null`, `properties: null`, `items: null`, a null property value, or a parameter without `schema`) made filters like `$..[?(@.type==...)]` / `$..[?(@.properties)]` / `parameters[?(@.schema.type==...)]` throw and abort the whole lint run. Added a null guard (`@ && ...`) to each filter; behavior on valid documents is unchanged (a null node was never a valid match).
+
+### Changed
+
+- OAR025 - The shared `apq-collection-query-param-required` function now also validates the parameter type for OAR025, keyed by rule code; when `$limit` is present but its type is not `integer`, a distinct type message is emitted.
+- OAR020 - Renamed the `parameter-name` functionOption to `parameterName` (Sonar-aligned); explicit `paths`/`pathValidationStrategy` defaults (`/me,/health,/ping,/status`, `/exclude`).
+- OAR021 - Same alignment as OAR020 for `$exclude`.
+- OAR022 - Switched from builtin `schema` to `apq-collection-query-param-required`; presence-only over paginated (206) `/examples` collection GETs, with configurable `paths`/`pathValidationStrategy`.
+- OAR025 - Same as OAR022 for `$limit`; dropped the `type: integer` requirement.
+- OAR085 - Refreshed `docs/resources/OAR085.md` to list the current default versions (including `3.1.0` and `3.2.0`).
+- OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
+- OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
+- OAR085 - Added `3.2.0` to the default `valid-versions` (`2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0`).
+- Generalized `apq-security-required-response` with a `response-code` option (default `"401"`), shared by OAR035 (401) and OAR096 (403).
+- Bumped `@stoplight/spectral-core` (`^1.19.5` → `1.23.0`), `@stoplight/spectral-rulesets` (`^1.20.2` → `1.22.2`), `@stoplight/spectral-functions` (`^1.9.0` → `^1.10.5`) and `@stoplight/spectral-ruleset-migrator` (`^1.10.0` → `^1.12.1`) in `devDependencies`.
+- OAR015 - ResourceLevelMaxAllowed - Renamed the `maxDepth` functionOption to `max-level-allowed` to match the Sonar parameter name.
+- OAR040 - StandardWso2ScopesName - Switched from the core `pattern` function (option `match`) to `apq-forbidden-characters` (option `pattern`) to match the Sonar parameter name; detection unchanged.
 
 ## [1.4.1-beta.5] - 2026-08-24
 

@@ -1,6 +1,6 @@
 {
   "name": "api-quality-spectral-ruleset",
-  "version": "1.4.1-beta.5",
+  "version": "1.4.1",
   "description": "Spectral ruleset by API Quality",
   "main": "apq-spectral.yaml",
   "files": [
