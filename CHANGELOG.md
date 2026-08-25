@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- OAR002 - Rewrote to validate the full `x-wso2-scopes` definition (null/empty container and missing/null/blank `name`/`key`/`roles`) via new `apq-wso2-scopes-valid`.
+- OAR002 - Rewrote to validate the full `x-wso2-scopes` definition (null/empty container and missing/null/blank or empty-array/object `name`/`key`/`roles`) via new `apq-wso2-scopes-valid`.
 
 
 ## [1.4.1-beta.5] - 2026-08-24

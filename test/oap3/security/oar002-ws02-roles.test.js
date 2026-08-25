@@ -7,6 +7,7 @@ const oar002ok = require('./OAR002/ok-example');
 const oar002null = require('./OAR002/fail-null');
 const oar002empty = require('./OAR002/fail-empty');
 const oar002allCases = require('./OAR002/fail-all-cases');
+const oar002emptyCollections = require('./OAR002/fail-empty-collections');
 
 const DEFINITION_WRONG = "OAR002: WSO2 scopes definition is wrong";
 const requiredMessage = (prop) => `OAR002: WSO2 scope '${prop}' is required`;
@@ -54,6 +55,20 @@ test('apiq:OAR002 flags every missing/null name, key and roles', () => {
       requiredMessage('key'),
       requiredMessage('key'),
       requiredMessage('name'),
+      requiredMessage('name'),
+      requiredMessage('roles'),
+      requiredMessage('roles'),
+    ]);
+    results.forEach((r) => expect(r.severity).toBe(0));
+  });
+});
+
+test('apiq:OAR002 flags empty array/object name, key and roles', () => {
+  return linter.run(oar002emptyCollections).then((results) => {
+    expect(results.length).toBe(4);
+    const messages = results.map((r) => r.message).sort();
+    expect(messages).toEqual([
+      requiredMessage('key'),
       requiredMessage('name'),
       requiredMessage('roles'),
       requiredMessage('roles'),

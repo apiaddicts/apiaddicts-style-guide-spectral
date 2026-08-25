@@ -9,6 +9,14 @@ const REQUIRED_PROPERTIES = ['name', 'key', 'roles'];
 
 const requiredMessage = (prop) => REQUIRED_PROP.replace('{0}', prop);
 
+// A scope property counts as "required but missing" when it is absent, null, a
+// blank string, or an empty collection ([] / {}) — mirrors Sonar's OAR002 check.
+const isEmptyValue = (value) =>
+  value === null
+  || (typeof value === 'string' && value.trim() === '')
+  || (Array.isArray(value) && value.length === 0)
+  || (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0);
+
 module.exports = (targetVal, _options, context) => {
   const errors = [];
   const basePath = context.path || [];
@@ -40,11 +48,8 @@ module.exports = (targetVal, _options, context) => {
     REQUIRED_PROPERTIES.forEach((prop) => {
       if (!Object.prototype.hasOwnProperty.call(scope, prop)) {
         errors.push({ message: requiredMessage(prop), path: scopePath });
-      } else {
-        const value = scope[prop];
-        if (value === null || (typeof value === 'string' && value.trim() === '')) {
-          errors.push({ message: requiredMessage(prop), path: [...scopePath, prop] });
-        }
+      } else if (isEmptyValue(scope[prop])) {
+        errors.push({ message: requiredMessage(prop), path: [...scopePath, prop] });
       }
     });
   });
