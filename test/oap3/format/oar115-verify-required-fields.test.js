@@ -4,6 +4,7 @@ let linter;
 
 const oar115fail = require('./OAR115/fail-example');
 const oar115ok = require('./OAR115/ok-example');
+const oar115arrayType31 = require('./OAR115/fail-array-type-31');
 
 beforeAll(async () => {
   linter = await linterForRule('apiq:OAR115');
@@ -19,5 +20,11 @@ test('apiq:OAR115 should find errors', () => {
 test('apiq:OAR115 should find no errors', () => {
   return linter.run(oar115ok).then((results) => {
     expect(results.length).toBe(0);
+  });
+});
+
+test('apiq:OAR115 should apply to 3.1 array-form object type', () => {
+  return linter.run(oar115arrayType31).then((results) => {
+    expect(results.length).toBe(1);
   });
 });

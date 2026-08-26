@@ -30,6 +30,7 @@ functions:
   - apq-status-endpoint-check
   - apq-validate-structure
   - apq-numeric-parameter-integrity
+  - apq-numeric-path-param
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -194,7 +195,7 @@ rules:
     message: "OAR016: Numeric types must use a valid format for their type."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md"
     severity: error
-    given: "$..[?(@ && (@.type=='number' || @.type=='integer'))]"
+    given: "$..[?(@ && (@.type=='number' || @.type=='integer' || (@.type && @.type.indexOf && (@.type.indexOf('number') > -1 || @.type.indexOf('integer') > -1))))]"
     then:
       function: schema
       functionOptions:
@@ -485,7 +486,7 @@ rules:
     message: "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64), or a valid pattern when no format is defined."
     severity: error
     resolved: false
-    given: "$..[?(@ && @.type=='string')]"
+    given: "$..[?(@ && @.type)]"
     then:
       function: apq-schema-format
   apiq:OAR038:
@@ -686,7 +687,7 @@ rules:
     message: "OAR052: Numeric types requires a format"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md"
     severity: warn
-    given: "$..[?(@ && (@.type == 'integer' || @.type == 'number'))]"
+    given: "$..[?(@ && (@.type == 'integer' || @.type == 'number' || (@.type && @.type.indexOf && (@.type.indexOf('integer') > -1 || @.type.indexOf('number') > -1))))]"
     then:
       field: format
       function: truthy
@@ -836,10 +837,7 @@ rules:
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]"
     then:
-      field: "schema.type"
-      function: pattern
-      functionOptions:
-        match: "^(?!integer|number)"
+      function: apq-numeric-path-param
   apiq:OAR071:
     description: "Query parameters 'param1', 'param2', and 'param3' must be defined in the operation."
     message: "OAR071: Query parameters 'param1', 'param2', and 'param3' must be defined."
@@ -876,15 +874,15 @@ rules:
     severity: error
     resolved: false
     given:
-      - "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema"
-      - "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number'))]"
+      - "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number' || (@.schema.type && @.schema.type.indexOf && (@.schema.type.indexOf('integer') > -1 || @.schema.type.indexOf('number') > -1))))].schema"
+      - "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number' || (@.type && @.type.indexOf && (@.type.indexOf('integer') > -1 || @.type.indexOf('number') > -1))))]"
     then:
       function: apq-numeric-parameter-integrity
   apiq:OAR075:
     description: "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction."
     message: "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction."
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && @.schema.type == 'string' && @.in == 'path')]"
+    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && (@.schema.type == 'string' || (@.schema.type && @.schema.type.indexOf && @.schema.type.indexOf('string') > -1)) && @.in == 'path')]"
     then:
       function: schema
       functionOptions:
@@ -902,7 +900,7 @@ rules:
     message: "OAR076: Schema should use well-defined type and format."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md"
     severity: error
-    given: "$..[?(@ && (@.type=='number' || @.type=='integer'))]"
+    given: "$..[?(@ && (@.type=='number' || @.type=='integer' || (@.type && @.type.indexOf && (@.type.indexOf('number') > -1 || @.type.indexOf('integer') > -1))))]"
     then:
       function: schema
       functionOptions:
@@ -1000,7 +998,7 @@ rules:
       functionOptions:
         notMatch: "^password$"
   apiq:OAR085:
-    description: "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0, 3.2.0."
+    description: "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.0.4, 3.1.0, 3.1.1, 3.1.2, 3.2.0."
     message: "{{error}}"
     severity: warn
     given:
@@ -1009,7 +1007,7 @@ rules:
     then:
       function: apq-valid-openapi-version
       functionOptions:
-        valid-versions: "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0"
+        valid-versions: "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.0.4,3.1.0,3.1.1,3.1.2,3.2.0"
   apiq:OAR086:
     description: "Descriptions must begin with a capital letter, end with a period, and not be empty."
     message: "OAR086: Descriptions must begin with a capital letter, end with a period, and not be empty."

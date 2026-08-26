@@ -6,8 +6,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.1] - 2026-08-25
 
+## [1.5.0-beta.1] - 2026-08-25
+
+### Changed
+
+- OAR085 - Accept `3.0.4`, `3.1.1`, `3.1.2` in the default valid-versions.
+- OAR037 - Accept array-form `type`; broadened `given`, string-type check moved into the function.
+- OAR082 - Accept array-form `type`; accept `contentEncoding`/`contentMediaType` as byte/binary.
+- OAR016 / OAR052 / OAR075 / OAR076 - Broadened `given` to also match array-form `type`.
+- OAR074 - Broadened `given` and updated `apq-numeric-parameter-integrity` to handle array-form `type`.
+- OAR115 - `apq-required-fields-exist` accepts array-form `object` type.
+- OAR070 - Replaced the `pattern`-on-`schema.type` check with a new `apq-numeric-path-param`.
+
+
+## [1.4.1] - 2026-08-25
 
 ### Added
 
