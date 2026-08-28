@@ -32,6 +32,7 @@
     "apq-validate-structure",
     "apq-collection-query-param-required",
     "apq-numeric-parameter-integrity",
+    "apq-wso2-scopes-valid",
     "apq-numeric-path-param"
   ],
   "extends": [
@@ -54,17 +55,13 @@
     },
     "apiq:OAR002": {
       "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
-      "message": "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'.",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
       "severity": "error",
-      "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
-      "then": [
-        {
-          "function": "truthy",
-          "field": "key",
-          "message": "Scope must define a 'key' attribute."
-        }
-      ]
+      "given": "$.x-wso2-security.apim.x-wso2-scopes",
+      "then": {
+        "function": "apq-wso2-scopes-valid"
+      }
     },
     "apiq:OAR003": {
       "description": "A description can help other developers to understand the correct use of the scope.",
