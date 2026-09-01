@@ -6,6 +6,7 @@ const failCases = {
   'fail-path-level': [require('./OAR060/fail-path-level'), 1],
   'fail-toplevel-param': [require('./OAR060/fail-toplevel-param'), 1],
   'fail-mixed': [require('./OAR060/fail-mixed'), 2],
+  'fail-ref-mixed-paths': [require('./OAR060/fail-ref-mixed-paths'), 1],
 };
 
 const okCases = {
@@ -13,6 +14,7 @@ const okCases = {
   'ok-no-required': require('./OAR060/ok-no-required'),
   'ok-non-query': require('./OAR060/ok-non-query'),
   'ok-excluded': require('./OAR060/ok-excluded'),
+  'ok-ref-excluded': require('./OAR060/ok-ref-excluded'),
 };
 
 let linter;
