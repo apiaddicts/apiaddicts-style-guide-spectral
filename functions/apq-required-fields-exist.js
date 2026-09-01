@@ -6,7 +6,10 @@
 module.exports = (given, options, context) => {
   const results = [];
 
-  if (!given || given.type !== 'object') return results;
+  if (!given) return results;
+  const t = given.type;
+  const isObjectType = t === 'object' || (Array.isArray(t) && t.indexOf('object') > -1);
+  if (!isObjectType) return results;
 
   const { required, properties } = given;
   if (!Array.isArray(required)) return results;
