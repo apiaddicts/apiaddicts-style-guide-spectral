@@ -5,7 +5,6 @@ module.exports = (schema, options = {}, context) => {
     return results;
   }
 
-  // Fields that must have byte or binary format
   const fieldsToCheck = (options['fields-to-apply'] || 'product,line,price')
     .split(',')
     .map(f => f.trim().toLowerCase());
@@ -13,7 +12,6 @@ module.exports = (schema, options = {}, context) => {
   const properties = schema.properties || {};
 
   Object.entries(properties).forEach(([propName, propSchema]) => {
-    // Only check if this property is in our list
     if (!fieldsToCheck.includes(propName.toLowerCase())) {
       return;
     }
@@ -22,13 +20,17 @@ module.exports = (schema, options = {}, context) => {
       return;
     }
 
-    // Check if it's a string type
-    if (propSchema.type !== 'string') {
+    const type = propSchema.type;
+    const isStringType = type === 'string' || (Array.isArray(type) && type.includes('string'));
+    if (!isStringType) {
       return;
     }
 
     const format = propSchema.format || '';
-    if (format !== 'byte' && format !== 'binary') {
+    const hasBinaryFormat = format === 'byte' || format === 'binary';
+    const hasContentEncoding = propSchema.contentEncoding !== undefined
+      || propSchema.contentMediaType !== undefined;
+    if (!hasBinaryFormat && !hasContentEncoding) {
       results.push({
         message: `OAR082: Property '${propName}' must define a 'byte' or 'binary' format (currently: ${format || 'missing'}).`,
         path: [...context.path, 'properties', propName, 'type'],

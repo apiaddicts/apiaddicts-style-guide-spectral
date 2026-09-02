@@ -4,6 +4,9 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
+  "parameters": {
+    "LimitInteger": { "name": "$limit", "in": "query", "type": "integer" }
+  },
   "paths": {
     "/examples": {
       "get": {
@@ -27,6 +30,14 @@ module.exports = {
           { "name": "$limit", "in": "query", "type": "integer" }
         ],
         "responses": { "206": { "description": "ok" } }
+      }
+    },
+    "/examples/ref-ok": {
+      "get": {
+        "parameters": [
+          { "$ref": "#/parameters/LimitInteger" }
+        ],
+        "responses": { "206": { "description": "present integer via $ref" } }
       }
     },
     "/examples/not-paginated": {
