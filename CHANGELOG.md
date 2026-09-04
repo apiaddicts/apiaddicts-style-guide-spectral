@@ -7,6 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.5.0-beta.3] - 2026-09-04
+
+### Changed
+
+- OAR016 / OAR052 / OAR076 - Replaced the core `schema`/`truthy` functions with `apq-numeric-invalid-format`, `apq-numeric-missing-format` and `apq-numeric-well-defined-format` respectively; `given` broadened to `$..[?(@ && @.type)]` (`resolved: false`) so array-form `type` and shared/`$ref`-ed schemas are covered consistently, matching the equivalent Sonar checks.
+- OAR029 - StandardResponseSchema - Replaced the core `schema` function (validating a fixed `components.schemas.errorResponse` shape) with `apq-standard-response-schema`, driven by `given: $.paths` and configurable `response-schema`/`path-exclusions` functionOptions; now validates the actual response bodies per path instead of a single shared schema object.
+- OAR075 - StringParameterIntegrity - Replaced the core `schema` function with `apq-string-parameter-integrity` (configurable `parameter_integrity` option, default `minLength,maxLength,pattern,enum`); `given` now covers parameters at the operation, path-item, `components/parameters` and root `parameters` levels, not just path-level `string` parameters on explicit verbs.
+- OAR108 - Replaced a hardcoded `schema` check (fixed `id`/`nombre` example shape on a single `/item` path) with `apq-example-schema-types`, now validating example/schema type consistency across every path and response.
+- OAR115 - `given` broadened from `$.components.schemas[*]` / `$.definitions[*]` to `$..[?(@ && @.required)]`, so `apq-required-fields-exist` also covers inline and nested schemas, not just top-level component/definition schemas.
+
 ## [1.5.0-beta.2] - 2026-09-02
 
 ### Added
