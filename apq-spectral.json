@@ -33,10 +33,14 @@
     "apq-numeric-parameter-integrity",
     "apq-path-pattern",
     "apq-query-params-optional",
-    "apq-collection-query-param-required",
-    "apq-numeric-parameter-integrity",
     "apq-wso2-scopes-valid",
-    "apq-numeric-path-param"
+    "apq-numeric-path-param",
+    "apq-numeric-invalid-format",
+    "apq-numeric-missing-format",
+    "apq-numeric-well-defined-format",
+    "apq-string-parameter-integrity",
+    "apq-example-schema-types",
+    "apq-standard-response-schema"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -255,59 +259,10 @@
       "message": "OAR016: Numeric types must use a valid format for their type.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
-      "given": "$..[?(@ && (@.type=='number' || @.type=='integer' || (@.type && @.type.indexOf && (@.type.indexOf('number') > -1 || @.type.indexOf('integer') > -1))))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "required": [
-              "format"
-            ],
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "integer"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "int32",
-                        "int64",
-                        "uint32",
-                        "uint64"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "number"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "float",
-                        "double",
-                        "decimal"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
+        "function": "apq-numeric-invalid-format"
       }
     },
     "apiq:OAR017": {
@@ -462,52 +417,14 @@
     },
     "apiq:OAR029": {
       "description": "A response not compliant with the standard may cause application issues.",
-      "message": "OAR029: A response not compliant with the standard may cause application issues.",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.components.schemas.errorResponse",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-standard-response-schema",
         "functionOptions": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "object",
-                    "properties": {
-                      "properties": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "array"
-                          },
-                          "httpStatus": {
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "code",
-                          "message",
-                          "httpStatus"
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "required": [
-              "properties"
-            ]
-          }
+          "response-schema": "{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"description\":{\"type\":\"string\"},\"internal_code\":{\"type\":\"string\"},\"errors\":{\"type\":\"array\",\"nullable\":true,\"items\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}}},\"required\":[\"code\"]},\"payload\":{\"type\":\"any\"}},\"required\":[\"status\",\"payload\"]}",
+          "path-exclusions": "/status"
         }
       }
     },
@@ -848,10 +765,10 @@
       "message": "OAR052: Numeric types requires a format",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
       "severity": "warn",
-      "given": "$..[?(@ && (@.type == 'integer' || @.type == 'number' || (@.type && @.type.indexOf && (@.type.indexOf('integer') > -1 || @.type.indexOf('number') > -1))))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "field": "format",
-        "function": "truthy"
+        "function": "apq-numeric-missing-format"
       }
     },
     "apiq:OAR053": {
@@ -1198,39 +1115,17 @@
       "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
       "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && (@.schema.type == 'string' || (@.schema.type && @.schema.type.indexOf && @.schema.type.indexOf('string') > -1)) && @.in == 'path')]",
+      "resolved": false,
+      "given": [
+        "$.paths[*][*].parameters[*]",
+        "$.paths[*].parameters[*]",
+        "$.components.parameters[*]",
+        "$.parameters[*]"
+      ],
       "then": {
-        "function": "schema",
+        "function": "apq-string-parameter-integrity",
         "functionOptions": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "minLength"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "maxLength"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "pattern"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "enum"
-                    ]
-                  }
-                ]
-              }
-            }
-          }
+          "parameter_integrity": "minLength,maxLength,pattern,enum"
         }
       }
     },
@@ -1239,56 +1134,10 @@
       "message": "OAR076: Schema should use well-defined type and format.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
-      "given": "$..[?(@ && (@.type=='number' || @.type=='integer' || (@.type && @.type.indexOf && (@.type.indexOf('number') > -1 || @.type.indexOf('integer') > -1))))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "required": [
-              "format"
-            ],
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "integer"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "int32",
-                        "int64"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "number"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "float",
-                        "double"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
+        "function": "apq-numeric-well-defined-format"
       }
     },
     "apiq:OAR077": {
@@ -1642,28 +1491,11 @@
       "description": "The schemas should match the provided examples.",
       "message": "OAR108: Schema does not match the provided example.",
       "severity": "error",
-      "given": [
-        "$.paths['/item'].get.responses['200'].content['application/json'].example",
-        "$.paths['/item'].get.responses['200'].examples['application/json']"
-      ],
-      "then": [
-        {
-          "function": "schema",
-          "functionOptions": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "nombre": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      ]
+      "resolved": false,
+      "given": "$.paths[*][*].responses[*]",
+      "then": {
+        "function": "apq-example-schema-types"
+      }
     },
     "apiq:OAR109": {
       "description": "Use default response instead of directly specifying 5XX codes.",
@@ -1732,10 +1564,8 @@
       "message": "OAR115: All fields in the required array must be defined in schema properties.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md",
       "severity": "warn",
-      "given": [
-        "$.components.schemas[*]",
-        "$.definitions[*]"
-      ],
+      "resolved": false,
+      "given": "$..[?(@ && @.required)]",
       "then": {
         "function": "apq-required-fields-exist"
       }
