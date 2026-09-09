@@ -4,176 +4,40 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
-  "host": "petstore.swagger.io",
-  "basePath": "/v2",
   "paths": {
-    "/no-parameters": {
+    "/examples": {
       "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "missing filter" } }
       }
     },
-    "/empty-parameters": {
+    "/examples/featured": {
       "get": {
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "empty params" } }
       }
     },
-    "/no-filter-param": {
+    "/catalog/examples": {
       "get": {
         "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "type": "integer"
-          }
+          { "name": "$limit", "in": "query", "type": "integer" }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "wrong param only" } }
       }
     },
-    "/filter-in-header": {
+    "/examples/archived": {
       "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "missing filter" } }
       }
     },
-    "/filter-in-path": {
+    "/users": {
       "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "out of scope (not /examples), ignored" } }
       }
     },
-    "/filter-in-body": {
+    "/examples/{id}": {
       "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "body",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "detail endpoint, ignored" } }
       }
-    },
-    "/filter-no-in": {
-      "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/query-no-filter-name": {
-      "get": {
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/only-refs": {
-      "get": {
-        "parameters": [
-          {
-            "$ref": "#/parameters/FilterParam"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/multiple-a": {
-      "get": {
-        "parameters": [
-          {
-            "name": "sort",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/multiple-b": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    }
-  },
-  "parameters": {
-    "FilterParam": {
-      "name": "$filter",
-      "in": "query",
-      "type": "string"
     }
   }
 };

@@ -4,233 +4,39 @@ module.exports = {
     "version": "1.0.0",
     "title": "Swagger Petstore"
   },
-  "host": "petstore.swagger.io",
-  "basePath": "/v2",
   "paths": {
-    "/filter-only": {
+    "/examples": {
       "get": {
         "parameters": [
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "$filter", "in": "query", "type": "string" }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "ok" } }
       }
     },
-    "/filter-with-others": {
+    "/examples/featured": {
       "get": {
         "parameters": [
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "type": "integer"
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "type": "integer"
-          }
+          { "name": "$filter", "in": "query", "type": "string" }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "ok" } }
       }
     },
-    "/filter-with-path-and-header-params": {
+    "/catalog/examples": {
       "get": {
         "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          },
-          {
-            "name": "X-Request-ID",
-            "in": "header",
-            "type": "string"
-          },
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          }
+          { "name": "$filter", "in": "query", "type": "string" }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "ok" } }
       }
     },
-    "/post-no-filter": {
-      "post": {
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      }
-    },
-    "/put-no-filter": {
-      "put": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/delete-no-filter": {
-      "delete": {
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/mixed-methods": {
+    "/users": {
       "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      },
-      "delete": {
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
+        "responses": { "200": { "description": "out of scope (not /examples), ignored" } }
       }
     },
-    "/multiple-valid-a": {
+    "/examples/{id}": {
       "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/multiple-valid-b": {
-      "get": {
-        "parameters": [
-          {
-            "name": "$filter",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/users/me": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/users/me/settings": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/pets/{petId}": {
-      "get": {
-        "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "required": true,
-            "type": "integer"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/status": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/health": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/ping": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": { "200": { "description": "detail endpoint, ignored" } }
       }
     }
   }

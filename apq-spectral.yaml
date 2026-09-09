@@ -222,7 +222,7 @@ rules:
     then:
       function: apq-alternate-paths
       functionOptions:
-        except: ["me", "get", "search", "delete"]
+        exclude_patterns: "get,me,search,delete"
   apiq:OAR018:
     description: Operation not recommended for resource path depending on HTTP verb
     message: "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})"
@@ -362,12 +362,16 @@ rules:
       field: "headers.Location.schema.type"
       function: truthy
   apiq:OAR028:
-    description: "$filter must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks)."
-    message: "OAR028: $filter must be defined as a query parameter in this operation."
+    description: "$filter must be defined as a query parameter in the collection GET operations selected by the configured paths."
+    message: "{{error}}"
     severity: warn
-    given: "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get"
+    given: "$.paths"
     then:
-      function: apq-has-filter-query-param
+      function: apq-collection-query-param-required
+      functionOptions:
+        parameterName: "$filter"
+        paths: "/examples"
+        pathValidationStrategy: "/include"
   apiq:OAR029:
     description: "A response not compliant with the standard may cause application issues."
     message: "{{error}}"
@@ -405,13 +409,13 @@ rules:
         validateProperty: true
   apiq:OAR032:
     description: "Ambiguous path parts not encouraged."
-    message: "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided."
+    message: "{{error}}"
     severity: error
     given: "$.paths.*~"
     then:
       function: apq-check-ambiguous-path
       functionOptions:
-        ambiguous-words: "elements,instances,resources,values,terms,objects,items"
+        ambiguous-names: "elementos,instancias,recursos,valores,terminos,objetos,articulos,elements,instances,resources,values,terms,objects,items"
   apiq:OAR033:
     description: "Request operation parameters must not include forbidden headers (Accept, Content-Type, Authorization). Note: This validates REQUEST headers, not response headers (see OAR053/114 for response header validation)."
     message: "OAR033: The request header parameter '{{value}}' is not allowed in operations."
