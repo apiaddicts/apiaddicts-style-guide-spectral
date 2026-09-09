@@ -21,3 +21,23 @@ test('apiq:OAR008 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR008 respects a widened allowed-verbs functionOptions override', async () => {
+  const customLinter = await linterForRule('apiq:OAR008', {
+    functionOptions: { 'allowed-verbs': 'get,post,put,delete,patch,head,options' },
+  });
+
+  return customLinter.run(oar008fail).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('apiq:OAR008 still flags a verb left out of a widened allowed-verbs override', async () => {
+  const customLinter = await linterForRule('apiq:OAR008', {
+    functionOptions: { 'allowed-verbs': 'get,post,put,delete,patch,head' },
+  });
+
+  return customLinter.run(oar008fail).then((results) => {
+    expect(results.length).toBe(1);
+  });
+});
