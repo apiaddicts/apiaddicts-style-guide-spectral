@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0-beta.4] - 2026-09-09
+
+### Changed
+
+- OAR008 - AllowedHttpVerb - Switched from a hardcoded `given`/`falsy` check on `head`/`options`/`trace` to a new `apq-allowed-http-verbs` function with a configurable `allowed-verbs` option (default `get,post,put,delete,patch`).
+- OAR010 - DefaultResponseMediaType - `apq-response-media-type` no longer hardcodes `application/json`; added configurable `default-media-type`/`media-type-exceptions` options.
+- OAR011 - UrlNamingConvention - Switched from the core `pattern` function to a new `apq-url-naming-convention` function supporting `snake_case`/`kebab-case`/`camelCase`/`UpperCamelCase` via a configurable `naming-convention` option, matching the Sonar parameter name and porting its regex definitions verbatim.
 
 ## [1.5.0-beta.3] - 2026-09-04
 

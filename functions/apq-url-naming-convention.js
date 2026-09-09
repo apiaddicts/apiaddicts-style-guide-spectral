@@ -1,8 +1,8 @@
 const NAMING_REGEX = {
   snake_case: /^[a-z0-9_$]*$/,
   'kebab-case': /^[a-z0-9-.]*$/,
-  camelCase: /^[a-z][a-zA-Z0-9]*$/,
-  UpperCamelCase: /^[A-Z][a-zA-Z0-9]*$/
+  camelCase: /^[a-z]+(?:[A-Z][a-z]+)*([A-Z])?$/,
+  UpperCamelCase: /^[A-Z]+(?:[a-z]+)*([A-Z])?$/
 };
 
 const PARAM_REGEX = /\{[^}{]*}/g;

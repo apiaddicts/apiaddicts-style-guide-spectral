@@ -31,3 +31,20 @@ test('apiq:OAR011 respects a naming-convention functionOptions override', async 
     expect(results.length).toBe(5);
   });
 });
+
+test('apiq:OAR011 rejects digits under a camelCase override, matching Sonar (no digits allowed)', async () => {
+  const customLinter = await linterForRule('apiq:OAR011', {
+    functionOptions: { 'naming-convention': 'camelCase' },
+  });
+  const spec = {
+    swagger: '2.0',
+    info: { version: '1.0.0', title: 'Petstore' },
+    host: 'api.example.com',
+    basePath: '/',
+    paths: { '/user2Profile': { get: { responses: { 200: { description: 'ok' } } } } },
+  };
+
+  return customLinter.run(spec).then((results) => {
+    expect(results.length).toBe(1);
+  });
+});
