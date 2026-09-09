@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OAR008 - AllowedHttpVerb - Switched from a hardcoded `given`/`falsy` check on `head`/`options`/`trace` to a new `apq-allowed-http-verbs` function with a configurable `allowed-verbs` option (default `get,post,put,delete,patch`).
 - OAR010 - DefaultResponseMediaType - `apq-response-media-type` no longer hardcodes `application/json`; added configurable `default-media-type`/`media-type-exceptions` options.
 - OAR011 - UrlNamingConvention - Switched from the core `pattern` function to a new `apq-url-naming-convention` function supporting `snake_case`/`kebab-case`/`camelCase`/`UpperCamelCase` via a configurable `naming-convention` option, matching the Sonar parameter name and porting its regex definitions verbatim.
+- OAR017 - ResourcePath - Renamed the `except` functionOption (array) to `exclude_patterns``apq-alternate-paths` logic unchanged.
+- OAR028 - FilterParameter - Switched from `apq-has-filter-query-param` to the shared `apq-collection-query-param-required` function, with configurable `parameterName`/`paths`/`pathValidationStrategy`; default `paths` changed to `/examples` (`/include`).
+- OAR032 - AmbiguousElementsPath - Renamed the `ambiguous-words` functionOption to `ambiguous-names`, also fixed the match itself from a case-insensitive substring check to an exact, case-sensitive whole-segment match (e.g. `/myresources` no longer flagged just for containing "resources"), and updated the default word list to `elementos,instancias,recursos,valores,terminos,objetos,articulos`.
+
 
 ## [1.5.0-beta.3] - 2026-09-04
 
