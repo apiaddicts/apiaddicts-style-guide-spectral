@@ -1,9 +1,8 @@
 /**
- * Requires one or more HTTP response codes when path parameters are present.
- *
  * @param {object} given
  * @param {object} options
- * @param {string} options.response Comma-separated HTTP status codes (e.g. "400,404,200")
+ * @param {string} options.paths Comma-separated list of paths to include/exclude (exact match)
+ * @param {string} options.pathValidationStrategy "/include" or "/exclude" (default "/exclude")
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (given, options, context) => {
@@ -11,21 +10,15 @@ module.exports = (given, options, context) => {
     return [];
   }
 
-  const ruleCode = context.rule?.name?.split(':').pop();
-  const responseOpt = options?.response;
-
-  if (typeof responseOpt !== 'string') {
-    throw new TypeError(`${ruleCode}: "response" option must be a comma-separated string of HTTP status codes`);
-  }
-
-  const requiredResponses = responseOpt
+  const excludedPaths = ((options && options.paths) || '')
     .split(',')
-    .map(r => r.trim())
-    .filter(r => /^\d{3}$/.test(r));
-
-  if (requiredResponses.length === 0) {
-    throw new Error(`${ruleCode}: No valid HTTP status codes found in "response" option`);
-  }
+    .map((path) => path.trim())
+    .filter(Boolean);
+  const strategy = (options && options.pathValidationStrategy) || '/exclude';
+  const currentPath = context.path[context.path.length - 2];
+  const isListed = excludedPaths.includes(currentPath);
+  const shouldExclude = strategy === '/exclude' ? isListed : !isListed;
+  if (shouldExclude) return [];
 
   const pathItemKeyIndex = context.path?.length - 2;
   const pathItem = typeof pathItemKeyIndex === 'number'
@@ -46,11 +39,7 @@ module.exports = (given, options, context) => {
 
   const responses = given?.responses || {};
 
-  const hasRequiredResponse = requiredResponses.some(
-    code => responses[code]
-  );
-
-  if (!hasRequiredResponse) {
+  if (!responses['404']) {
     return [
       {
         message: context.rule.message,
