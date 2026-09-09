@@ -21,3 +21,13 @@ test('apiq:OAR011 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR011 respects a naming-convention functionOptions override', async () => {
+  const customLinter = await linterForRule('apiq:OAR011', {
+    functionOptions: { 'naming-convention': 'snake_case' },
+  });
+
+  return customLinter.run(oar011ok).then((results) => {
+    expect(results.length).toBe(5);
+  });
+});

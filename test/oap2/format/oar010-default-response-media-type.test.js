@@ -21,3 +21,13 @@ test('apiq:OAR010 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR010 respects a custom default-media-type functionOptions override', async () => {
+  const customLinter = await linterForRule('apiq:OAR010', {
+    functionOptions: { 'default-media-type': 'application/xml' },
+  });
+
+  return customLinter.run(oar010fail).then((results) => {
+    expect(results.length).toBe(2);
+  });
+});
