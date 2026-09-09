@@ -42,7 +42,10 @@
     "apq-example-schema-types",
     "apq-standard-response-schema",
     "apq-allowed-http-verbs",
-    "apq-url-naming-convention"
+    "apq-url-naming-convention",
+    "apq-mandatory-response-codes",
+    "apq-rate-limit-response",
+    "apq-forbidden-query-format"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -832,177 +835,71 @@
     },
     "apiq:OAR061": {
       "description": "Ensure get have mandatory response codes",
-      "message": "OAR061: Ensure get have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].get.responses",
+      "given": "$.paths[*][get]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ],
-                "not": {
-                  "required": [
-                    "201",
-                    "204"
-                  ]
-                }
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR062": {
       "description": "Ensure post have mandatory response codes",
-      "message": "OAR062: Ensure post have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].post.responses",
+      "given": "$.paths[*][post]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "201"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 201, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR063": {
       "description": "Ensure put have mandatory response codes",
-      "message": "OAR063: Ensure put have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].put.responses",
+      "given": "$.paths[*][put]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR064": {
       "description": "Ensure patch have mandatory response codes",
-      "message": "OAR064: Ensure patch have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].patch.responses",
+      "given": "$.paths[*][patch]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR065": {
       "description": "Ensure delete have mandatory response codes",
-      "message": "OAR065: Ensure delete have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].delete.responses",
+      "given": "$.paths[*][delete]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -1101,10 +998,13 @@
       "description": "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness.",
       "message": "OAR073: API should include a 429 response to indicate rate limiting.",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status' && @property !== '/health' && @property !== '/health-check' && @property !== '/ping' && @property !== '/liveness' && @property !== '/readiness')][*].responses",
+      "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
-        "field": "429",
-        "function": "truthy"
+        "function": "apq-rate-limit-response",
+        "functionOptions": {
+          "paths": "/status, /health, /health-check, /ping, /liveness, /readiness",
+          "pathValidationStrategy": "/exclude"
+        }
       }
     },
     "apiq:OAR074": {
@@ -1181,7 +1081,8 @@
       "then": {
         "function": "apq-require-response-on-path-params",
         "functionOptions": {
-          "response": "404"
+          "paths": "/status",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -1233,15 +1134,16 @@
       }
     },
     "apiq:OAR084": {
-      "description": "The format password should not pass through the querystring.",
-      "message": "OAR084: The format password should not be used in querystring parameters.",
+      "description": "Some formats should not pass through this querystring.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
       "then": {
-        "field": "schema.format",
-        "function": "pattern",
+        "function": "apq-forbidden-query-format",
         "functionOptions": {
-          "notMatch": "^password$"
+          "forbidden-query-formats": "password",
+          "paths": "/examples",
+          "pathValidationStrategy": "/include"
         }
       }
     },

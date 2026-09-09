@@ -21,3 +21,13 @@ test('apiq:OAR079 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR079 respects a paths/pathValidationStrategy functionOptions override', async () => {
+  const customLinter = await linterForRule('apiq:OAR079', {
+    functionOptions: { paths: '/items/{id}', pathValidationStrategy: '/exclude' },
+  });
+
+  return customLinter.run(oar079fail).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
