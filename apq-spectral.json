@@ -45,7 +45,9 @@
     "apq-url-naming-convention",
     "apq-mandatory-response-codes",
     "apq-rate-limit-response",
-    "apq-forbidden-query-format"
+    "apq-forbidden-query-format",
+    "apq-wso2-scope-defined",
+    "apq-undefined-response-media-type"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -104,24 +106,14 @@
     },
     "apiq:OAR005": {
       "description": "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint.",
-      "message": "OAR005: Scope in the operation must be defined correctly and match an existing scope.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR005.md",
       "severity": "error",
-      "given": "$.paths[*][*].x-scope",
-      "then": [
-        {
-          "function": "truthy",
-          "message": "Scope must be defined in the operation."
-        },
-        {
-          "function": "enumeration",
-          "functionOptions": {
-            "values": [
-              "read",
-              "write"
-            ]
-          }
-        }
-      ]
+      "resolved": false,
+      "given": "$",
+      "then": {
+        "function": "apq-wso2-scope-defined"
+      }
     },
     "apiq:OAR006": {
       "description": "Routes must define request media types supported by the API.",
@@ -145,13 +137,15 @@
       "message": "OAR007: Specify at least one Media Type in the content of the response body.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR007.md",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
-      "then": [
-        {
-          "field": "content",
-          "function": "truthy"
-        }
-      ]
+      "given": [
+        "$.paths[*][post,put,patch]",
+        "$.webhooks[*][post,put,patch]",
+        "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
+        "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')]"
+      ],
+      "then": {
+        "function": "apq-undefined-response-media-type"
+      }
     },
     "apiq:OAR008": {
       "description": "HTTP verbs not encouraged.",
@@ -180,7 +174,14 @@
       "description": "Default response media type should be defined for responses.",
       "message": "OAR010: Default response media type is mandatory.",
       "severity": "warn",
-      "given": "$.paths[*][get,post,put,patch,delete]",
+      "given": [
+        "$.paths[*][post,put,patch]",
+        "$.webhooks[*][post,put,patch]",
+        "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]",
+        "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')]",
+        "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')].content",
+        "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')].content"
+      ],
       "then": {
         "function": "apq-response-media-type",
         "functionOptions": {
