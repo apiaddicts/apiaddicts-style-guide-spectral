@@ -30,7 +30,22 @@
     "apq-paged-response-check",
     "apq-status-endpoint-check",
     "apq-validate-structure",
-    "apq-numeric-parameter-integrity"
+    "apq-numeric-parameter-integrity",
+    "apq-path-pattern",
+    "apq-query-params-optional",
+    "apq-wso2-scopes-valid",
+    "apq-numeric-path-param",
+    "apq-numeric-invalid-format",
+    "apq-numeric-missing-format",
+    "apq-numeric-well-defined-format",
+    "apq-string-parameter-integrity",
+    "apq-example-schema-types",
+    "apq-standard-response-schema",
+    "apq-allowed-http-verbs",
+    "apq-url-naming-convention",
+    "apq-mandatory-response-codes",
+    "apq-rate-limit-response",
+    "apq-forbidden-query-format"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -52,17 +67,13 @@
     },
     "apiq:OAR002": {
       "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
-      "message": "OAR002: Scope definition must include the 'key' attribute along with 'name' and 'roles'.",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
       "severity": "error",
-      "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
-      "then": [
-        {
-          "function": "truthy",
-          "field": "key",
-          "message": "Scope must define a 'key' attribute."
-        }
-      ]
+      "given": "$.x-wso2-security.apim.x-wso2-scopes",
+      "then": {
+        "function": "apq-wso2-scopes-valid"
+      }
     },
     "apiq:OAR003": {
       "description": "A description can help other developers to understand the correct use of the scope.",
@@ -144,12 +155,15 @@
     },
     "apiq:OAR008": {
       "description": "HTTP verbs not encouraged.",
-      "message": "OAR008: Only the REST standard verbs are allowed (POST, GET, PUT, PATCH and DELETE).",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
       "severity": "error",
-      "given": "$.paths[*][head,options,trace]",
+      "given": "$.paths[*]",
       "then": {
-        "function": "falsy"
+        "function": "apq-allowed-http-verbs",
+        "functionOptions": {
+          "allowed-verbs": "get,post,put,delete,patch"
+        }
       }
     },
     "apiq:OAR009": {
@@ -168,12 +182,16 @@
       "severity": "warn",
       "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
-        "function": "apq-response-media-type"
+        "function": "apq-response-media-type",
+        "functionOptions": {
+          "default-media-type": "application/json",
+          "media-type-exceptions": "-"
+        }
       }
     },
     "apiq:OAR011": {
-      "description": "URLs should follow the specified naming convention: all literal path segments must be in kebab-case.",
-      "message": "OAR011: The resource names with more than two words must be compliant with the standard naming convention (kebab-case).",
+      "description": "URLs should follow the configured naming convention (default kebab-case): all literal path segments must comply.",
+      "message": "{{error}}",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR011.md",
       "severity": "error",
       "given": [
@@ -181,9 +199,9 @@
         "$.servers[*].url"
       ],
       "then": {
-        "function": "pattern",
+        "function": "apq-url-naming-convention",
         "functionOptions": {
-          "match": "^(https?:\\/\\/[^\\/]+)?(\\/(?:[a-z0-9]+(?:-[a-z0-9]+)*|\\{[^}]+\\}))*\\/?$"
+          "naming-convention": "kebab-case"
         }
       }
     },
@@ -253,59 +271,10 @@
       "message": "OAR016: Numeric types must use a valid format for their type.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
-      "given": "$..[?(@ && (@.type=='number' || @.type=='integer'))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "required": [
-              "format"
-            ],
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "integer"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "int32",
-                        "int64",
-                        "uint32",
-                        "uint64"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "number"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "float",
-                        "double",
-                        "decimal"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
+        "function": "apq-numeric-invalid-format"
       }
     },
     "apiq:OAR017": {
@@ -317,12 +286,7 @@
       "then": {
         "function": "apq-alternate-paths",
         "functionOptions": {
-          "except": [
-            "me",
-            "get",
-            "search",
-            "delete"
-          ]
+          "exclude_patterns": "get,me,search,delete"
         }
       }
     },
@@ -450,62 +414,29 @@
       }
     },
     "apiq:OAR028": {
-      "description": "$filter must be defined as a query parameter in all collection operations (excluding detail endpoints and health checks).",
-      "message": "OAR028: $filter must be defined as a query parameter in this operation.",
+      "description": "$filter must be defined as a query parameter in the collection GET operations selected by the configured paths.",
+      "message": "{{error}}",
       "severity": "warn",
-      "given": "$.paths[?(!@property.match(/\\/me(\\/|$)/) && !@property.match(/\\/\\{[^}]+\\}$/) && !@property.match(/status|health|ping/))].get",
+      "given": "$.paths",
       "then": {
-        "function": "apq-has-filter-query-param"
+        "function": "apq-collection-query-param-required",
+        "functionOptions": {
+          "parameterName": "$filter",
+          "paths": "/examples",
+          "pathValidationStrategy": "/include"
+        }
       }
     },
     "apiq:OAR029": {
       "description": "A response not compliant with the standard may cause application issues.",
-      "message": "OAR029: A response not compliant with the standard may cause application issues.",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.components.schemas.errorResponse",
+      "given": "$.paths",
       "then": {
-        "function": "schema",
+        "function": "apq-standard-response-schema",
         "functionOptions": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "properties": {
-                "type": "object",
-                "properties": {
-                  "error": {
-                    "type": "object",
-                    "properties": {
-                      "properties": {
-                        "type": "object",
-                        "properties": {
-                          "code": {
-                            "type": "string"
-                          },
-                          "message": {
-                            "type": "string"
-                          },
-                          "details": {
-                            "type": "array"
-                          },
-                          "httpStatus": {
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "code",
-                          "message",
-                          "httpStatus"
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "required": [
-              "properties"
-            ]
-          }
+          "response-schema": "{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"description\":{\"type\":\"string\"},\"internal_code\":{\"type\":\"string\"},\"errors\":{\"type\":\"array\",\"nullable\":true,\"items\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"value\":{\"type\":\"string\"}}}}},\"required\":[\"code\"]},\"payload\":{\"type\":\"any\"}},\"required\":[\"status\",\"payload\"]}",
+          "path-exclusions": "/status"
         }
       }
     },
@@ -543,13 +474,13 @@
     },
     "apiq:OAR032": {
       "description": "Ambiguous path parts not encouraged.",
-      "message": "OAR032: When reading a URL, it must be possible to interpret which resources it is referring to in a concrete way. Ambiguous names in resources must be avoided.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
         "function": "apq-check-ambiguous-path",
         "functionOptions": {
-          "ambiguous-words": "elements,instances,resources,values,terms,objects,items"
+          "ambiguous-names": "elementos,instancias,recursos,valores,terminos,objetos,articulos,elements,instances,resources,values,terms,objects,items"
         }
       }
     },
@@ -611,7 +542,7 @@
       "message": "OAR037: String schemas must specify a valid format (date, date-time, password, byte, binary, email, uuid, uri, hostname, ipv4, ipv6, HEX, HEX(16), json, xml, or base64), or a valid pattern when no format is defined.",
       "severity": "error",
       "resolved": false,
-      "given": "$..[?(@ && @.type=='string')]",
+      "given": "$..[?(@ && @.type)]",
       "then": {
         "function": "apq-schema-format"
       }
@@ -846,10 +777,10 @@
       "message": "OAR052: Numeric types requires a format",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
       "severity": "warn",
-      "given": "$..[?(@ && (@.type == 'integer' || @.type == 'number'))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "field": "format",
-        "function": "truthy"
+        "function": "apq-numeric-missing-format"
       }
     },
     "apiq:OAR053": {
@@ -886,187 +817,89 @@
     },
     "apiq:OAR060": {
       "description": "All query parameters must be defined as optional.",
-      "message": "OAR060: All query parameter must be optional (required: false).",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
+      "given": [
+        "$.paths[*][get,put,post,delete,options,head,patch,trace].parameters[?(@.in == 'query')]",
+        "$.paths[*].parameters[?(@.in == 'query')]",
+        "$.components.parameters[?(@.in == 'query')]",
+        "$.parameters[?(@.in == 'query')]"
+      ],
       "then": {
         "field": "required",
-        "function": "falsy"
+        "function": "apq-query-params-optional",
+        "functionOptions": {
+          "path-exclusions": "/status"
+        }
       }
     },
     "apiq:OAR061": {
       "description": "Ensure get have mandatory response codes",
-      "message": "OAR061: Ensure get have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].get.responses",
+      "given": "$.paths[*][get]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ],
-                "not": {
-                  "required": [
-                    "201",
-                    "204"
-                  ]
-                }
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR062": {
       "description": "Ensure post have mandatory response codes",
-      "message": "OAR062: Ensure post have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].post.responses",
+      "given": "$.paths[*][post]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "201"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 201, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR063": {
       "description": "Ensure put have mandatory response codes",
-      "message": "OAR063: Ensure put have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].put.responses",
+      "given": "$.paths[*][put]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR064": {
       "description": "Ensure patch have mandatory response codes",
-      "message": "OAR064: Ensure patch have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].patch.responses",
+      "given": "$.paths[*][patch]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              },
-              {
-                "required": [
-                  "206"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204, 206",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
     "apiq:OAR065": {
       "description": "Ensure delete have mandatory response codes",
-      "message": "OAR065: Ensure delete have the mandatory response codes",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status')].delete.responses",
+      "given": "$.paths[*][delete]",
       "then": {
-        "function": "schema",
+        "function": "apq-mandatory-response-codes",
         "functionOptions": {
-          "schema": {
-            "oneOf": [
-              {
-                "required": [
-                  "200"
-                ]
-              },
-              {
-                "required": [
-                  "202"
-                ]
-              },
-              {
-                "required": [
-                  "204"
-                ]
-              }
-            ]
-          }
+          "mandatory-response-codes": "200, 202, 204",
+          "paths": "/status, /another",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -1125,11 +958,7 @@
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'path')]",
       "then": {
-        "field": "schema.type",
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^(?!integer|number)"
-        }
+        "function": "apq-numeric-path-param"
       }
     },
     "apiq:OAR071": {
@@ -1169,10 +998,13 @@
       "description": "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness.",
       "message": "OAR073: API should include a 429 response to indicate rate limiting.",
       "severity": "error",
-      "given": "$.paths[?(@property !== '/status' && @property !== '/health' && @property !== '/health-check' && @property !== '/ping' && @property !== '/liveness' && @property !== '/readiness')][*].responses",
+      "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
-        "field": "429",
-        "function": "truthy"
+        "function": "apq-rate-limit-response",
+        "functionOptions": {
+          "paths": "/status, /health, /health-check, /ping, /liveness, /readiness",
+          "pathValidationStrategy": "/exclude"
+        }
       }
     },
     "apiq:OAR074": {
@@ -1181,8 +1013,8 @@
       "severity": "error",
       "resolved": false,
       "given": [
-        "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number'))].schema",
-        "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number'))]"
+        "$..[?(@ && @.in && @.schema && (@.schema.type == 'integer' || @.schema.type == 'number' || (@.schema.type && @.schema.type.indexOf && (@.schema.type.indexOf('integer') > -1 || @.schema.type.indexOf('number') > -1))))].schema",
+        "$..[?(@ && @.in && (@.type == 'integer' || @.type == 'number' || (@.type && @.type.indexOf && (@.type.indexOf('integer') > -1 || @.type.indexOf('number') > -1))))]"
       ],
       "then": {
         "function": "apq-numeric-parameter-integrity"
@@ -1192,39 +1024,17 @@
       "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
       "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@ && @.schema && @.schema.type == 'string' && @.in == 'path')]",
+      "resolved": false,
+      "given": [
+        "$.paths[*][*].parameters[*]",
+        "$.paths[*].parameters[*]",
+        "$.components.parameters[*]",
+        "$.parameters[*]"
+      ],
       "then": {
-        "function": "schema",
+        "function": "apq-string-parameter-integrity",
         "functionOptions": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "required": [
-                      "minLength"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "maxLength"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "pattern"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "enum"
-                    ]
-                  }
-                ]
-              }
-            }
-          }
+          "parameter_integrity": "minLength,maxLength,pattern,enum"
         }
       }
     },
@@ -1233,56 +1043,10 @@
       "message": "OAR076: Schema should use well-defined type and format.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
-      "given": "$..[?(@ && (@.type=='number' || @.type=='integer'))]",
+      "resolved": false,
+      "given": "$..[?(@ && @.type)]",
       "then": {
-        "function": "schema",
-        "functionOptions": {
-          "schema": {
-            "required": [
-              "format"
-            ],
-            "allOf": [
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "integer"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "int32",
-                        "int64"
-                      ]
-                    }
-                  }
-                }
-              },
-              {
-                "if": {
-                  "properties": {
-                    "type": {
-                      "const": "number"
-                    }
-                  }
-                },
-                "then": {
-                  "properties": {
-                    "format": {
-                      "enum": [
-                        "float",
-                        "double"
-                      ]
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
+        "function": "apq-numeric-well-defined-format"
       }
     },
     "apiq:OAR077": {
@@ -1317,7 +1081,8 @@
       "then": {
         "function": "apq-require-response-on-path-params",
         "functionOptions": {
-          "response": "404"
+          "paths": "/status",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -1369,20 +1134,21 @@
       }
     },
     "apiq:OAR084": {
-      "description": "The format password should not pass through the querystring.",
-      "message": "OAR084: The format password should not be used in querystring parameters.",
+      "description": "Some formats should not pass through this querystring.",
+      "message": "{{error}}",
       "severity": "error",
       "given": "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]",
       "then": {
-        "field": "schema.format",
-        "function": "pattern",
+        "function": "apq-forbidden-query-format",
         "functionOptions": {
-          "notMatch": "^password$"
+          "forbidden-query-formats": "password",
+          "paths": "/examples",
+          "pathValidationStrategy": "/include"
         }
       }
     },
     "apiq:OAR085": {
-      "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.1.0, 3.2.0.",
+      "description": "The OpenAPI version must be one of: 2.0, 3.0.0, 3.0.1, 3.0.2, 3.0.3, 3.0.4, 3.1.0, 3.1.1, 3.1.2, 3.2.0.",
       "message": "{{error}}",
       "severity": "warn",
       "given": [
@@ -1392,7 +1158,7 @@
       "then": {
         "function": "apq-valid-openapi-version",
         "functionOptions": {
-          "valid-versions": "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.1.0,3.2.0"
+          "valid-versions": "2.0,3.0.0,3.0.1,3.0.2,3.0.3,3.0.4,3.1.0,3.1.1,3.1.2,3.2.0"
         }
       }
     },
@@ -1636,28 +1402,11 @@
       "description": "The schemas should match the provided examples.",
       "message": "OAR108: Schema does not match the provided example.",
       "severity": "error",
-      "given": [
-        "$.paths['/item'].get.responses['200'].content['application/json'].example",
-        "$.paths['/item'].get.responses['200'].examples['application/json']"
-      ],
-      "then": [
-        {
-          "function": "schema",
-          "functionOptions": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "nombre": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      ]
+      "resolved": false,
+      "given": "$.paths[*][*].responses[*]",
+      "then": {
+        "function": "apq-example-schema-types"
+      }
     },
     "apiq:OAR109": {
       "description": "Use default response instead of directly specifying 5XX codes.",
@@ -1726,12 +1475,23 @@
       "message": "OAR115: All fields in the required array must be defined in schema properties.",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md",
       "severity": "warn",
-      "given": [
-        "$.components.schemas[*]",
-        "$.definitions[*]"
-      ],
+      "resolved": false,
+      "given": "$..[?(@ && @.required)]",
       "then": {
         "function": "apq-required-fields-exist"
+      }
+    },
+    "apiq:OAR116": {
+      "description": "Every API path must match the configured regular expression.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR116.md",
+      "severity": "error",
+      "given": "$.paths.*~",
+      "then": {
+        "function": "apq-path-pattern",
+        "functionOptions": {
+          "pattern": "^/"
+        }
       }
     }
   }

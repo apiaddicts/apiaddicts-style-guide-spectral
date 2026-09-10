@@ -1,18 +1,22 @@
-
 const isVariable = (part) => {
   return (part.startsWith('{') && part.endsWith('}'));
 }
 
-module.exports = (given, { except }, context) => {
+module.exports = (given, options, context) => {
   const result = [];
   const paths = given || [];
   if (paths.length === 0) return result;
+
+  const excludePatterns = ((options && options['exclude_patterns']) || '')
+    .split(',')
+    .map((pattern) => pattern.trim())
+    .filter(Boolean);
 
   const parts = paths.substr(1).split('/').filter(p => p.length > 0);
   if (parts.length === 0) return result;
   const firstPart = parts.shift();
   let previousIsVar;
-  if (except && except.includes(firstPart)) {
+  if (excludePatterns.includes(firstPart)) {
     previousIsVar = true;
   } else if (isVariable(firstPart)) {
     return [{ message: context.rule.message }];
@@ -21,7 +25,7 @@ module.exports = (given, { except }, context) => {
   }
 
   for (const part of parts) {
-    if (except && except.includes(part)) {
+    if (excludePatterns.includes(part)) {
       previousIsVar = true;
       continue;
     }

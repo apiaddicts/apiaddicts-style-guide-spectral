@@ -9,7 +9,9 @@ module.exports = (node, options, context) => {
   if (!node || typeof node !== 'object') return results;
 
   const { type } = node;
-  if (type !== 'integer' && type !== 'number') return results;
+  const types = Array.isArray(type) ? type : [type];
+  const isNumeric = types.indexOf('integer') > -1 || types.indexOf('number') > -1;
+  if (!isNumeric) return results;
 
   const has = (field) => Object.prototype.hasOwnProperty.call(node, field);
   const hasMin = has('minimum');

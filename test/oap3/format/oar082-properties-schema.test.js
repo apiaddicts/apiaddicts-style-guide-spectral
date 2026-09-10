@@ -4,6 +4,7 @@ let linter;
 
 const oar082fail = require('./OAR082/fail-properties-schema');
 const oar082ok = require('./OAR082/ok-properties-schema');
+const oar082arrayType31 = require('./OAR082/fail-array-type-31');
 
 beforeAll(async () => {
   linter = await linterForRule('apiq:OAR082');
@@ -19,5 +20,12 @@ test('apiq:OAR082 should find errors', () => {
 test('apiq:OAR082 should find no errors', () => {
   return linter.run(oar082ok).then((results) => {
     expect(results.length).toBe(0);
+  });
+});
+
+test('apiq:OAR082 should handle 3.1 array-form type and contentEncoding', () => {
+  return linter.run(oar082arrayType31).then((results) => {
+    expect(results.length).toBe(1);
+    expect(results[0].path.join('.')).toContain('product');
   });
 });

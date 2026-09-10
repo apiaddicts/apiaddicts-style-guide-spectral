@@ -21,3 +21,13 @@ test('apiq:OAR017 should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('apiq:OAR017 respects a narrower exclude_patterns functionOptions override', async () => {
+  const customLinter = await linterForRule('apiq:OAR017', {
+    functionOptions: { exclude_patterns: 'me,get,search' },
+  });
+
+  return customLinter.run(oar017ok).then((results) => {
+    expect(results.length).toBe(2);
+  });
+});

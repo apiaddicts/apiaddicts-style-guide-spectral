@@ -13,8 +13,31 @@ function isValidPattern(pattern) {
   }
 }
 
+const NON_SCHEMA_CONTAINERS = new Set(['example', 'examples', 'default', 'enum']);
+
+function isNotASchemaNode(path) {
+  for (let i = 0; i < path.length; i += 1) {
+    const segment = path[i];
+    if (typeof segment !== 'string' || !NON_SCHEMA_CONTAINERS.has(segment)) continue;
+    if (i > 0 && path[i - 1] === 'properties') continue;
+    return true;
+  }
+  const last = path.length - 2;
+  return last >= 0 && path[last] === 'headers' && (last === 0 || path[last - 1] !== 'properties');
+}
+
 module.exports = (targetVal, _options, context) => {
+  if (isNotASchemaNode(context.path)) {
+    return [];
+  }
+
   const typePath = [...context.path, 'type'];
+
+  const type = targetVal.type;
+  const isStringType = type === 'string' || (Array.isArray(type) && type.includes('string'));
+  if (!isStringType) {
+    return [];
+  }
 
   const format = targetVal.format;
   if (format !== undefined && format !== null) {
