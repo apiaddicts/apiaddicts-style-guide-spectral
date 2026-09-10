@@ -6,6 +6,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-10
+
+### Added
+
+- OAR060 - `path-exclusions` (default `/status`), a comma-separated list of exact, case-sensitive paths the rule must not fire on. Backed by the new `apq-query-params-optional` function; the rule now also covers path-item-level parameters, every HTTP verb, and shared parameter definitions.
+- OAR116 - PathPattern - New rule: every API path must match a configurable regex `pattern` (default `^/`, i.e. must start with "/"); unanchored match, dynamic message showing the configured pattern.
+
+### Fixed
+
+- OAR002 - Rewrote to validate the full `x-wso2-scopes` definition (null/empty container and missing/null/blank or empty-array/object `name`/`key`/`roles`) via new `apq-wso2-scopes-valid`.
+
+### Changed
+
+- OAR085 - Accept `3.0.4`, `3.1.1`, `3.1.2` in the default valid-versions.
+- OAR037 - Accept array-form `type`; broadened `given`, string-type check moved into the function.
+- OAR082 - Accept array-form `type`; accept `contentEncoding`/`contentMediaType` as byte/binary.
+- OAR016 / OAR052 / OAR075 / OAR076 - Broadened `given` to also match array-form `type`.
+- OAR074 - Broadened `given` and updated `apq-numeric-parameter-integrity` to handle array-form `type`.
+- OAR115 - `apq-required-fields-exist` accepts array-form `object` type.
+- OAR070 - Replaced the `pattern`-on-`schema.type` check with a new `apq-numeric-path-param`.
+- OAR016 / OAR052 / OAR076 - Replaced the core `schema`/`truthy` functions with `apq-numeric-invalid-format`, `apq-numeric-missing-format` and `apq-numeric-well-defined-format` respectively; `given` broadened to `$..[?(@ && @.type)]` (`resolved: false`) so array-form `type` and shared/`$ref`-ed schemas are covered consistently, matching the equivalent Sonar checks.
+- OAR029 - StandardResponseSchema - Replaced the core `schema` function (validating a fixed `components.schemas.errorResponse` shape) with `apq-standard-response-schema`, driven by `given: $.paths` and configurable `response-schema`/`path-exclusions` functionOptions; now validates the actual response bodies per path instead of a single shared schema object.
+- OAR075 - StringParameterIntegrity - Replaced the core `schema` function with `apq-string-parameter-integrity` (configurable `parameter_integrity` option, default `minLength,maxLength,pattern,enum`); `given` now covers parameters at the operation, path-item, `components/parameters` and root `parameters` levels, not just path-level `string` parameters on explicit verbs.
+- OAR108 - Replaced a hardcoded `schema` check (fixed `id`/`nombre` example shape on a single `/item` path) with `apq-example-schema-types`, now validating example/schema type consistency across every path and response.
+- OAR115 - `given` broadened from `$.components.schemas[*]` / `$.definitions[*]` to `$..[?(@ && @.required)]`, so `apq-required-fields-exist` also covers inline and nested schemas, not just top-level component/definition schemas.
+- OAR008 - AllowedHttpVerb - Switched from a hardcoded `given`/`falsy` check on `head`/`options`/`trace` to a new `apq-allowed-http-verbs` function with a configurable `allowed-verbs` option (default `get,post,put,delete,patch`).
+- OAR010 - DefaultResponseMediaType - `apq-response-media-type` no longer hardcodes `application/json`; added configurable `default-media-type`/`media-type-exceptions` options.
+- OAR011 - UrlNamingConvention - Switched from the core `pattern` function to a new `apq-url-naming-convention` function supporting `snake_case`/`kebab-case`/`camelCase`/`UpperCamelCase` via a configurable `naming-convention` option, matching the Sonar parameter name and porting its regex definitions verbatim.
+- OAR017 - ResourcePath - Renamed the `except` functionOption (array) to `exclude_patterns` (comma-separated string) on the same `apq-alternate-paths` function; logic unchanged.
+- OAR028 - FilterParameter - Switched from `apq-has-filter-query-param` to the shared `apq-collection-query-param-required` function, with configurable `parameterName`/`paths`/`pathValidationStrategy`; default `paths` changed to `/examples` (`/include`).
+- OAR032 - AmbiguousElementsPath - Renamed the `ambiguous-words` functionOption to `ambiguous-names`, also fixed the match itself from a case-insensitive substring check to an exact, case-sensitive whole-segment match (e.g. `/myresources` no longer flagged just for containing "resources"), and updated the default word list to `elementos,instancias,recursos,valores,terminos,objetos,articulos,elements,instances,resources,values,terms,objects,items`.
+- OAR061/062/063/064/065 - Get/Post/Put/Patch/DeleteMethod - Switched from a hardcoded `schema`/`oneOf` check to a new shared `apq-mandatory-response-codes` function, with configurable `mandatory-response-codes`/`paths`/`pathValidationStrategy`. Also fixes a real bug in the old `oneOf` schema: an operation declaring more than one mandatory code at once matched more than one `oneOf` branch and was incorrectly flagged. Default `paths` corrected to `/status, /another` (was only excluding `/status`).
+- OAR073 - RateLimit - Switched from a hardcoded `given`/`truthy` (field `429`) check to a new `apq-rate-limit-response` function, with configurable `paths`/`pathValidationStrategy`; default unchanged (`/status, /health, /health-check, /ping, /liveness, /readiness`, `/exclude`).
+- OAR079 - PathParameter404 - `apq-require-response-on-path-params` now also accepts `paths`/`pathValidationStrategy` (default `/status`, `/exclude`). Also removed the `response` functionOption (previously configurable, defaulted to `"404"`) since Sonar's `OAR079PathParameter404Check` has no matching rule property — it hardcodes `"404"` in code; the function now does the same, keeping only `paths`/`pathValidationStrategy` to match Sonar's 2 rule properties exactly.
+- OAR084 - ForbiddenQueryFormats - Switched from the core `pattern` function to a new `apq-forbidden-query-format` function with configurable `forbidden-query-formats`/`paths`/`pathValidationStrategy`. Fixes a real bug: the old fixed field didn't work against OpenAPI 2.0.
+
+
 ## [1.5.0-beta.4] - 2026-09-09
 
 ### Changed
