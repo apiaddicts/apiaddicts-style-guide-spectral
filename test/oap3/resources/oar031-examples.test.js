@@ -2,6 +2,7 @@ const { linterForRule } = require('../../helpers/utils');
 
 const oar031fail = require('./OAR031/fail-example');
 const oar031ok = require('./OAR031/ok-example');
+const oar031nullableTypeArray = require('./OAR031/fail-nullable-type-array');
 
 const ALL_ON = {
   validateResponse: true,
@@ -73,5 +74,13 @@ describe('apiq:OAR031 (OAS3) — per-level toggles', () => {
       validateProperty: false,
     }, oar031fail);
     expect(results.length).toBe(0);
+  });
+});
+
+describe('apiq:OAR031 (OAS3.1) — nullable `type: [x, null]` arrays', () => {
+  test('recurses into a nullable object/array property instead of treating it as a leaf', async () => {
+    const results = await run(ALL_ON, oar031nullableTypeArray);
+    expect(results.length).toBe(1);
+    expect(results[0].message).toBe("OAR031: Property 'city' is missing an example.");
   });
 });

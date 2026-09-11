@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/12</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">76.92% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>10/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">91.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/12</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -94,36 +94,36 @@
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">39x</span>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">171x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">171x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">88x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const HTTP_VERBS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
 &nbsp;
@@ -132,29 +132,29 @@
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
-module.exports = <span class="fstat-no" title="function not covered" >(g</span>iven, options, context) =&gt; {
-<span class="cstat-no" title="statement not covered" >  if (!given || typeof given !== 'object') {</span>
+module.exports = (given, options, context) =&gt; {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!given || typeof given !== 'object') {
 <span class="cstat-no" title="statement not covered" >    return [];</span>
   }
 &nbsp;
-  const allowedVerbs = <span class="cstat-no" title="statement not covered" >((options &amp;&amp; options['allowed-verbs']) || '')</span>
+  const allowedVerbs = ((options &amp;&amp; options['allowed-verbs']) || <span class="branch-2 cbranch-no" title="branch not covered" >'')</span>
     .split(',')
-    .map(<span class="fstat-no" title="function not covered" >(v</span>erb) =&gt; <span class="cstat-no" title="statement not covered" >verb.trim().toLowerCase())</span>
+    .map((verb) =&gt; verb.trim().toLowerCase())
     .filter(Boolean);
 &nbsp;
-  const basePath = <span class="cstat-no" title="statement not covered" >context.path || [];</span>
-  const errors = <span class="cstat-no" title="statement not covered" >[];</span>
+  const basePath = context.path || <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
+  const errors = [];
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  HTTP_VERBS.forEach(<span class="fstat-no" title="function not covered" >(v</span>erb) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (Object.prototype.hasOwnProperty.call(given, verb) &amp;&amp; !allowedVerbs.includes(verb)) {</span>
-<span class="cstat-no" title="statement not covered" >      errors.push({</span>
+  HTTP_VERBS.forEach((verb) =&gt; {
+    if (Object.prototype.hasOwnProperty.call(given, verb) &amp;&amp; !allowedVerbs.includes(verb)) {
+      errors.push({
         message: `HTTP verb '${verb}' is not encouraged. Only the following verbs are allowed: ${allowedVerbs.join(', ')}.`,
         path: [...basePath, verb]
       });
     }
   });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return errors;</span>
+  return errors;
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -163,7 +163,7 @@ module.exports = <span class="fstat-no" title="function not covered" >(g</span>i
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-10T23:01:33.351Z
+                at 2026-09-11T02:58:14.905Z
             </div>
         <script src="prettify.js"></script>
         <script>

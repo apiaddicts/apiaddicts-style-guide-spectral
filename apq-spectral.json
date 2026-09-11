@@ -47,7 +47,8 @@
     "apq-rate-limit-response",
     "apq-forbidden-query-format",
     "apq-wso2-scope-defined",
-    "apq-undefined-response-media-type"
+    "apq-undefined-response-media-type",
+    "apq-total-param-default-value"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -396,12 +397,11 @@
     },
     "apiq:OAR026": {
       "description": "The $total parameter default value should be false.",
-      "message": "OAR026: The $total parameter default value should be false.",
+      "message": "{[error}}",
       "severity": "error",
       "given": "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]",
       "then": {
-        "field": "schema.default",
-        "function": "falsy"
+        "function": "apq-total-param-default-value"
       }
     },
     "apiq:OAR027": {

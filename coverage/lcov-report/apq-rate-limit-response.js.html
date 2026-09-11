@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.66% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/15</span>
+                <span class='fraction'>14/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/20</span>
+                <span class='fraction'>16/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.69% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -84,47 +84,47 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">39x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">171x</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">196x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">module.exports = <span class="fstat-no" title="function not covered" >(o</span>peration, options, context) =&gt; {
-<span class="cstat-no" title="statement not covered" >  if (!operation || typeof operation !== 'object' || Array.isArray(operation)) <span class="cstat-no" title="statement not covered" >return [];</span></span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">module.exports = (operation, options, context) =&gt; {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!operation || typeof operation !== 'object' || Array.isArray(operation)) <span class="cstat-no" title="statement not covered" >return [];</span>
 &nbsp;
-  const paths = <span class="cstat-no" title="statement not covered" >((options &amp;&amp; options.paths) || '')</span>
+  const paths = ((options &amp;&amp; options.paths) || <span class="branch-2 cbranch-no" title="branch not covered" >'')</span>
     .split(',')
-    .map(<span class="fstat-no" title="function not covered" >(p</span>ath) =&gt; <span class="cstat-no" title="statement not covered" >path.trim())</span>
+    .map((path) =&gt; path.trim())
     .filter(Boolean);
-  const strategy = <span class="cstat-no" title="statement not covered" >(options &amp;&amp; options.pathValidationStrategy) || '/exclude';</span>
+  const strategy = (options &amp;&amp; options.pathValidationStrategy) || <span class="branch-2 cbranch-no" title="branch not covered" >'/exclude';</span>
 &nbsp;
-  const currentPath = <span class="cstat-no" title="statement not covered" >context.path[context.path.length - 2];</span>
-  const isListed = <span class="cstat-no" title="statement not covered" >paths.includes(currentPath);</span>
-  const shouldExclude = <span class="cstat-no" title="statement not covered" >strategy === '/exclude' ? isListed : !isListed;</span>
-<span class="cstat-no" title="statement not covered" >  if (shouldExclude) <span class="cstat-no" title="statement not covered" >return [];</span></span>
+  const currentPath = context.path[context.path.length - 2];
+  const isListed = paths.includes(currentPath);
+  const shouldExclude = strategy === '/exclude' ? isListed : <span class="branch-1 cbranch-no" title="branch not covered" >!isListed;</span>
+  if (shouldExclude) return [];
 &nbsp;
-  const responses = <span class="cstat-no" title="statement not covered" >operation.responses;</span>
-<span class="cstat-no" title="statement not covered" >  if (!responses || typeof responses !== 'object' || !('429' in responses)) {</span>
-<span class="cstat-no" title="statement not covered" >    return [{ message: context.rule.message }];</span>
+  const responses = operation.responses;
+  if (!responses || typeof responses !== 'object' || !('429' in responses)) {
+    return [{ message: context.rule.message }];
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return [];</span>
+  return [];
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -133,7 +133,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-10T23:01:33.351Z
+                at 2026-09-11T02:58:14.905Z
             </div>
         <script src="prettify.js"></script>
         <script>
