@@ -1,5 +1,5 @@
 module.exports = {
-    "openapi": "3.0.0",
+    "openapi": "3.1.0",
     "info": {
         "version": "1.0.0",
         "title": "Swagger Petstore"
@@ -18,8 +18,15 @@ module.exports = {
     },
     "paths": {
         "/pets": {
-            "get": {
-                "x-scope": "read"
+            "$ref": "#/components/pathItems/SharedPet"
+        }
+    },
+    "components": {
+        "pathItems": {
+            "SharedPet": {
+                "get": {
+                    "x-scope": "read"
+                }
             }
         }
     }

@@ -1,5 +1,5 @@
 module.exports = {
-    "openapi": "3.0.0",
+    "swagger": "2.0",
     "info": {
         "version": "1.0.0",
         "title": "Swagger Petstore"
@@ -12,6 +12,12 @@ module.exports = {
                     "key": "read",
                     "roles": "READ_ROLE",
                     "description": "Allows users to view records"
+                },
+                {
+                    "name": "write",
+                    "key": "write",
+                    "roles": "WRITE_ROLE",
+                    "description": "Allows users to modify records"
                 }
             ]
         }
@@ -19,7 +25,14 @@ module.exports = {
     "paths": {
         "/pets": {
             "get": {
-                "x-scope": "read"
+                "x-scope": "read",
+                "x-auth-type": "Application"
+            },
+            "post": {
+                "x-scope": "write"
+            },
+            "delete": {
+                "x-scope": "write"
             }
         }
     }

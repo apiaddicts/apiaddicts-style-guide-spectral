@@ -1,5 +1,5 @@
 module.exports = {
-    "openapi": "3.0.0",
+    "openapi": "3.1.0",
     "info": {
         "version": "1.0.0",
         "title": "Swagger Petstore"
@@ -21,6 +21,22 @@ module.exports = {
             "get": {
                 "x-scope": "read",
                 "x-auth-type": "Application"
+            }
+        }
+    },
+    "webhooks": {
+        "petAdopted": {
+            "post": {
+                "x-scope": "read",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
             }
         }
     }

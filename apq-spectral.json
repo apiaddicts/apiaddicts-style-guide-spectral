@@ -48,6 +48,7 @@
     "apq-forbidden-query-format",
     "apq-wso2-scope-defined",
     "apq-undefined-response-media-type",
+    "apq-wso2-auth-type-required",
     "apq-total-param-default-value"
   ],
   "extends": [
@@ -592,13 +593,14 @@
       }
     },
     "apiq:OAR041": {
-      "description": "Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.",
-      "message": "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths.",
+      "description": "A WSO2 x-scope on an operation always requires an x-auth-type definition.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR041.md",
       "severity": "error",
-      "given": "$.paths[*].get",
+      "resolved": false,
+      "given": "$",
       "then": {
-        "field": "x-aut-type",
-        "function": "truthy"
+        "function": "apq-wso2-auth-type-required"
       }
     },
     "apiq:OAR042": {
@@ -619,12 +621,19 @@
     "apiq:OAR043": {
       "description": "OpenAPI definition contains structural errors that would be detected by a strict parser or validator.",
       "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR043.md",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*.in",
         "$.components.parameters.*.in",
+        "$.paths.*.*.parameters.*.type",
+        "$.components.parameters.*.type",
         "$.paths.*.*.parameters.*.schema.type",
-        "$.components.parameters.*.schema.type"
+        "$.components.parameters.*.schema.type",
+        "$.webhooks.*.*.parameters.*.in",
+        "$.webhooks.*.*.parameters.*.schema.type",
+        "$.components.pathItems.*.*.parameters.*.in",
+        "$.components.pathItems.*.*.parameters.*.schema.type"
       ],
       "then": {
         "function": "apq-validate-structure"

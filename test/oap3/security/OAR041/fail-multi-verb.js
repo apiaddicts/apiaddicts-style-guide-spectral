@@ -12,6 +12,12 @@ module.exports = {
                     "key": "read",
                     "roles": "READ_ROLE",
                     "description": "Allows users to view records"
+                },
+                {
+                    "name": "write",
+                    "key": "write",
+                    "roles": "WRITE_ROLE",
+                    "description": "Allows users to modify records"
                 }
             ]
         }
@@ -20,6 +26,16 @@ module.exports = {
         "/pets": {
             "get": {
                 "x-scope": "read",
+                "x-auth-type": "Application"
+            },
+            "post": {
+                "x-scope": "write"
+            },
+            "put": {
+                "x-scope": "write"
+            },
+            "delete": {
+                "x-scope": "write",
                 "x-auth-type": "Application"
             }
         }
