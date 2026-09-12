@@ -18,14 +18,16 @@ module.exports = (given, options, context) => {
       continue;
     }
 
+    const sharedParams = Array.isArray(pathItem.parameters) ? pathItem.parameters : [];
+
     for (const [operationKey, operation] of Object.entries(pathItem)) {
       if (!operation || typeof operation !== 'object' ||
           !httpMethods.includes(operationKey)) {
         continue;
       }
 
-      const parameters = operation.parameters;
-      if (!Array.isArray(parameters)) {
+      const operationParams = Array.isArray(operation.parameters) ? operation.parameters : [];
+      if (sharedParams.length === 0 && operationParams.length === 0) {
         continue;
       }
 
@@ -35,13 +37,28 @@ module.exports = (given, options, context) => {
         continue;
       }
 
-      parameters.forEach((param, index) => {
+      const overridden = new Set(
+        operationParams
+          .filter((p) => p && p.name && p.in)
+          .map((p) => `${p.in}:${p.name}`)
+      );
+
+      operationParams.forEach((param, index) => {
         if (param && (param.in === 'path' || param.in === 'query')) {
           errors.push({
             message: context.rule.message,
             path: [...context.path, pathKey, operationKey, 'parameters', index]
           });
         }
+      });
+
+      sharedParams.forEach((param, index) => {
+        if (!param || (param.in !== 'path' && param.in !== 'query')) return;
+        if (overridden.has(`${param.in}:${param.name}`)) return;
+        errors.push({
+          message: context.rule.message,
+          path: [...context.path, pathKey, 'parameters', index]
+        });
       });
     }
   }

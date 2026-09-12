@@ -49,6 +49,8 @@ functions:
   - apq-wso2-scope-defined
   - apq-undefined-response-media-type
   - apq-wso2-auth-type-required
+  - apq-response-content-required
+  - apq-tags-consistency
 extends:
   - spectral:asyncapi
   - spectral:oas
@@ -591,8 +593,7 @@ rules:
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses[?(@property !== '204')]"
     then:
-      field: "content"
-      function: truthy
+      function: apq-response-content-required
   apiq:OAR046:
     description: "Each operation SHOULD have a tag."
     message: "OAR046: You should categorize the operations of your contract with tags."
@@ -614,29 +615,12 @@ rules:
               type: array
               minItems: 1
   apiq:OAR047:
-    description: "Tags required and each tag must have a short description."
-    message: "OAR047: Add tags with a short description to each one."
+    description: "Tags required and each tag must have a short description, must not be duplicated, and every tag used by an operation must be declared at the top level."
+    message: "{{error}}"
     severity: error
     given: "$"
     then:
-      - field: "tags"
-        function: schema
-        functionOptions:
-          schema:
-            type: array
-            minLength: 1
-            items:
-              type: object
-              required:
-                - name
-                - description
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                description:
-                  type: string
-                  minLength: 1
+      function: apq-tags-consistency
   apiq:OAR048:
     description: APIs must define at most one body parameter.
     message: "OAR048: An operation can have at most one body parameter"
@@ -666,7 +650,7 @@ rules:
       function: truthy
   apiq:OAR051:
     description: "Summary and description must be different - not just case variations or semantic duplicates."
-    message: "OAR051: Summary and description must be meaningfully different from each other."
+    message: "{{error}}"
     severity: "error"
     given: "$.paths[*][get,post,put,patch,delete]"
     then:
@@ -891,7 +875,9 @@ rules:
     description: "All parameters in query must be snake_case."
     message: "OAR077: All parameters in query must be snake_case."
     severity: warn
-    given: "$.paths[*][*].parameters[?(@.in == 'query')]"
+    given:
+      - "$.paths[*][*].parameters[?(@.in == 'query')]"
+      - "$.paths[*].parameters[?(@.in == 'query')]"
     then:
       field: "name"
       function: pattern
@@ -956,7 +942,9 @@ rules:
     description: "Some formats should not pass through this querystring."
     message: "{{error}}"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
+    given:
+      - "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
+      - "$.paths[*].parameters[?(@.in == 'query')]"
     then:
       function: apq-forbidden-query-format
       functionOptions:
