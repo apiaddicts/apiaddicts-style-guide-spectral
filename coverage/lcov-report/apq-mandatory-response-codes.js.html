@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.46% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/26</span>
+                <span class='fraction'>25/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72% </span>
+                <span class="strong">88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/25</span>
+                <span class='fraction'>22/25</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.23% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/21</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -99,50 +99,50 @@
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
 <a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">171x</span>
-<span class="cline-any cline-yes">54x</span>
+<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">212x</span>
+<span class="cline-any cline-yes">649x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">649x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">199x</span>
+<span class="cline-any cline-yes">2373x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">649x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">639x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
+<span class="cline-any cline-yes">1261x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">639x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">54x</span>
-<span class="cline-any cline-yes">54x</span>
-<span class="cline-any cline-yes">54x</span>
-<span class="cline-any cline-yes">54x</span>
+<span class="cline-any cline-yes">639x</span>
+<span class="cline-any cline-yes">639x</span>
+<span class="cline-any cline-yes">639x</span>
+<span class="cline-any cline-yes">639x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">598x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">142x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">598x</span>
+<span class="cline-any cline-yes">598x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">919x</span>
+<span class="cline-any cline-yes">1480x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">596x</span>
+<span class="cline-any cline-yes">197x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">399x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">module.exports = (operation, options, context) =&gt; {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!operation || typeof operation !== 'object') <span class="cstat-no" title="statement not covered" >return [];</span>
 &nbsp;
-  const mandatoryCodes = ((options &amp;&amp; options['mandatory-response-codes']) || <span class="branch-2 cbranch-no" title="branch not covered" >'')</span>
+  const mandatoryCodes = ((options &amp;&amp; options['mandatory-response-codes']) || '')
     .split(',')
     .map((code) =&gt; code.trim())
     .filter(Boolean);
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (mandatoryCodes.length === 0) <span class="cstat-no" title="statement not covered" >return [];</span>
+  if (mandatoryCodes.length === 0) return [];
 &nbsp;
   const paths = ((options &amp;&amp; options.paths) || <span class="branch-2 cbranch-no" title="branch not covered" >'')</span>
     .split(',')
@@ -152,14 +152,14 @@
 &nbsp;
   const currentPath = context.path[context.path.length - 2];
   const isListed = paths.includes(currentPath);
-  const shouldExclude = strategy === '/exclude' ? isListed : <span class="branch-1 cbranch-no" title="branch not covered" >!isListed;</span>
+  const shouldExclude = strategy === '/exclude' ? isListed : !isListed;
   if (shouldExclude) return [];
 &nbsp;
   const message = `Mandatory response code(s) required: ${mandatoryCodes.join(', ')}.`;
 &nbsp;
   const responses = operation.responses;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!responses || typeof responses !== 'object') {
-<span class="cstat-no" title="statement not covered" >    return [{ message }];</span>
+  if (!responses || typeof responses !== 'object') {
+    return [{ message }];
   }
 &nbsp;
   const responseCodes = Object.keys(responses).map((code) =&gt; code.trim());
@@ -178,7 +178,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-11T02:58:14.905Z
+                at 2026-09-12T03:38:16.267Z
             </div>
         <script src="prettify.js"></script>
         <script>

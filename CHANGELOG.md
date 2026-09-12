@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- OAR027 - PostResponseLocationHeaderCheck - Rewritten as `apq-post-201-location-header`: now reads `headers.Location.type` (OAS2) or `headers.Location.schema.type` (OAS3+) depending on version, instead of always the OAS3 path, and also recognizes a lowercase `location` header key.
+- OAR049 - NoContentIn204Check - Rewritten as `apq-response-no-content`: now checks `schema` (OAS2) or `content` (OAS3/3.1/3.2) depending on document version instead of always `content`, same fix pattern as OAR045.
+- OAR038 - StandardCreateResponseCheck - `apq-valid-response-schema` now resolves the response schema directly (per media type, merging `allOf` recursively) instead of matching `.schema.properties` via JSONPath, so a missing schema, an empty `properties`, or `data`/`error` composed via `allOf`/`$ref` are now correctly flagged.
 - OAR045 - ResponseSchema - Fixed to check `schema` (OAS2) or `content` (OAS3/3.1/3.2) instead of always `content`, which made it fire on every non-204 response of any Swagger 2.0 document. New `apq-response-content-required` function; also fixes the `{{property}}` placeholder, which showed "content" instead of the status code.
 - OAR047 - TagsRequired - Rewritten as `apq-tags-consistency`: now also flags duplicate tag names and tags used by an operation/webhook but not declared in the top-level `tags` array.
 - OAR051 - SummaryDescriptionSimilarity - `message` changed to `{{error}}` so the function's own `"(NN% similar)"` suffix is no longer silently discarded in favor of the rule's static message. Also fixed `options.threshold || 0.6`, which silently ignored an explicit `threshold: 0`.

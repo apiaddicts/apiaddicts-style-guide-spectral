@@ -18,6 +18,8 @@ functions:
   - apq-path-depth
   - apq-forbidden-characters
   - apq-valid-response-schema
+  - apq-post-201-location-header
+  - apq-response-no-content
   - apq-valid-openapi-version
   - apq-collection-query-param-required
   - apq-total-param-default-value
@@ -368,12 +370,11 @@ rules:
       function: apq-total-param-default-value
   apiq:OAR027:
     description: "Location header is required in responses with code 201 from POST operations."
-    message: "OAR027: Location header is required in responses with code 201 from POST operations."
+    message: "{{error}}"
     severity: error
     given: "$.paths.*.post.responses['201']"
     then:
-      field: "headers.Location.schema.type"
-      function: truthy
+      function: apq-post-201-location-header
   apiq:OAR028:
     description: "$filter must be defined as a query parameter in the collection GET operations selected by the configured paths."
     message: "{{error}}"
@@ -481,9 +482,7 @@ rules:
     description: "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property."
     message: "{{error}}"
     severity: error
-    given:
-      - "$.paths.*.post.responses.*.content..schema.properties"
-      - "$.paths.*.post.responses.*.schema.properties"
+    given: "$.paths.*.post.responses['201']"
     then:
       function: apq-valid-response-schema
       functionOptions:
@@ -634,12 +633,11 @@ rules:
       function: apq-at-most-one-body-parameter
   apiq:OAR049:
     description: "204 No Content MUST NOT return any content."
-    message: "OAR049: 204 No Content MUST NOT return any content."
+    message: "{{error}}"
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses['204']"
     then:
-      field: "content"
-      function: falsy
+      function: apq-response-no-content
   apiq:OAR050:
     description: "Provide a summary for each operation."
     message: "OAR050: Provide a summary for each operation."
