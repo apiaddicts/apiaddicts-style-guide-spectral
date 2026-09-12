@@ -1,0 +1,26 @@
+module.exports = {
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Petstore"
+  },
+  "paths": {
+    "/pets": {
+      "post": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "$total",
+            "type": "boolean",
+            "default": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  }
+};

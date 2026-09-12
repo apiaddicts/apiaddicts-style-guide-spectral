@@ -20,10 +20,12 @@ module.exports = (given, options, context) => {
   const shouldExclude = strategy === '/exclude' ? isListed : !isListed;
   if (shouldExclude) return [];
 
-  const pathItemKeyIndex = context.path?.length - 2;
-  const pathItem = typeof pathItemKeyIndex === 'number'
-    ? context.path?.[pathItemKeyIndex]
-    : null;
+  const pathKey = context.path[1];
+  const rawPaths = (context.document
+    && context.document.parserResult
+    && context.document.parserResult.data
+    && context.document.parserResult.data.paths) || {};
+  const pathItem = rawPaths[pathKey] || null;
 
   const pathParams = (pathItem?.parameters || []).filter(
     p => p?.in === 'path'

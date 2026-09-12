@@ -26,12 +26,13 @@ module.exports = (given, options, context) => {
     return errors;
   }
 
-  const threshold = options.threshold || 0.6;
+  const threshold = typeof options.threshold === 'number' ? options.threshold : 0.6;
+  const baseMessage = 'OAR051: Summary and description must be meaningfully different from each other.';
 
   // Exact match (case-insensitive)
   if (propA.trim().toUpperCase() === propB.trim().toUpperCase()) {
     errors.push({
-      message: context.rule.message,
+      message: baseMessage,
       path: [...context.path, options.property]
     });
     return errors;
@@ -41,7 +42,7 @@ module.exports = (given, options, context) => {
   const similarity = calculateSimilarity(propA, propB);
   if (similarity >= threshold) {
     errors.push({
-      message: `${context.rule.message} (${Math.round(similarity * 100)}% similar)`,
+      message: `${baseMessage} (${Math.round(similarity * 100)}% similar)`,
       path: [...context.path, options.property]
     });
   }
