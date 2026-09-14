@@ -45,9 +45,6 @@ functions:
   - apq-mandatory-response-codes
   - apq-rate-limit-response
   - apq-forbidden-query-format
-extends:
-  - spectral:asyncapi
-  - spectral:oas
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -626,8 +623,6 @@ rules:
     message: "OAR048: An operation can have at most one body parameter"
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md"
     severity: error
-    formats:
-      - oas2
     given: "$.paths[*][*]"
     then:
       field: parameters
@@ -989,6 +984,7 @@ rules:
     description: "The $ref of a request body must end with the suffix Body."
     message: "OAR089: The $ref of a request body must end with the suffix Body."
     severity: "warn"
+    resolved: false
     given: "$..requestBody.$ref"
     then:
       function: pattern
