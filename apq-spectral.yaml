@@ -856,6 +856,10 @@ rules:
     given:
       - "$.paths[*][*].parameters[*]"
       - "$.paths[*].parameters[*]"
+      - "$.paths[*].additionalOperations[*].parameters[*]"
+      - "$.webhooks[*][*].parameters[*]"
+      - "$.webhooks[*].parameters[*]"
+      - "$.webhooks[*].additionalOperations[*].parameters[*]"
       - "$.components.parameters[*]"
       - "$.parameters[*]"
     then:
