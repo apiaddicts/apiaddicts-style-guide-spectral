@@ -1,0 +1,32 @@
+module.exports = {
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Swagger Petstore"
+  },
+  "paths" : {
+    "/pets" : {
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "headers" : {
+              "Location" : {
+                "type" : "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders" : {
+      "post" : {
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        }
+      }
+    }
+  }
+}
