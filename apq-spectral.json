@@ -53,7 +53,8 @@
     "apq-undefined-response-media-type",
     "apq-wso2-auth-type-required",
     "apq-response-content-required",
-    "apq-tags-consistency"
+    "apq-tags-consistency",
+    "apq-forbidden-title-pattern"
   ],
   "extends": [
     "spectral:asyncapi",
@@ -1479,6 +1480,19 @@
         "function": "apq-path-pattern",
         "functionOptions": {
           "pattern": "^/"
+        }
+      }
+    },
+    "apiq:OAR117": {
+      "description": "The API title must not match the configured forbidden regular expression.",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR117.md",
+      "severity": "error",
+      "given": "$.info.title",
+      "then": {
+        "function": "apq-forbidden-title-pattern",
+        "functionOptions": {
+          "forbidden-pattern": "(?!)"
         }
       }
     }
