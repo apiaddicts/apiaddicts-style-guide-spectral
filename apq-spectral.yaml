@@ -18,8 +18,11 @@ functions:
   - apq-path-depth
   - apq-forbidden-characters
   - apq-valid-response-schema
+  - apq-post-201-location-header
+  - apq-response-no-content
   - apq-valid-openapi-version
   - apq-collection-query-param-required
+  - apq-total-param-default-value
   - apq-path-param-query-conflict
   - apq-schema-format
   - apq-security-required-response
@@ -45,6 +48,11 @@ functions:
   - apq-mandatory-response-codes
   - apq-rate-limit-response
   - apq-forbidden-query-format
+  - apq-wso2-scope-defined
+  - apq-undefined-response-media-type
+  - apq-wso2-auth-type-required
+  - apq-response-content-required
+  - apq-tags-consistency
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -86,17 +94,13 @@ rules:
         pattern: "^[a-zA-Z0-9_\\-., ]+$"
   apiq:OAR005:
     description: "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint."
-    message: "OAR005: Scope in the operation must be defined correctly and match an existing scope."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR005.md"
     severity: "error"
-    given: "$.paths[*][*].x-scope"
+    resolved: false
+    given: "$"
     then:
-      - function: "truthy"
-        message: "Scope must be defined in the operation."
-      - function: enumeration
-        functionOptions:
-          values:
-            - read
-            - write
+      function: apq-wso2-scope-defined
   apiq:OAR006:
     description: "Routes must define request media types supported by the API."
     message: "OAR006: Specify at least one Media Type in the content of the request body."
@@ -113,10 +117,13 @@ rules:
     message: "OAR007: Specify at least one Media Type in the content of the response body."
     documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR007.md"
     severity: "error"
-    given: "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]"
+    given:
+      - "$.paths[*][post,put,patch]"
+      - "$.webhooks[*][post,put,patch]"
+      - "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]"
+      - "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')]"
     then:
-      - field: "content"
-        function: truthy
+      function: apq-undefined-response-media-type
   apiq:OAR008:
     description: "HTTP verbs not encouraged."
     message: "{{error}}"
@@ -139,7 +146,13 @@ rules:
     description: "Default response media type should be defined for responses."
     message: "OAR010: Default response media type is mandatory."
     severity: warn
-    given: "$.paths[*][get,post,put,patch,delete]"
+    given:
+      - "$.paths[*][post,put,patch]"
+      - "$.webhooks[*][post,put,patch]"
+      - "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')]"
+      - "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')]"
+      - "$.paths[*][get,post,put,patch,delete].responses[?(@property != '204')].content"
+      - "$.webhooks[*][get,post,put,patch,delete].responses[?(@property != '204')].content"
     then:
       function: apq-response-media-type
       functionOptions:
@@ -347,20 +360,18 @@ rules:
         pathValidationStrategy: "/include"
   apiq:OAR026:
     description: "The $total parameter default value should be false."
-    message: "OAR026: The $total parameter default value should be false."
+    message: "{{error}}"
     severity: error
     given: "$.paths[*].get.parameters[?(@.name == '$total' && @.in == 'query')]"
     then:
-      field: "schema.default"
-      function: falsy
+      function: apq-total-param-default-value
   apiq:OAR027:
     description: "Location header is required in responses with code 201 from POST operations."
-    message: "OAR027: Location header is required in responses with code 201 from POST operations."
+    message: "{{error}}"
     severity: error
     given: "$.paths.*.post.responses['201']"
     then:
-      field: "headers.Location.schema.type"
-      function: truthy
+      function: apq-post-201-location-header
   apiq:OAR028:
     description: "$filter must be defined as a query parameter in the collection GET operations selected by the configured paths."
     message: "{{error}}"
@@ -468,9 +479,7 @@ rules:
     description: "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property."
     message: "{{error}}"
     severity: error
-    given:
-      - "$.paths.*.post.responses.*.content..schema.properties"
-      - "$.paths.*.post.responses.*.schema.properties"
+    given: "$.paths.*.post.responses['201']"
     then:
       function: apq-valid-response-schema
       functionOptions:
@@ -521,13 +530,14 @@ rules:
       functionOptions:
         pattern: "^[a-zA-Z]{4,}_(SC|sc)_[a-zA-Z0-9]{1,}$"
   apiq:OAR041:
-    description: Available scopes must be defined at the end of the document, at the root level, inside `x-wso2-security`.
-    message: "OAR041:Scopes must be defined in `x-wso2-security` at the end of the document, before the paths."
+    description: "A WSO2 x-scope on an operation always requires an x-auth-type definition."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR041.md"
     severity: "error"
-    given: "$.paths[*].get"
+    resolved: false
+    given: "$"
     then:
-      field: "x-aut-type"
-      function: truthy
+      function: apq-wso2-auth-type-required
   apiq:OAR042:
     description: "Base path must be compliant with the standard."
     message: "OAR042: Base path must follow the '/api-<name>/v<version>' standard."
@@ -542,12 +552,19 @@ rules:
   apiq:OAR043:
     description: "OpenAPI definition contains structural errors that would be detected by a strict parser or validator."
     message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR043.md"
     severity: error
     given:
       - $.paths.*.*.parameters.*.in
       - $.components.parameters.*.in
+      - $.paths.*.*.parameters.*.type
+      - $.components.parameters.*.type
       - $.paths.*.*.parameters.*.schema.type
       - $.components.parameters.*.schema.type
+      - $.webhooks.*.*.parameters.*.in
+      - $.webhooks.*.*.parameters.*.schema.type
+      - $.components.pathItems.*.*.parameters.*.in
+      - $.components.pathItems.*.*.parameters.*.schema.type
     then:
       function: apq-validate-structure
   apiq:OAR044:
@@ -572,8 +589,7 @@ rules:
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses[?(@property !== '204')]"
     then:
-      field: "content"
-      function: truthy
+      function: apq-response-content-required
   apiq:OAR046:
     description: "Each operation SHOULD have a tag."
     message: "OAR046: You should categorize the operations of your contract with tags."
@@ -595,29 +611,12 @@ rules:
               type: array
               minItems: 1
   apiq:OAR047:
-    description: "Tags required and each tag must have a short description."
-    message: "OAR047: Add tags with a short description to each one."
+    description: "Tags required and each tag must have a short description, must not be duplicated, and every tag used by an operation must be declared at the top level."
+    message: "{{error}}"
     severity: error
     given: "$"
     then:
-      - field: "tags"
-        function: schema
-        functionOptions:
-          schema:
-            type: array
-            minLength: 1
-            items:
-              type: object
-              required:
-                - name
-                - description
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                description:
-                  type: string
-                  minLength: 1
+      function: apq-tags-consistency
   apiq:OAR048:
     description: APIs must define at most one body parameter.
     message: "OAR048: An operation can have at most one body parameter"
@@ -629,12 +628,11 @@ rules:
       function: apq-at-most-one-body-parameter
   apiq:OAR049:
     description: "204 No Content MUST NOT return any content."
-    message: "OAR049: 204 No Content MUST NOT return any content."
+    message: "{{error}}"
     severity: error
     given: "$.paths[*][get,post,put,patch,delete].responses['204']"
     then:
-      field: "content"
-      function: falsy
+      function: apq-response-no-content
   apiq:OAR050:
     description: "Provide a summary for each operation."
     message: "OAR050: Provide a summary for each operation."
@@ -645,7 +643,7 @@ rules:
       function: truthy
   apiq:OAR051:
     description: "Summary and description must be different - not just case variations or semantic duplicates."
-    message: "OAR051: Summary and description must be meaningfully different from each other."
+    message: "{{error}}"
     severity: "error"
     given: "$.paths[*][get,post,put,patch,delete]"
     then:
@@ -870,7 +868,9 @@ rules:
     description: "All parameters in query must be snake_case."
     message: "OAR077: All parameters in query must be snake_case."
     severity: warn
-    given: "$.paths[*][*].parameters[?(@.in == 'query')]"
+    given:
+      - "$.paths[*][*].parameters[?(@.in == 'query')]"
+      - "$.paths[*].parameters[?(@.in == 'query')]"
     then:
       field: "name"
       function: pattern
@@ -935,7 +935,9 @@ rules:
     description: "Some formats should not pass through this querystring."
     message: "{{error}}"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
+    given:
+      - "$.paths[*][get,post,put,patch,delete].parameters[?(@.in == 'query')]"
+      - "$.paths[*].parameters[?(@.in == 'query')]"
     then:
       function: apq-forbidden-query-format
       functionOptions:
