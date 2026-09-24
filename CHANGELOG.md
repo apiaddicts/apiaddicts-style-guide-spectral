@@ -6,11 +6,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.6.0-beta.2] - 2026-09-22
+## [1.6.0-beta.3] - 2026-09-24
 
 ### Added
 
 - OAR117 - ForbiddenTitlePattern - New rule: `info.title` must not match the configurable regex `forbidden-pattern` (default `(?!)`, an expression that matches nothing, so the rule forbids nothing until it is configured); unanchored match, backed by the new `apq-forbidden-title-pattern` function.
+
+## [1.6.0-beta.2] - 2026-09-23
+
+### Changed
+
+- OAR075 - String parameters whose `format` already fully constrains the value (`date`, `date-time`, `uuid`, `ipv4`, `ipv6`, case-insensitive) are now exempt from requiring `minLength`/`maxLength`/`pattern`/`enum`. The exemption list is fixed and independent of the `parameter_integrity` property. `given` also broadened to cover `additionalOperations` and `webhooks` parameters.
+
+### Removed
+
+- Removed `spectral:oas` and `spectral:asyncapi` from the ruleset `extends`, so only the `apiq:` rules are applied and Spectral's built-in OpenAPI/AsyncAPI rules no longer add results on top of them.
+
+### Fixed
+
+- OAR048 - Removed the `formats: [oas2]` restriction, so the rule is evaluated on every document regardless of its detected format.
+- OAR089 - Added `resolved: false` so `$..requestBody.$ref` matches the raw `$ref` value instead of the already resolved request body.
 
 ## [1.6.0-beta.1] - 2026-09-11
 

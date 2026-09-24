@@ -56,10 +56,6 @@
     "apq-tags-consistency",
     "apq-forbidden-title-pattern"
   ],
-  "extends": [
-    "spectral:asyncapi",
-    "spectral:oas"
-  ],
   "rules": {
     "apiq:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
@@ -712,9 +708,6 @@
       "message": "OAR048: An operation can have at most one body parameter",
       "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md",
       "severity": "error",
-      "formats": [
-        "oas2"
-      ],
       "given": "$.paths[*][*]",
       "then": {
         "field": "parameters",
@@ -1011,6 +1004,10 @@
       "given": [
         "$.paths[*][*].parameters[*]",
         "$.paths[*].parameters[*]",
+        "$.paths[*].additionalOperations[*].parameters[*]",
+        "$.webhooks[*][*].parameters[*]",
+        "$.webhooks[*].parameters[*]",
+        "$.webhooks[*].additionalOperations[*].parameters[*]",
         "$.components.parameters[*]",
         "$.parameters[*]"
       ],
@@ -1191,6 +1188,7 @@
       "description": "The $ref of a request body must end with the suffix Body.",
       "message": "OAR089: The $ref of a request body must end with the suffix Body.",
       "severity": "warn",
+      "resolved": false,
       "given": "$..requestBody.$ref",
       "then": {
         "function": "pattern",

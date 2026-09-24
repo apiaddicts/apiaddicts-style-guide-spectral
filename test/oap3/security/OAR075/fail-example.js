@@ -11,7 +11,7 @@ module.exports = {
           { name: 'q', in: 'query', schema: { type: 'string' } },
           { name: 'X-Trace', in: 'header', schema: { type: 'string' } },
           { name: 'sid', in: 'cookie', schema: { type: 'string' } },
-          { name: 'onlyFormat', in: 'query', schema: { type: 'string', format: 'date' } },
+          { name: 'nonExemptFormat', in: 'query', schema: { type: 'string', format: 'password' } },
         ],
         responses: { 200: { description: 'ok' } },
       },
