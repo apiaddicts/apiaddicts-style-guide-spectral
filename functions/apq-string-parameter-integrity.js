@@ -1,7 +1,15 @@
 const DEFAULT_INTEGRITY = 'minLength,maxLength,pattern,enum';
 
+const SELF_CONSTRAINED_FORMATS = new Set([
+  'date', 'date-time', 'uuid', 'ipv4', 'ipv6',
+]);
+
 function isStringType(type) {
   return type === 'string' || (Array.isArray(type) && type.indexOf('string') > -1);
+}
+
+function hasSelfConstrainedFormat(format) {
+  return typeof format === 'string' && SELF_CONSTRAINED_FORMATS.has(format.trim().toLowerCase());
 }
 
 /**
@@ -19,6 +27,8 @@ module.exports = (targetVal, options, context) => {
   if (!container || typeof container !== 'object') return [];
 
   if (!isStringType(container.type)) return [];
+
+  if (hasSelfConstrainedFormat(container.format)) return [];
 
   const raw = options && options.parameter_integrity !== undefined && options.parameter_integrity !== null
     ? String(options.parameter_integrity)
