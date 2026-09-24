@@ -6,6 +6,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0-beta.2] - 2026-09-23
+
+### Removed
+
+- Removed `spectral:oas` and `spectral:asyncapi` from the ruleset `extends`, so only the `apiq:` rules are applied and Spectral's built-in OpenAPI/AsyncAPI rules no longer add results on top of them.
+
+### Fixed
+
+- OAR048 - Removed the `formats: [oas2]` restriction, so the rule is evaluated on every document regardless of its detected format.
+- OAR089 - Added `resolved: false` so `$..requestBody.$ref` matches the raw `$ref` value instead of the already resolved request body.
+
+## [1.6.0-beta.1] - 2026-09-11
+
+### Fixed
+
+- OAR027 - PostResponseLocationHeaderCheck - Rewritten as `apq-post-201-location-header`: now reads `headers.Location.type` (OAS2) or `headers.Location.schema.type` (OAS3+) depending on version, instead of always the OAS3 path, and also recognizes a lowercase `location` header key.
+- OAR049 - NoContentIn204Check - Rewritten as `apq-response-no-content`: now checks `schema` (OAS2) or `content` (OAS3/3.1/3.2) depending on document version instead of always `content`, same fix pattern as OAR045.
+- OAR038 - StandardCreateResponseCheck - `apq-valid-response-schema` now resolves the response schema directly (per media type, merging `allOf` recursively) instead of matching `.schema.properties` via JSONPath, so a missing schema, an empty `properties`, or `data`/`error` composed via `allOf`/`$ref` are now correctly flagged.
+- OAR045 - ResponseSchema - Fixed to check `schema` (OAS2) or `content` (OAS3/3.1/3.2) instead of always `content`, which made it fire on every non-204 response of any Swagger 2.0 document. New `apq-response-content-required` function; also fixes the `{{property}}` placeholder, which showed "content" instead of the status code.
+- OAR047 - TagsRequired - Rewritten as `apq-tags-consistency`: now also flags duplicate tag names and tags used by an operation/webhook but not declared in the top-level `tags` array.
+- OAR051 - SummaryDescriptionSimilarity - `message` changed to `{{error}}` so the function's own `"(NN% similar)"` suffix is no longer silently discarded in favor of the rule's static message. Also fixed `options.threshold || 0.6`, which silently ignored an explicit `threshold: 0`.
+- OAR069 - PathParameterQueryConflict - Now also checks `path`/`query` parameters shared at the path-item level, not just per-operation ones.
+- OAR077 - QueryParameterCasing - `given` broadened to also cover path-item-level shared query parameters.
+- OAR079 - PathParameter404 - Fixed a dead path-item lookup (`context.path` holds JSONPath key strings, not document objects) that silently skipped shared path-item parameters.
+- OAR081 - PasswordFormat - Added a `typeIncludes` helper so the OpenAPI 3.1/3.2 nullable array-form type (`type: ['string', 'null']`) is recognized, matching the equivalent fix already applied to OAR031.
+- OAR084 - ForbiddenQueryFormats - Same path-item-level shared-parameter fix as OAR069/OAR077.
+- OAR041 - UndefinedAuthTypeForWso2Scope - Rewritten as `apq-wso2-auth-type-required`: was checking the misspelled `x-aut-type` field, only on `get` operations, with no condition on `x-scope` being present. Now checks the real `x-auth-type` field, on every operation/verb across all versions, only when `x-scope` is actually declared.
+- OAR043 - ParsingError - Fixed the `type` check to support OpenAPI 3.1/3.2 array-form types (`type: [string, "null"]`), which previously always false-positived. Also narrowed the rule to match Sonar's actual (looser) grammar for 3.1/3.2 and fixed duplicate reporting on `$ref`'d parameters.
+- OAR026 - TotalParameterDefaultValue - Fixed to read `default` (OAS2) or `schema.default` (OAS3+) depending on document version, instead of always the OAS3 path - silently never fired on Swagger 2.0 before.
+- OAR031 - Examples - Added a `typeIncludes` helper so nullable array-form types (`['object','null']`/`['array','null']`) are recursed into instead of treated as leaves. Also exempted Swagger 2.0 non-`body` parameters from the parameter-level check (that field doesn't exist there).
+- OAR005 - UndefinedWso2ScopeUse - Rewritten as `apq-wso2-scope-defined`: now resolves valid scopes from the document's own `x-wso2-security` catalog (following `$ref`s) instead of a hardcoded `read`/`write` list, and covers every operation surface across all OpenAPI versions.
+- OAR007 - UndefinedResponseMediaType - Rewritten as `apq-undefined-response-media-type`: now checks `produces` (OAS2, `post`/`put`/`patch` only) or `content` (OAS3+, including `webhooks`) depending on version, instead of a single `content`/`truthy` check that flagged every Swagger 2.0 response.
+- OAR010 - DefaultResponseMediaType - `apq-response-media-type` no longer hardcodes `application/json`; added `default-media-type`/`media-type-exceptions` options, and fixed the Swagger 2.0 branch to only check `post`/`put`/`patch` operations.
+
 ## [1.5.0] - 2026-09-10
 
 ### Added

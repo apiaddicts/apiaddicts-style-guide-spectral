@@ -5,6 +5,31 @@ module.exports = {
     "title": "Swagger Petstore"
   },
   "paths": {
+    "/failBody": {
+      "post": {
+        "parameters": [
+          {
+            "in": "body",
+            "name": "payload",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string", "example": "Fluffy" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "example": { "name": "Fluffy" }
+            }
+          }
+        }
+      }
+    },
     "/failAll": {
       "get": {
         "parameters": [
