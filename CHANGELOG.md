@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.6.0-beta.2] - 2026-09-23
 
+### Changed
+
+- OAR075 - String parameters whose `format` already fully constrains the value (`date`, `date-time`, `uuid`, `ipv4`, `ipv6`, case-insensitive) are now exempt from requiring `minLength`/`maxLength`/`pattern`/`enum`. The exemption list is fixed and independent of the `parameter_integrity` property. `given` also broadened to cover `additionalOperations` and `webhooks` parameters.
+
 ### Removed
 
 - Removed `spectral:oas` and `spectral:asyncapi` from the ruleset `extends`, so only the `apiq:` rules are applied and Spectral's built-in OpenAPI/AsyncAPI rules no longer add results on top of them.
