@@ -1,15 +1,13 @@
 const COMBINERS = ['allOf', 'oneOf', 'anyOf'];
 
-// A level is validated unless explicitly turned off with `false`.
+const typeIncludes = (type, name) => (Array.isArray(type) ? type.includes(name) : type === name);
+
 const isOn = (value) => value !== false;
 
-// Whole-body (root) example declared directly on a schema node.
 const schemaHasRootExample = (schema) =>
   !!schema && typeof schema === 'object'
   && (schema.example !== undefined || schema.examples !== undefined);
 
-// Parameter-level example: param.example/examples, the param schema's root example,
-// or a media-type example under param.content (OAS3). OAS2 params use param.example.
 const hasParameterExample = (param) => {
   if (!param || typeof param !== 'object') return false;
   if (param.example !== undefined || param.examples !== undefined) return true;
@@ -23,9 +21,6 @@ const hasParameterExample = (param) => {
   return false;
 };
 
-// Body-level (whole response / requestBody) example: a media-type example/examples or a
-// root schema example. OAS3 -> content.<mt>.{example|examples|schema.example}.
-// OAS2 -> node.examples map or node.schema root example.
 const hasBodyLevelExample = (node) => {
   if (!node || typeof node !== 'object') return false;
   if (node.content && typeof node.content === 'object') {
@@ -34,16 +29,15 @@ const hasBodyLevelExample = (node) => {
         && (mt.example !== undefined || mt.examples !== undefined || schemaHasRootExample(mt.schema)),
     );
   }
-  if (node.examples !== undefined) return true; // OAS2 response-level examples map
-  if (schemaHasRootExample(node.schema)) return true; // OAS2 root schema example
+  if (node.examples !== undefined) return true;
+  if (schemaHasRootExample(node.schema)) return true;
   return false;
 };
 
-// Per-leaf-property example check (recurses objects, arrays and combiners).
 const collectPropertyIssues = (schema, issues, basePath) => {
   if (!schema || typeof schema !== 'object' || schema.$ref) return;
 
-  if (schema.type === 'array') {
+  if (typeIncludes(schema.type, 'array')) {
     if (schema.items) collectPropertyIssues(schema.items, issues, [...basePath, 'items']);
     return;
   }
@@ -53,7 +47,7 @@ const collectPropertyIssues = (schema, issues, basePath) => {
       if (!propSchema || typeof propSchema !== 'object' || propSchema.$ref) continue;
       const propPath = [...basePath, 'properties', propName];
       const propType = propSchema.type;
-      if (propType === 'object' || propType === 'array' || (!propType && propSchema.properties)) {
+      if (typeIncludes(propType, 'object') || typeIncludes(propType, 'array') || (!propType && propSchema.properties)) {
         collectPropertyIssues(propSchema, issues, propPath);
       } else if (propType !== undefined && propSchema.example === undefined && propSchema.examples === undefined) {
         issues.push({
@@ -71,7 +65,6 @@ const collectPropertyIssues = (schema, issues, basePath) => {
   });
 };
 
-// Property-level coverage for a response / requestBody node (OAS3 content.* or OAS2 schema).
 const collectBodyProperties = (node, issues, basePath) => {
   if (node.content && typeof node.content === 'object') {
     Object.entries(node.content).forEach(([mediaType, mt]) => {
@@ -83,10 +76,6 @@ const collectBodyProperties = (node, issues, basePath) => {
 };
 
 /**
- * OAR031 — examples coverage, validated independently per level. Each level can be
- * switched off via functionOptions (all default on):
- *   validateResponse, validateRequestBody, validateParameter, validateProperty
- *
  * @param {object} given
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
@@ -106,13 +95,17 @@ module.exports = function oar031ExamplesCoverage(given, options, context) {
   const isRequestBody = nodePath.at(-1) === 'requestBody';
 
   if (isParameter) {
+    const doc = context.document?.data ?? {};
+    const isOAP2 = typeof doc.swagger === 'string';
+    if (isOAP2 && given.in !== 'body') {
+      return issues;
+    }
     if (validateParameter && !hasParameterExample(given)) {
       issues.push({
         message: `OAR031: Parameter '${given.name || ''}' must have an example defined`,
         path: nodePath,
       });
     }
-    // OAS2 body parameters carry a schema, so property-level coverage applies to them too.
     if (given.in === 'body' && validateProperty && given.schema) {
       collectPropertyIssues(given.schema, issues, [...nodePath, 'schema']);
     }

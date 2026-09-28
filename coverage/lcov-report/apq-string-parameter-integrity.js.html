@@ -98,32 +98,10 @@
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
 <a name='L35'></a><a href='#L35'>35</a>
-<a name='L36'></a><a href='#L36'>36</a>
-<a name='L37'></a><a href='#L37'>37</a>
-<a name='L38'></a><a href='#L38'>38</a>
-<a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a>
-<a name='L41'></a><a href='#L41'>41</a>
-<a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">157x</span>
+<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">212x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">175x</span>
+<span class="cline-any cline-yes">169x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,35 +109,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">212x</span>
+<span class="cline-any cline-yes">177x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">177x</span>
+<span class="cline-any cline-yes">177x</span>
+<span class="cline-any cline-yes">177x</span>
+<span class="cline-any cline-yes">177x</span>
+<span class="cline-any cline-yes">177x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">157x</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-yes">185x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">175x</span>
+<span class="cline-any cline-yes">169x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">121x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">429x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">121x</span>
 <span class="cline-any cline-yes">317x</span>
@@ -169,24 +133,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Same key and same default as the Sonar @RuleProperty on OAR075StringParameterIntegrityCheck, so a
-// profile configured in API Quality drives both engines identically.
-const DEFAULT_INTEGRITY = 'minLength,maxLength,pattern,enum';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const DEFAULT_INTEGRITY = 'minLength,maxLength,pattern,enum';
 &nbsp;
-// Mirrors JsonNodeUtils.isStringType, which scans the elements of an array-form `type`, so
-// ["string","null"] and ["null","string"] both count as a string.
 function isStringType(type) {
   return type === 'string' || (Array.isArray(type) &amp;&amp; type.indexOf('string') &gt; -1);
 }
 &nbsp;
 /**
- * OAR075 — a string parameter must declare at least one of the configured restrictions.
- *
- * Mirrors apiaddicts.sonar.openapi.checks.security.OAR075StringParameterIntegrityCheck together with
- * AbstractTypedParameterIntegrityCheck: EVERY parameter is inspected regardless of its `in`, Swagger
- * 2.0 carries `type` on the parameter itself while OAS 3 carries it under `schema`, and the issue is
- * reported on the `type` key of whichever node holds it.
- *
  * @param {object} targetVal a Parameter Object
  * @param {object} options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
@@ -194,10 +147,6 @@ function isStringType(type) {
 module.exports = (targetVal, options, context) =&gt; {
   <span class="missing-if-branch" title="if path not taken" >I</span>if (!targetVal || typeof targetVal !== 'object') <span class="cstat-no" title="statement not covered" >return [];</span>
 &nbsp;
-  // Swagger 2.0 keeps `type` on the parameter; OAS 3 moves it into `schema`. A v3 parameter with no
-  // `schema` is skipped, exactly as validateOas3Parameter does. `in: body` is the one Swagger 2.0
-  // parameter that carries a `schema`, and validateSwaggerParameter never looks at it — it only reads
-  // the parameter's own `type` — so it must not fall through to the OAS 3 branch here.
   const hasOwnType = Object.prototype.hasOwnProperty.call(targetVal, 'type');
   const isSwaggerBody = targetVal.in === 'body';
   const container = hasOwnType || isSwaggerBody ? targetVal : targetVal.schema;
@@ -211,9 +160,6 @@ module.exports = (targetVal, options, context) =&gt; {
     : <span class="branch-1 cbranch-no" title="branch not covered" >DEFAULT_INTEGRITY;</span>
   const checks = raw.split(',').map((key) =&gt; key.trim());
 &nbsp;
-  // Own properties only: `node.get(k)` in the Java looks at the node's own keys, so a configured key
-  // like "constructor" must not resolve through the prototype chain and silently satisfy the rule.
-  // A key present with a null value counts as missing, the way the grammar reports it.
   const satisfied = checks.some((key) =&gt; {
     if (!Object.prototype.hasOwnProperty.call(container, key)) return false;
     return container[key] !== undefined &amp;&amp; container[key] !== null;
@@ -229,7 +175,7 @@ module.exports = (targetVal, options, context) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-03T03:39:15.013Z
+                at 2026-09-12T03:38:16.267Z
             </div>
         <script src="prettify.js"></script>
         <script>

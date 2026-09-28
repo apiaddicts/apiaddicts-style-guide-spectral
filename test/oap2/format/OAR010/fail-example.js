@@ -12,7 +12,7 @@ module.exports = {
       "get": {
         "responses": {
           "200": {
-            "description": "No produces override"
+            "description": "GET is exempt in OAS2, even with a wrong global produces"
           }
         }
       },
@@ -48,7 +48,7 @@ module.exports = {
         ],
         "responses": {
           "200": {
-            "description": "Multiple but missing json"
+            "description": "DELETE is exempt in OAS2, even with produces missing json"
           }
         }
       }

@@ -11,7 +11,7 @@ module.exports = {
           { name: 'q', in: 'query', type: 'string' },
           { name: 'X-Trace', in: 'header', type: 'string' },
           { name: 'field', in: 'formData', type: 'string' },
-          { name: 'onlyFormat', in: 'query', type: 'string', format: 'date' },
+          { name: 'nonExemptFormat', in: 'query', type: 'string', format: 'password' },
         ],
         responses: { 200: { description: 'ok' } },
       },

@@ -8,12 +8,12 @@ module.exports = {
         "apim": {
             "x-wso2-scopes": [
                 {
-                    "name": "read",
+                    "name": "USER_SC_READ",
                     "key": "read",
                     "roles": ["READ_ROLE"]
                 },
                 {
-                    "name": "write",
+                    "name": "USER_SC_WRITE",
                     "key": "write",
                     "roles": ["WRITE_ROLE"]
                 }
@@ -28,7 +28,7 @@ module.exports = {
     "paths": {
         "/pets": {
             "get": {
-                "x-scope": "read"
+                "x-scope": "USER_SC_READ"
             }
         }
     }

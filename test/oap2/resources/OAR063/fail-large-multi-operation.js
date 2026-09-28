@@ -1,0 +1,96 @@
+module.exports = {
+  "swagger": "2.0",
+  "info": { "version": "1.0.0", "title": "Swagger Petstore" },
+  "paths": {
+    "/pets/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "200": { "description": "OK" },
+          "400": { "description": "Bad request" }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "202": { "description": "Accepted" },
+          "206": { "description": "Partial content" }
+        }
+      }
+    },
+    "/invoices/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/shipments/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "400": { "description": "Bad request" },
+          "415": { "description": "Unsupported media type" }
+        }
+      }
+    },
+    "/payments/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "204": { "description": "No content" }
+        }
+      }
+    },
+    "/refunds/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/status": {
+      "put": {
+        "parameters": [
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/reports/{id}": {
+      "put": {
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "type": "string" },
+          { "in": "body", "name": "body", "schema": { "type": "object" } }
+        ],
+        "responses": {
+          "206": { "description": "Partial content" }
+        }
+      }
+    }
+  }
+};

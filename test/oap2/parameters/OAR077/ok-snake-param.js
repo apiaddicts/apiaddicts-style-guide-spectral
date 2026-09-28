@@ -1,0 +1,41 @@
+module.exports = {
+  swagger: '2.0',
+  info: {
+    version: '1.0.0',
+    title: 'Swagger Petstore',
+  },
+  paths: {
+    '/pets': {
+      get: {
+        parameters: [
+          {
+            in: 'query',
+            name: 'other',
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          {
+            in: 'query',
+            name: 'other_param',
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          {
+            in: 'query',
+            name: '$total',
+            type: 'boolean',
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Ok',
+          },
+        },
+      },
+    },
+  },
+};

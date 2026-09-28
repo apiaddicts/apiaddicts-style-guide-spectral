@@ -4,6 +4,10 @@
  * @param {object} options - Function options
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
+function typeIncludes(type, name) {
+  return Array.isArray(type) ? type.includes(name) : type === name;
+}
+
 module.exports = (given, options, context) => {
   const results = [];
 
@@ -17,10 +21,9 @@ module.exports = (given, options, context) => {
       return;
     }
 
-    // Check if this is a password-related field (name contains "password")
     const isPasswordField = propName.toLowerCase().includes('password');
 
-    if (isPasswordField && propSchema.type === 'string') {
+    if (isPasswordField && typeIncludes(propSchema.type, 'string')) {
       // Password fields must have format: password
       if (propSchema.format !== 'password') {
         results.push({

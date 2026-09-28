@@ -6,7 +6,7 @@
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 
-const NO_BODY_CODES = new Set(['204']);
+const BODY_ALLOWED_METHODS = new Set(['post', 'put', 'patch']);
 
 function parseExceptions(value) {
   return new Set(
@@ -29,39 +29,42 @@ module.exports = (given, options, context) => {
   const exceptions = parseExceptions(options && options['media-type-exceptions']);
 
   const root = context.document.parserResult.data;
+  const path = context.path;
+  const lastSegment = path[path.length - 1];
 
   if (root.swagger) {
-    const produces = given.produces ?? root.produces;
+    if (given.responses === undefined) return errors;
 
-    if (
-      !produces ||
-      !Array.isArray(produces) ||
-      !produces.some((mediaType) => isSupported(String(mediaType).toLowerCase(), defaultMediaType, exceptions))
-    ) {
+    const method = path[path.length - 1];
+    if (!BODY_ALLOWED_METHODS.has(method)) return errors;
+
+    const hasOwnProduces = given.produces !== undefined && given.produces !== null;
+    const produces = hasOwnProduces ? given.produces : root.produces;
+    const supported = Array.isArray(produces) && produces.some((mediaType) => isSupported(String(mediaType).toLowerCase(), defaultMediaType, exceptions));
+    if (!supported) {
       errors.push({
         message: context.rule.message,
-        path: [...context.path]
+        path: hasOwnProduces ? [...path, 'produces'] : [...path]
       });
     }
 
     return errors;
   }
 
-  const responses = given.responses;
-  if (!responses) return errors;
+  if (given.responses !== undefined) return errors;
 
-  for (const [statusCode, response] of Object.entries(responses)) {
-    if (NO_BODY_CODES.has(statusCode)) continue;
-
-    const contentTypes = response?.content ? Object.keys(response.content) : [];
+  if (lastSegment === 'content') {
+    const contentTypes = Object.keys(given);
     const supported = contentTypes.some((mediaType) => isSupported(mediaType.toLowerCase(), defaultMediaType, exceptions));
-
     if (!supported) {
-      errors.push({
-        message: context.rule.message,
-        path: [...context.path, 'responses', statusCode]
-      });
+      errors.push({ message: context.rule.message, path: [...path] });
     }
+    return errors;
+  }
+
+  const hasContentKey = given.content !== undefined && given.content !== null;
+  if (!hasContentKey) {
+    errors.push({ message: context.rule.message, path: [...path] });
   }
 
   return errors;

@@ -1,5 +1,9 @@
 module.exports = {
-    "swagger": "2.0",
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Swagger Petstore"
+    },
     "x-wso2-security": {
         "apim": {
             "x-wso2-scopes": [
@@ -16,7 +20,7 @@ module.exports = {
         "/pets": {
             "get": {
                 "x-scope": "read",
-                "x-aut-type": "Application & Application User"
+                "x-auth-type": "Application"
             }
         }
     }

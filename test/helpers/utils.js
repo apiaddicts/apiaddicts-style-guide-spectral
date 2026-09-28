@@ -18,9 +18,7 @@ async function loadRuleset(file) {
     }),
     // eslint-disable-next-line import/no-dynamic-require,global-require
   )(m, (text) => require(require.resolve(text, { paths })));
-  const ruleset = m.exports;
-  delete ruleset.extends;
-  return ruleset;
+  return m.exports;
 }
 
 async function linterForRule(rule, { namingConvention, functionOptions } = {}) {
