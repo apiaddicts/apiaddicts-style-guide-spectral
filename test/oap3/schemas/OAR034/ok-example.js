@@ -67,7 +67,7 @@ module.exports = {
           "paging": {
             "type": "object",
             "properties": {
-              "init": {
+              "start": {
                 "type": "integer"
               },
               "limit": {
@@ -106,7 +106,7 @@ module.exports = {
               }
             },
             "required": [
-              "init",
+              "start",
               "limit",
               "links"
             ]

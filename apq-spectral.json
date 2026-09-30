@@ -500,10 +500,10 @@
       }
     },
     "apiq:OAR034": {
-      "description": "A paged response must comply with the standard paging schema (start, limit, links with self/previous/next, numPages, total).",
-      "message": "OAR034: Paged response schema does not match the required standard.",
+      "description": "GET collection responses must include a paging block that complies with the standard paging schema (required start, limit and links with self/previous/next; optional numPages and total as integers).",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[*][get].responses[?(@property != '204' && @property != '304' && @property != 'default')]..schema",
+      "given": "$.paths[*].get.responses[*]",
       "then": {
         "function": "apq-paged-response-check",
         "functionOptions": {
