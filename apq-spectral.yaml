@@ -477,7 +477,7 @@ rules:
     then:
       function: apq-schema-format
   apiq:OAR038:
-    description: "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property."
+    description: "The 201 response schema of a POST operation must only have the allowed top-level properties ('data' or 'error' by default), each with at least one sub-property, and every required one."
     message: "{{error}}"
     severity: error
     given: "$.paths.*.post.responses['201']"
@@ -485,6 +485,10 @@ rules:
       function: apq-valid-response-schema
       functionOptions:
         data-property: data
+        allowed-properties: ""
+        required-properties: ""
+        paths: "/me,/health,/ping,/status"
+        pathValidationStrategy: "/exclude"
   apiq:OAR039:
     description: "Response codes must be defined according to the standard depending on the HTTP verb and resource path."
     message: "{{error}}"
