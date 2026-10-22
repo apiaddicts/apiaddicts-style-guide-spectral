@@ -2,32 +2,51 @@ module.exports = {
   "openapi": "3.1.0",
   "info": {
     "title": "Identity Directory API",
-    "summary": "Users, groups and memberships.",
-    "description": "Every response wraps its payload in a result envelope; collections carry result.pagination. Nullable values use the array form of type.",
-    "version": "3.0.0",
-    "license": {
-      "name": "Apache 2.0",
-      "identifier": "Apache-2.0"
-    }
+    "description": "Every response wraps its payload in a result object that carries the pagination of collections.",
+    "version": "4.0.0"
   },
   "servers": [
     {
-      "url": "https://api.example.com/identity/v3"
+      "url": "https://api.example.com/identity/v4"
     }
   ],
   "paths": {
     "/users": {
       "get": {
         "summary": "List users",
-        "operationId": "listUsers",
         "responses": {
           "200": {
-            "description": "Users found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserPage",
-                  "description": "Paged users."
+                  "$ref": "#/components/schemas/UserPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      },
+      "post": {
+        "summary": "Bulk create users",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -38,17 +57,29 @@ module.exports = {
     "/users/me": {
       "get": {
         "summary": "Get the signed in user",
-        "operationId": "getMe",
         "responses": {
           "200": {
-            "description": "Current user.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
@@ -56,7 +87,6 @@ module.exports = {
     "/users/{userId}": {
       "get": {
         "summary": "Get user",
-        "operationId": "getUser",
         "parameters": [
           {
             "name": "userId",
@@ -69,44 +99,17 @@ module.exports = {
         ],
         "responses": {
           "200": {
-            "description": "User found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/groups": {
-      "get": {
-        "summary": "List groups with a nullable result",
-        "operationId": "listGroups",
-        "responses": {
-          "200": {
-            "description": "Groups found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "result": {
-                      "type": [
-                        "object",
-                        "null"
-                      ],
+                      "type": "object",
                       "properties": {
                         "data": {
-                          "type": [
-                            "array",
-                            "null"
-                          ],
-                          "items": {
-                            "$ref": "#/components/schemas/Group"
-                          }
+                          "$ref": "#/components/schemas/User"
                         }
                       }
                     }
@@ -114,17 +117,29 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
-    "/memberships": {
+    "/users/{userId}/sessions": {
       "get": {
-        "summary": "List memberships",
-        "operationId": "listMemberships",
+        "summary": "List the sessions of a user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Memberships found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -138,31 +153,6 @@ module.exports = {
                           "items": {
                             "type": "string"
                           }
-                        },
-                        "pagination": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
-                          "required": [
-                            "start",
-                            "limit",
-                            "links"
-                          ],
-                          "properties": {
-                            "start": {
-                              "type": [
-                                "string",
-                                "null"
-                              ]
-                            },
-                            "limit": {
-                              "type": "integer"
-                            },
-                            "links": {
-                              "$ref": "#/components/schemas/PaginationLinks"
-                            }
-                          }
                         }
                       }
                     }
@@ -170,29 +160,160 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
-    "/roles": {
+    "/groups": {
       "get": {
-        "summary": "List roles as a nullable array result",
-        "operationId": "listRoles",
+        "summary": "List groups",
         "responses": {
           "200": {
-            "description": "Roles found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "result": {
-                      "type": [
-                        "array",
-                        "null"
+                      "type": "object",
+                      "required": [
+                        "pagination"
                       ],
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Group"
+                          }
+                        },
+                        "pagination": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/roles": {
+      "get": {
+        "summary": "List roles",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/Role"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/devices": {
+      "get": {
+        "summary": "List devices",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/audit-events": {
+      "get": {
+        "summary": "List audit events",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/permissions": {
+      "get": {
+        "summary": "List permissions",
+        "responses": {
+          "206": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/PaginationStartString"
+                        }
                       }
                     }
                   }
@@ -205,25 +326,31 @@ module.exports = {
     },
     "/teams": {
       "get": {
-        "summary": "List teams whose result has a null branch",
-        "operationId": "listTeams",
+        "summary": "List teams",
         "responses": {
-          "200": {
-            "description": "Teams found.",
+          "2XX": {
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "result": {
-                      "anyOf": [
-                        {
-                          "$ref": "#/components/schemas/TeamResultWithoutLinks"
+                      "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Group"
+                          }
                         },
-                        {
-                          "type": "null"
+                        "pagination": {
+                          "$ref": "#/components/schemas/PaginationSelfOnly"
                         }
-                      ]
+                      }
                     }
                   }
                 }
@@ -233,13 +360,72 @@ module.exports = {
         }
       }
     },
-    "/invitations": {
+    "/organizations": {
       "get": {
-        "summary": "List invitations whose paging block is a null branch first",
-        "operationId": "listInvitations",
+        "summary": "List organizations",
         "responses": {
           "200": {
-            "description": "Invitations found.",
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/OrganizationEnvelopeNotListed"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "summary": "List notifications",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/invitations": {
+      "get": {
+        "summary": "List invitations",
+        "responses": {
+          "200": {
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -255,14 +441,7 @@ module.exports = {
                           }
                         },
                         "pagination": {
-                          "oneOf": [
-                            {
-                              "type": "null"
-                            },
-                            {
-                              "$ref": "#/components/schemas/PaginationWithoutStart"
-                            }
-                          ]
+                          "$ref": "#/components/schemas/Pagination"
                         }
                       }
                     }
@@ -270,70 +449,19 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
-    "/fleets": {
+    "/settings/{settingId}": {
       "get": {
-        "summary": "List fleets through $defs",
-        "operationId": "listFleets",
-        "responses": {
-          "200": {
-            "description": "Fleets found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FleetEnvelope/$defs/FleetPage"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/archived-users": {
-      "$ref": "#/components/pathItems/ArchivedUsers"
-    },
-    "/devices": {
-      "get": {
-        "summary": "List devices as a nullable bare array",
-        "operationId": "listDevices",
-        "responses": {
-          "200": {
-            "description": "Devices found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": [
-                    "array",
-                    "null"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/{userId}/sessions/{sessionId}": {
-      "get": {
-        "summary": "Get a session with its token history",
-        "operationId": "getSession",
+        "summary": "Get a setting with a malformed paging block",
         "parameters": [
           {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sessionId",
+            "name": "settingId",
             "in": "path",
             "required": true,
             "schema": {
@@ -343,50 +471,7 @@ module.exports = {
         ],
         "responses": {
           "200": {
-            "description": "Session found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": [
-                        "object",
-                        "null"
-                      ],
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "userCreated": {
-      "post": {
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserResult"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Acknowledged.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -395,11 +480,8 @@ module.exports = {
                     "result": {
                       "type": "object",
                       "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
+                        "pagination": {
+                          "type": "string"
                         }
                       }
                     }
@@ -407,35 +489,123 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/exports": {
+      "get": {
+        "summary": "Export the users",
+        "responses": {
+          "200": {
+            "description": "Ok"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/locales": {
+      "get": {
+        "summary": "List locales in several formats",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
+                      "properties": {
+                        "records": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/Pagination"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/hal+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/archived-users": {
+      "$ref": "#/components/pathItems/ArchivedUsers"
+    },
+    "/fleets": {
+      "get": {
+        "summary": "List fleets",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FleetEnvelope/$defs/FleetPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     }
   },
   "components": {
-    "pathItems": {
-      "ArchivedUsers": {
-        "get": {
-          "summary": "List archived users",
-          "operationId": "listArchivedUsers",
-          "responses": {
-            "200": {
-              "description": "Archived users found.",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "result": {
-                        "type": "object",
-                        "properties": {
-                          "rows": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/User"
-                            }
-                          }
-                        }
+    "responses": {
+      "Problem": {
+        "description": "Problem.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
                       }
                     }
                   }
@@ -451,27 +621,7 @@ module.exports = {
         "type": "object",
         "properties": {
           "href": {
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
-      "PaginationLinks": {
-        "type": "object",
-        "required": [
-          "self",
-          "previous",
-          "next"
-        ],
-        "properties": {
-          "self": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "previous": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "next": {
-            "$ref": "#/components/schemas/Link"
+            "type": "string"
           }
         }
       },
@@ -496,42 +646,129 @@ module.exports = {
             ]
           },
           "numPages": {
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer"
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
           }
         }
       },
-      "PaginationWithoutStart": {
+      "PaginationStartString": {
         "type": "object",
         "required": [
+          "start",
           "limit",
           "links"
         ],
         "properties": {
+          "start": {
+            "type": "string"
+          },
           "limit": {
             "type": "integer"
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
+          }
+        }
+      },
+      "PaginationSelfOnly": {
+        "type": "object",
+        "required": [
+          "start",
+          "limit",
+          "links"
+        ],
+        "properties": {
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "self"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
+          }
+        }
+      },
+      "PaginationNotListed": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
           }
         }
       },
       "User": {
         "type": "object",
         "properties": {
-          "id": {
+          "userId": {
             "type": "string"
           },
-          "aliases": {
-            "type": [
-              "array",
-              "null"
-            ],
+          "roles": {
+            "type": "array",
             "items": {
               "type": "string"
             }
@@ -541,7 +778,7 @@ module.exports = {
       "Group": {
         "type": "object",
         "properties": {
-          "id": {
+          "groupId": {
             "type": "string"
           }
         }
@@ -559,6 +796,9 @@ module.exports = {
         "properties": {
           "result": {
             "type": "object",
+            "required": [
+              "pagination"
+            ],
             "properties": {
               "data": {
                 "type": "array",
@@ -573,45 +813,71 @@ module.exports = {
           }
         }
       },
-      "UserResult": {
+      "PagedResult": {
         "type": "object",
+        "required": [
+          "pagination"
+        ],
         "properties": {
-          "result": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
           }
         }
       },
-      "TeamResultWithoutLinks": {
+      "PagedResultNotListed": {
+        "type": "object",
+        "required": [
+          "pagination"
+        ],
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationNotListed"
+          }
+        }
+      },
+      "OrganizationEnvelope": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Group"
-            }
-          },
-          "pagination": {
-            "type": "object",
-            "required": [
-              "start",
-              "limit"
-            ],
-            "properties": {
-              "start": {
-                "type": "integer"
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PagedResult"
               },
-              "limit": {
-                "type": "integer"
+              {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
-            }
+            ]
+          }
+        }
+      },
+      "OrganizationEnvelopeNotListed": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PagedResultNotListed"
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       },
@@ -629,6 +895,62 @@ module.exports = {
                     "items": {
                       "type": "string"
                     }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pathItems": {
+      "ArchivedUsers": {
+        "get": {
+          "summary": "List archived users",
+          "responses": {
+            "200": {
+              "description": "Ok",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "result": {
+                        "type": "object",
+                        "properties": {
+                          "rows": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/User"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/components/responses/Problem"
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {
+    "userCreated": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
                   }
                 }
               }

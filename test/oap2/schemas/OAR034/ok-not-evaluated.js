@@ -168,7 +168,10 @@ module.exports = {
           "200": {
             "description": "No schema"
           }
-        }
+        },
+        "produces": [
+          "text/csv"
+        ]
       }
     },
     "/catalog/file": {
@@ -180,7 +183,10 @@ module.exports = {
               "type": "file"
             }
           }
-        }
+        },
+        "produces": [
+          "application/pdf"
+        ]
       }
     },
     "/catalog/anything": {
@@ -190,7 +196,10 @@ module.exports = {
             "description": "Ok",
             "schema": {}
           }
-        }
+        },
+        "produces": [
+          "application/octet-stream"
+        ]
       }
     },
     "/catalog/summary": {
@@ -227,7 +236,11 @@ module.exports = {
               }
             }
           }
-        }
+        },
+        "produces": [
+          "application/xml",
+          "text/plain"
+        ]
       }
     }
   }

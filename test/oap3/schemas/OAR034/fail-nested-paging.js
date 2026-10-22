@@ -2,44 +2,21 @@ module.exports = {
   "openapi": "3.0.3",
   "info": {
     "title": "Identity Directory API",
-    "description": "Every response wraps its payload in a result envelope; collections carry result.pagination.",
-    "version": "2.4.0"
+    "description": "Every response wraps its payload in a result object that carries the pagination of collections.",
+    "version": "4.0.0"
   },
   "servers": [
     {
-      "url": "https://api.example.com/identity/v2"
-    }
-  ],
-  "tags": [
-    {
-      "name": "users"
-    },
-    {
-      "name": "groups"
-    },
-    {
-      "name": "settings"
+      "url": "https://api.example.com/identity/v4"
     }
   ],
   "paths": {
     "/users": {
       "get": {
-        "tags": [
-          "users"
-        ],
         "summary": "List users",
-        "operationId": "listUsers",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/start"
-          },
-          {
-            "$ref": "#/components/parameters/limit"
-          }
-        ],
         "responses": {
           "200": {
-            "description": "Users found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -48,27 +25,28 @@ module.exports = {
               }
             }
           },
-          "304": {
-            "description": "Not modified."
-          },
           "400": {
             "$ref": "#/components/responses/Problem"
           }
         }
       },
       "post": {
-        "tags": [
-          "users"
-        ],
         "summary": "Bulk create users",
-        "operationId": "createUsers",
         "responses": {
-          "201": {
-            "description": "Users created.",
+          "200": {
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserCollectionResult"
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -78,49 +56,69 @@ module.exports = {
     },
     "/users/me": {
       "get": {
-        "tags": [
-          "users"
-        ],
         "summary": "Get the signed in user",
-        "operationId": "getMe",
         "responses": {
           "200": {
-            "description": "Current user.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/users/{userId}": {
       "get": {
-        "tags": [
-          "users"
-        ],
         "summary": "Get user",
-        "operationId": "getUser",
         "parameters": [
           {
-            "$ref": "#/components/parameters/userId"
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "User found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserResult"
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/User"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
           },
-          "404": {
+          "400": {
             "$ref": "#/components/responses/Problem"
           }
         }
@@ -128,19 +126,20 @@ module.exports = {
     },
     "/users/{userId}/sessions": {
       "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "List active sessions of a user",
-        "operationId": "listUserSessions",
+        "summary": "List the sessions of a user",
         "parameters": [
           {
-            "$ref": "#/components/parameters/userId"
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Sessions found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,7 +151,7 @@ module.exports = {
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Session"
+                            "type": "string"
                           }
                         }
                       }
@@ -161,54 +160,19 @@ module.exports = {
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/users/{userId}/friends/{friendId}": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "Get a friend link with its shared groups",
-        "operationId": "getFriend",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/userId"
           },
-          {
-            "name": "friendId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Friend found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserCollectionResult"
-                }
-              }
-            }
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/groups": {
       "get": {
-        "tags": [
-          "groups"
-        ],
         "summary": "List groups",
-        "operationId": "listGroups",
         "responses": {
           "200": {
-            "description": "Groups found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -216,6 +180,9 @@ module.exports = {
                   "properties": {
                     "result": {
                       "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
                       "properties": {
                         "items": {
                           "type": "array",
@@ -232,20 +199,19 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/roles": {
       "get": {
-        "tags": [
-          "groups"
-        ],
-        "summary": "List roles as an array result",
-        "operationId": "listRoles",
+        "summary": "List roles",
         "responses": {
           "200": {
-            "description": "Roles found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -261,44 +227,42 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/devices": {
       "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "List devices as a bare array",
-        "operationId": "listDevices",
+        "summary": "List devices",
         "responses": {
           "200": {
-            "description": "Devices found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Device"
+                    "type": "string"
                   }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/audit-events": {
       "get": {
-        "tags": [
-          "settings"
-        ],
-        "summary": "List audit events with root level paging",
-        "operationId": "listAuditEvents",
+        "summary": "List audit events",
         "responses": {
           "200": {
-            "description": "Audit events found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -307,7 +271,7 @@ module.exports = {
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/AuditEvent"
+                        "type": "string"
                       }
                     },
                     "pagination": {
@@ -317,20 +281,19 @@ module.exports = {
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/permissions": {
       "get": {
-        "tags": [
-          "groups"
-        ],
         "summary": "List permissions",
-        "operationId": "listPermissions",
         "responses": {
           "206": {
-            "description": "Partial permission list.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -338,31 +301,18 @@ module.exports = {
                   "properties": {
                     "result": {
                       "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
                       "properties": {
                         "data": {
                           "type": "array",
                           "items": {
-                            "$ref": "#/components/schemas/Permission"
+                            "type": "string"
                           }
                         },
                         "pagination": {
-                          "type": "object",
-                          "required": [
-                            "start",
-                            "limit",
-                            "links"
-                          ],
-                          "properties": {
-                            "start": {
-                              "type": "string"
-                            },
-                            "limit": {
-                              "type": "integer"
-                            },
-                            "links": {
-                              "$ref": "#/components/schemas/PaginationLinks"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PaginationStartString"
                         }
                       }
                     }
@@ -376,14 +326,10 @@ module.exports = {
     },
     "/teams": {
       "get": {
-        "tags": [
-          "groups"
-        ],
         "summary": "List teams",
-        "operationId": "listTeams",
         "responses": {
           "2XX": {
-            "description": "Teams found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -391,6 +337,9 @@ module.exports = {
                   "properties": {
                     "result": {
                       "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
                       "properties": {
                         "data": {
                           "type": "array",
@@ -399,31 +348,7 @@ module.exports = {
                           }
                         },
                         "pagination": {
-                          "type": "object",
-                          "required": [
-                            "start",
-                            "limit",
-                            "links"
-                          ],
-                          "properties": {
-                            "start": {
-                              "type": "integer"
-                            },
-                            "limit": {
-                              "type": "integer"
-                            },
-                            "links": {
-                              "type": "object",
-                              "required": [
-                                "self"
-                              ],
-                              "properties": {
-                                "self": {
-                                  "$ref": "#/components/schemas/Link"
-                                }
-                              }
-                            }
-                          }
+                          "$ref": "#/components/schemas/PaginationSelfOnly"
                         }
                       }
                     }
@@ -437,36 +362,101 @@ module.exports = {
     },
     "/organizations": {
       "get": {
-        "tags": [
-          "groups"
-        ],
-        "summary": "List organizations through a composed envelope",
-        "operationId": "listOrganizations",
+        "summary": "List organizations",
         "responses": {
           "200": {
-            "description": "Organizations found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
                   "allOf": [
                     {
-                      "$ref": "#/components/schemas/OrganizationEnvelope"
+                      "$ref": "#/components/schemas/OrganizationEnvelopeNotListed"
                     }
                   ]
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "summary": "List notifications",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
+          }
+        }
+      }
+    },
+    "/invitations": {
+      "get": {
+        "summary": "List invitations",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "values": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/Pagination"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/settings/{settingId}": {
       "get": {
-        "tags": [
-          "settings"
-        ],
         "summary": "Get a setting with a malformed paging block",
-        "operationId": "getSetting",
         "parameters": [
           {
             "name": "settingId",
@@ -479,7 +469,7 @@ module.exports = {
         ],
         "responses": {
           "200": {
-            "description": "Setting found.",
+            "description": "Ok",
             "content": {
               "application/json": {
                 "schema": {
@@ -488,9 +478,6 @@ module.exports = {
                     "result": {
                       "type": "object",
                       "properties": {
-                        "key": {
-                          "type": "string"
-                        },
                         "pagination": {
                           "type": "string"
                         }
@@ -500,194 +487,85 @@ module.exports = {
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/invitations": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "List invitations through an alias",
-        "operationId": "listInvitations",
-        "responses": {
-          "200": {
-            "description": "Invitations found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/InvitationPageAlias"
-                }
-              }
-            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/exports": {
       "get": {
-        "tags": [
-          "settings"
-        ],
-        "summary": "Get the export token",
-        "operationId": "getExport",
+        "summary": "Export the users",
         "responses": {
           "200": {
-            "description": "Export token.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/status": {
-      "get": {
-        "tags": [
-          "settings"
-        ],
-        "summary": "Health status with its checks",
-        "operationId": "getStatus",
-        "responses": {
-          "200": {
-            "description": "Status.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "type": "string"
-                        },
-                        "checks": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/notifications": {
-      "get": {
-        "tags": [
-          "users"
-        ],
-        "summary": "List notifications",
-        "operationId": "listNotifications",
-        "responses": {
-          "200": {
-            "description": "Notifications found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "result": {
-                      "type": "object",
-                      "nullable": true,
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Ok"
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     },
     "/locales": {
       "get": {
-        "tags": [
-          "settings"
-        ],
-        "summary": "List locales in JSON and XML",
-        "operationId": "listLocales",
+        "summary": "List locales in several formats",
         "responses": {
           "200": {
-            "description": "Locales found.",
+            "description": "Ok",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocalePage"
-                }
-              },
-              "application/xml": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "result": {
                       "type": "object",
+                      "required": [
+                        "pagination"
+                      ],
                       "properties": {
                         "records": {
                           "type": "array",
                           "items": {
                             "type": "string"
                           }
+                        },
+                        "pagination": {
+                          "$ref": "#/components/schemas/Pagination"
                         }
+                      }
+                    }
+                  }
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/hal+json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "records": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
                       }
                     }
                   }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/Problem"
           }
         }
       }
     }
   },
   "components": {
-    "parameters": {
-      "start": {
-        "name": "$start",
-        "in": "query",
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "limit": {
-        "name": "$limit",
-        "in": "query",
-        "schema": {
-          "type": "integer"
-        }
-      },
-      "userId": {
-        "name": "userId",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string"
-        }
-      }
-    },
     "responses": {
       "Problem": {
         "description": "Problem.",
@@ -722,31 +600,6 @@ module.exports = {
           }
         }
       },
-      "PaginationLinks": {
-        "type": "object",
-        "required": [
-          "self",
-          "previous",
-          "next"
-        ],
-        "properties": {
-          "self": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "first": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "previous": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "next": {
-            "$ref": "#/components/schemas/Link"
-          },
-          "last": {
-            "$ref": "#/components/schemas/Link"
-          }
-        }
-      },
       "Pagination": {
         "type": "object",
         "required": [
@@ -768,7 +621,85 @@ module.exports = {
             "type": "integer"
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
+          }
+        }
+      },
+      "PaginationStartString": {
+        "type": "object",
+        "required": [
+          "start",
+          "limit",
+          "links"
+        ],
+        "properties": {
+          "start": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
+          }
+        }
+      },
+      "PaginationSelfOnly": {
+        "type": "object",
+        "required": [
+          "start",
+          "limit",
+          "links"
+        ],
+        "properties": {
+          "start": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "links": {
+            "type": "object",
+            "required": [
+              "self"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
           }
         }
       },
@@ -782,17 +713,30 @@ module.exports = {
             "type": "integer"
           },
           "links": {
-            "$ref": "#/components/schemas/PaginationLinks"
+            "type": "object",
+            "required": [
+              "self",
+              "previous",
+              "next"
+            ],
+            "properties": {
+              "self": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "previous": {
+                "$ref": "#/components/schemas/Link"
+              },
+              "next": {
+                "$ref": "#/components/schemas/Link"
+              }
+            }
           }
         }
       },
       "User": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "email": {
+          "userId": {
             "type": "string"
           },
           "roles": {
@@ -803,25 +747,11 @@ module.exports = {
           }
         }
       },
-      "Session": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          }
-        }
-      },
       "Group": {
         "type": "object",
         "properties": {
-          "id": {
+          "groupId": {
             "type": "string"
-          },
-          "members": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         }
       },
@@ -833,35 +763,14 @@ module.exports = {
           }
         }
       },
-      "Device": {
-        "type": "object",
-        "properties": {
-          "serial": {
-            "type": "string"
-          }
-        }
-      },
-      "AuditEvent": {
-        "type": "object",
-        "properties": {
-          "action": {
-            "type": "string"
-          }
-        }
-      },
-      "Permission": {
-        "type": "object",
-        "properties": {
-          "scope": {
-            "type": "string"
-          }
-        }
-      },
       "UserPage": {
         "type": "object",
         "properties": {
           "result": {
             "type": "object",
+            "required": [
+              "pagination"
+            ],
             "properties": {
               "data": {
                 "type": "array",
@@ -876,37 +785,22 @@ module.exports = {
           }
         }
       },
-      "UserResult": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        }
-      },
-      "UserCollectionResult": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "data": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          }
-        }
-      },
       "PagedResult": {
         "type": "object",
+        "required": [
+          "pagination"
+        ],
+        "properties": {
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        }
+      },
+      "PagedResultNotListed": {
+        "type": "object",
+        "required": [
+          "pagination"
+        ],
         "properties": {
           "pagination": {
             "$ref": "#/components/schemas/PaginationNotListed"
@@ -936,44 +830,26 @@ module.exports = {
           }
         }
       },
-      "InvitationPage": {
+      "OrganizationEnvelopeNotListed": {
         "type": "object",
         "properties": {
           "result": {
-            "type": "object",
-            "properties": {
-              "values": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PagedResultNotListed"
               },
-              "pagination": {
-                "$ref": "#/components/schemas/Pagination"
-              }
-            }
-          }
-        }
-      },
-      "InvitationPageAlias": {
-        "$ref": "#/components/schemas/InvitationPage"
-      },
-      "LocalePage": {
-        "type": "object",
-        "properties": {
-          "result": {
-            "type": "object",
-            "properties": {
-              "records": {
-                "type": "array",
-                "items": {
-                  "type": "string"
+              {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
                 }
-              },
-              "pagination": {
-                "$ref": "#/components/schemas/Pagination"
               }
-            }
+            ]
           }
         }
       }
