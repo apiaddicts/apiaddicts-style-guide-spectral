@@ -16,6 +16,12 @@ const failExample31 = require('./OAR034/fail-example-31');
 const okExample31 = require('./OAR034/ok-example-31');
 const failExample320 = require('./OAR034/fail-example-320');
 const okExample320 = require('./OAR034/ok-example-320');
+const failNestedPaging = require('./OAR034/fail-nested-paging');
+const okNestedPaging = require('./OAR034/ok-nested-paging');
+const failNestedPaging31 = require('./OAR034/fail-nested-paging-31');
+const okNestedPaging31 = require('./OAR034/ok-nested-paging-31');
+const failNestedPaging320 = require('./OAR034/fail-nested-paging-320');
+const okNestedPaging320 = require('./OAR034/ok-nested-paging-320');
 
 const link = { type: 'object', properties: { href: { type: 'string' } } };
 const paging = () => ({
@@ -40,6 +46,10 @@ const RESPONSE_SCHEMA = ['content', 'application/json', 'schema'];
 const at = (path, code, ...rest) => ['paths', path, 'get', 'responses', code, ...RESPONSE_SCHEMA, ...rest];
 const NO_PAGING = (prop) => `OAR034: Response with collection property '${prop}' must include 'paging' property for pagination`;
 const TOP_LEVEL_ARRAY = "OAR034: Collection response must be an object with a 'paging' property, not a top-level array";
+const NESTED_NO_PAGING = (prop) => `OAR034: Response with collection property '${prop}' must include 'result.pagination' property for pagination`;
+const NESTED_TOP_LEVEL_ARRAY = "OAR034: Collection response must be an object with a 'result.pagination' property, not a top-level array";
+const RESULT_ARRAY = "OAR034: 'result' must be an object with a 'pagination' property, not an array";
+const pagingOption = (pagingPropertyName) => JSON.stringify({ ...paging(), pagingPropertyName });
 
 const sorted = (entries) => [...entries].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
 
@@ -247,6 +257,130 @@ describe('apiq:OAR034 paging-schema option', () => {
   });
 });
 
+describe('apiq:OAR034 reported case — root and result pagination', () => {
+  const json = (schema) => ({ description: 'Ok', content: { 'application/json': { schema } } });
+  const usersApi = (collection, single) => ({
+    openapi: '3.0.3',
+    info: { title: 'Users API', version: '1.0.0' },
+    paths: {
+      '/users': { get: { parameters: [{ name: '$start', in: 'query', schema: { type: 'integer' } }], responses: { 200: json(collection) } } },
+      '/users/me': { get: { responses: { 200: json(single) } } },
+      '/users/{path_id}': { get: { parameters: [{ name: 'path_id', in: 'path', required: true, schema: { type: 'string' } }], responses: { 200: json(single) } } },
+    },
+  });
+  const user = { type: 'object', properties: { id: { type: 'string' }, roles: { type: 'array', items: { type: 'string' } } } };
+  const users = { type: 'array', items: user };
+  let rootLinter;
+  let resultLinter;
+
+  beforeAll(async () => {
+    rootLinter = await linterForRule('apiq:OAR034', { functionOptions: { 'paging-schema': pagingOption('pagination') } });
+    resultLinter = await linterForRule('apiq:OAR034', { functionOptions: { 'paging-schema': pagingOption('result.pagination') } });
+  });
+
+  test('root pagination: an empty {"pagination":{}} block is reported only on the /users collection', async () => {
+    const document = usersApi({ type: 'object', properties: { data: users, pagination: {} } }, { type: 'object', properties: { data: user } });
+    expect(await findings(document, rootLinter)).toEqual([
+      [at('/users', '200', 'properties', 'pagination'), "OAR034: 'pagination' must include required properties: start, limit, links"],
+    ]);
+    expect(await findings(usersApi({ type: 'object', properties: { data: users, pagination: paging() } }, { type: 'object', properties: { data: user } }), rootLinter)).toEqual([]);
+  });
+
+  test('result pagination: an empty {"result":{"pagination":{}}} block is reported only on the /users collection', async () => {
+    const single = { type: 'object', properties: { result: { type: 'object', properties: { data: user } } } };
+    const document = usersApi({ type: 'object', properties: { result: { type: 'object', properties: { data: users, pagination: {} } } } }, single);
+    expect(await findings(document, resultLinter)).toEqual([
+      [at('/users', '200', 'properties', 'result', 'properties', 'pagination'), "OAR034: 'result.pagination' must include required properties: start, limit, links"],
+    ]);
+    expect(await findings(usersApi({ type: 'object', properties: { result: { type: 'object', properties: { data: users, pagination: paging() } } } }, single), resultLinter)).toEqual([]);
+  });
+
+  test('/users/{path_id} is never asked for paging, while a collection returned by /users/me still is', async () => {
+    const collection = { type: 'object', properties: { result: { type: 'object', properties: { data: users } } } };
+    expect(await findings(usersApi(collection, collection), resultLinter)).toEqual(sorted([
+      [at('/users', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+      [at('/users/me', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+    ]));
+  });
+
+  test('each placement is only looked for where the option points', async () => {
+    const rootPaged = usersApi({ type: 'object', properties: { data: users, pagination: paging() } }, { type: 'object', properties: { data: user } });
+    const resultPaged = usersApi({ type: 'object', properties: { result: { type: 'object', properties: { data: users, pagination: {} } } } }, { type: 'object', properties: { data: user } });
+    expect(await findings(rootPaged, resultLinter)).toEqual([[at('/users', '200'), NESTED_NO_PAGING('data')]]);
+    expect(await findings(resultPaged, rootLinter)).toEqual([]);
+  });
+});
+
+describe('apiq:OAR034 nested paging path (result.pagination)', () => {
+  let nested;
+
+  beforeAll(async () => {
+    nested = await linterForRule('apiq:OAR034', { functionOptions: { 'paging-schema': pagingOption('result.pagination') } });
+  });
+
+  test('OpenAPI 3.0: envelopes, sub-collections, array results, allOf, aliases, nullable and per media type', async () => {
+    expect(await findings(failNestedPaging, nested)).toEqual(sorted([
+      [at('/audit-events', '200'), NESTED_NO_PAGING('data')],
+      [at('/devices', '200'), NESTED_TOP_LEVEL_ARRAY],
+      [at('/groups', '200', 'properties', 'result', 'properties', 'pagination'), "OAR034: 'result.pagination' must include required properties: start, limit, links"],
+      [['paths', '/locales', 'get', 'responses', '200', 'content', 'application/xml', 'schema', 'properties', 'result'], NESTED_NO_PAGING('result.records')],
+      [at('/notifications', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+      [at('/organizations', '200', 'allOf', '0', 'properties', 'result', 'allOf', '0', 'properties', 'pagination'), "OAR034: 'result.pagination' must list as required: start, limit, links"],
+      [at('/permissions', '206', 'properties', 'result', 'properties', 'pagination', 'properties', 'start', 'type'), "OAR034: 'result.pagination.start' must be of type integer"],
+      [at('/roles', '200', 'properties', 'result', 'type'), RESULT_ARRAY],
+      [at('/settings/{settingId}', '200', 'properties', 'result', 'properties', 'pagination', 'type'), "OAR034: 'result.pagination' must be of type object"],
+      [at('/teams', '2XX', 'properties', 'result', 'properties', 'pagination', 'properties', 'links', 'properties'), "OAR034: 'result.pagination.links' must include required properties: previous, next"],
+      [at('/users/{userId}/sessions', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+    ]));
+  });
+
+  test('OpenAPI 3.0: the compliant directory, /users/me and detail endpoints report nothing', async () => {
+    expect(await findings(okNestedPaging, nested)).toEqual([]);
+  });
+
+  test('OpenAPI 3.1: nullable array-form types, null branches, pathItems and $defs are followed', async () => {
+    expect(await findings(failNestedPaging31, nested)).toEqual(sorted([
+      [at('/archived-users', '200', 'properties', 'result'), NESTED_NO_PAGING('result.rows')],
+      [at('/devices', '200'), NESTED_TOP_LEVEL_ARRAY],
+      [at('/fleets', '200', 'properties', 'result'), NESTED_NO_PAGING('result.list')],
+      [at('/groups', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+      [at('/invitations', '200', 'properties', 'result', 'properties', 'pagination', 'oneOf', '1', 'properties'), "OAR034: 'result.pagination' must include required properties: start"],
+      [at('/memberships', '200', 'properties', 'result', 'properties', 'pagination', 'properties', 'start', 'type'), "OAR034: 'result.pagination.start' must be of type integer"],
+      [at('/roles', '200', 'properties', 'result', 'type'), RESULT_ARRAY],
+      [at('/teams', '200', 'properties', 'result', 'anyOf', '0', 'properties', 'pagination', 'properties'), "OAR034: 'result.pagination' must include required properties: links"],
+    ]));
+  });
+
+  test('OpenAPI 3.1: compliant nullable envelopes, webhooks and a null result report nothing', async () => {
+    expect(await findings(okNestedPaging31, nested)).toEqual([]);
+  });
+
+  test('OpenAPI 3.2: components.mediaTypes, itemSchema streams, QUERY and additionalOperations', async () => {
+    const settings = (...rest) => at('/settings', '2XX', 'properties', 'result', 'properties', 'pagination', ...rest);
+    expect(await findings(failNestedPaging320, nested)).toEqual(sorted([
+      [at('/audit-events', '200', 'properties', 'result'), NESTED_NO_PAGING('result.entries')],
+      [at('/devices', '200', 'properties', 'result', 'type'), RESULT_ARRAY],
+      [at('/groups', '200', 'properties', 'result'), NESTED_NO_PAGING('result.results')],
+      [settings('properties', 'limit', 'type'), "OAR034: 'result.pagination.limit' must be of type integer"],
+      [settings('properties', 'links', 'required'), "OAR034: 'result.pagination.links' must list as required: previous"],
+      [settings('required'), "OAR034: 'result.pagination' must list as required: limit"],
+    ]));
+  });
+
+  test('OpenAPI 3.2: the compliant directory reports nothing', async () => {
+    expect(await findings(okNestedPaging320, nested)).toEqual([]);
+  });
+
+  test('the shipped option keeps looking only at the root, so result envelopes are not evaluated', async () => {
+    expect(await findings(failNestedPaging)).toEqual(sorted([
+      [at('/audit-events', '200'), NO_PAGING('data')],
+      [at('/devices', '200'), TOP_LEVEL_ARRAY],
+    ]));
+    expect(await findings(failNestedPaging31)).toEqual([[at('/devices', '200'), TOP_LEVEL_ARRAY]]);
+    expect(await findings(failNestedPaging320)).toEqual([]);
+  });
+});
+
 describe('apq-paged-response-check function', () => {
   const context = (path, extra = {}) => ({ path, rule: { name: 'apiq:OAR034' }, document: { data: { openapi: '3.1.0' } }, ...extra });
   const response = (schema) => ({ description: 'Ok', content: { 'application/json': { schema } } });
@@ -338,5 +472,88 @@ describe('apq-paged-response-check function', () => {
       { message: TOP_LEVEL_ARRAY, path: [...collectionPath, 'schema'] },
     ]);
     expect(pagedResponseCheck(response({ type: 'array' }), {}, swagger)).toEqual([]);
+  });
+
+  describe('dotted pagingPropertyName', () => {
+    const schemaPath = [...collectionPath, ...RESPONSE_SCHEMA];
+    const option = (pagingPropertyName) => ({ 'paging-schema': { required: ['start'], pagingPropertyName } });
+    const wrapped = { type: 'object', properties: { result: { type: 'object', properties: { data: { type: 'array' }, pagination: { type: 'object', properties: {} } } } } };
+    const missingStart = (label, ...rest) => ({ message: `OAR034: '${label}' must include required properties: start`, path: [...schemaPath, ...rest] });
+
+    test.each([
+      ['result.pagination'],
+      [' result . pagination '],
+      ['result..pagination'],
+      ['.result.pagination.'],
+    ])('%j resolves the paging block inside the result envelope', (name) => {
+      expect(pagedResponseCheck(response(wrapped), option(name), context(collectionPath))).toEqual([
+        missingStart('result.pagination', 'properties', 'result', 'properties', 'pagination', 'properties'),
+      ]);
+    });
+
+    test.each([['.'], ['..'], [' . ']])('%j has no segment and falls back to paging', (name) => {
+      expect(pagedResponseCheck(response(wrapped), option(name), context(collectionPath))).toEqual([]);
+      const rootPaging = { type: 'object', properties: { data: { type: 'array' }, paging: { type: 'object' } } };
+      expect(pagedResponseCheck(response(rootPaging), option(name), context(collectionPath))).toEqual([
+        missingStart('paging', 'properties', 'paging'),
+      ]);
+    });
+
+    test('a property literally named with the dotted name wins over the nested path', () => {
+      const literal = { type: 'object', properties: { data: { type: 'array' }, 'meta.paging': { type: 'object', properties: {} }, meta: { type: 'object', properties: { paging: { type: 'object', required: ['start'], properties: { start: { type: 'integer' } } } } } } };
+      expect(pagedResponseCheck(response(literal), option('meta.paging'), context(collectionPath))).toEqual([
+        missingStart('meta.paging', 'properties', 'meta.paging', 'properties'),
+      ]);
+    });
+
+    test('a three level path walks envelope after envelope and prefixes the collection it finds', () => {
+      const deep = (inner) => ({ type: 'object', properties: { response: { type: 'object', properties: { result: { type: 'object', properties: inner } } } } });
+      const name = option('response.result.pagination');
+      expect(pagedResponseCheck(response(deep({ items: { type: 'array' } })), name, context(collectionPath))).toEqual([
+        { message: "OAR034: Response with collection property 'response.result.items' must include 'response.result.pagination' property for pagination", path: [...schemaPath, 'properties', 'response', 'properties', 'result'] },
+      ]);
+      expect(pagedResponseCheck(response(deep({ items: { type: 'array' }, pagination: {} })), name, context(collectionPath))).toEqual([
+        missingStart('response.result.pagination', 'properties', 'response', 'properties', 'result', 'properties', 'pagination'),
+      ]);
+      const middleArray = { type: 'object', properties: { response: { type: 'object', properties: { result: { type: ['array', 'null'], items: {} } } } } };
+      expect(pagedResponseCheck(response(middleArray), name, context(collectionPath))).toEqual([
+        { message: "OAR034: 'response.result' must be an object with a 'pagination' property, not an array", path: [...schemaPath, 'properties', 'response', 'properties', 'result', 'type'] },
+      ]);
+    });
+
+    test('the root is searched before the envelope, and a missing or scalar envelope only checks the root', () => {
+      const name = option('result.pagination');
+      const both = { type: 'object', properties: { data: { type: 'array' }, result: { type: 'object', properties: { items: { type: 'array' } } } } };
+      expect(pagedResponseCheck(response(both), name, context(collectionPath))).toEqual([
+        { message: "OAR034: Response with collection property 'data' must include 'result.pagination' property for pagination", path: schemaPath },
+      ]);
+      expect(pagedResponseCheck(response({ type: 'object', properties: { result: { type: 'string' } } }), name, context(collectionPath))).toEqual([]);
+      expect(pagedResponseCheck(response({ type: 'object', properties: { meta: { type: 'object' } } }), name, context(collectionPath))).toEqual([]);
+    });
+
+    test('an envelope under an allOf member or a nullable oneOf is merged before looking for the paging block', () => {
+      const name = option('result.pagination');
+      const composed = { allOf: [{ type: 'object', properties: { result: { oneOf: [{ type: 'null' }, { allOf: [{ properties: { data: { type: 'array' } } }, { properties: { pagination: { type: 'object' } } }] }] } } }] };
+      expect(pagedResponseCheck(response(composed), name, context(collectionPath))).toEqual([
+        missingStart('result.pagination', 'allOf', 0, 'properties', 'result', 'oneOf', 1, 'allOf', 1, 'properties', 'pagination'),
+      ]);
+    });
+
+    test('detail paths skip a missing nested block but still validate a declared one', () => {
+      const detail = ['paths', '/items/{id}', 'get', 'responses', '200'];
+      const name = option('result.pagination');
+      expect(pagedResponseCheck(response({ type: 'object', properties: { result: { type: 'object', properties: { data: { type: 'array' } } } } }), name, context(detail))).toEqual([]);
+      expect(pagedResponseCheck(response({ type: 'object', properties: { result: { type: 'array' } } }), name, context(detail))).toEqual([]);
+      expect(pagedResponseCheck(response(wrapped), name, context(detail))).toEqual([
+        { message: "OAR034: 'result.pagination' must include required properties: start", path: [...detail, ...RESPONSE_SCHEMA, 'properties', 'result', 'properties', 'pagination', 'properties'] },
+      ]);
+    });
+
+    test('Swagger 2.0 responses resolve the nested block from the response schema', () => {
+      const swagger = { path: collectionPath, rule: { name: 'apiq:OAR034' }, document: { data: { swagger: '2.0' } } };
+      expect(pagedResponseCheck({ description: 'Ok', schema: wrapped }, option('result.pagination'), swagger)).toEqual([
+        { message: "OAR034: 'result.pagination' must include required properties: start", path: [...collectionPath, 'schema', 'properties', 'result', 'properties', 'pagination', 'properties'] },
+      ]);
+    });
   });
 });

@@ -189,6 +189,25 @@ const validateAgainstTemplate = (template, view, label, report) => {
   });
 };
 
+const pagingSegments = (name) => name.split('.').map((segment) => segment.trim()).filter((segment) => segment !== '');
+
+const resolvePaging = (view, segments) => {
+  const containers = [{ view, prefix: '' }];
+  let container = view;
+  for (let index = 0; index < segments.length - 1; index += 1) {
+    const envelope = container.properties.get(segments[index]);
+    if (!envelope) return { containers };
+    const envelopeView = buildView(envelope.schema, envelope.path);
+    const name = segments.slice(0, index + 1).join('.');
+    if (isArrayView(envelopeView)) {
+      return { containers, arrayEnvelope: { view: envelopeView, name, rest: segments.slice(index + 1).join('.') } };
+    }
+    container = envelopeView;
+    containers.push({ view: container, prefix: `${name}.` });
+  }
+  return { containers, paging: container.properties.get(segments[segments.length - 1]) };
+};
+
 const responseSchemas = (response, responsePath, isOas2) => {
   if (isOas2) {
     return isObject(response.schema) ? [{ schema: response.schema, path: [...responsePath, 'schema'] }] : [];
@@ -201,7 +220,7 @@ const responseSchemas = (response, responsePath, isOas2) => {
 
 /**
  * @param {object} response - a resolved response of a GET operation
- * @param {object} options - { 'paging-schema': JSON string or object }
+ * @param {object} options - { 'paging-schema': JSON string or object; its pagingPropertyName may be a dotted path such as result.pagination }
  * @param {import('@stoplight/spectral-core').RulesetFunctionContext} context
  */
 module.exports = (response, options = {}, context) => {
@@ -215,9 +234,9 @@ module.exports = (response, options = {}, context) => {
   const isDetailPath = DETAIL_PATH_REGEX.test(pathKey);
 
   const pagingSchema = parsePagingSchema((options || {})['paging-schema']);
-  const pagingPropertyName = typeof pagingSchema.pagingPropertyName === 'string' && pagingSchema.pagingPropertyName.trim() !== ''
-    ? pagingSchema.pagingPropertyName.trim()
-    : DEFAULT_PAGING_PROPERTY;
+  const configuredName = typeof pagingSchema.pagingPropertyName === 'string' ? pagingSchema.pagingPropertyName.trim() : '';
+  const configuredSegments = pagingSegments(configuredName);
+  const pagingPropertyName = configuredSegments.length > 0 ? configuredName : DEFAULT_PAGING_PROPERTY;
 
   const document = context.document && context.document.data;
   const isOas2 = isObject(document) && typeof document.swagger === 'string';
@@ -228,27 +247,33 @@ module.exports = (response, options = {}, context) => {
 
   responseSchemas(response, responsePath, isOas2).forEach(({ schema, path }) => {
     const view = buildView(schema, path);
-    const paging = view.properties.get(pagingPropertyName);
+    const segments = view.properties.has(pagingPropertyName) || configuredSegments.length === 0 ? [pagingPropertyName] : configuredSegments;
+    const label = segments.join('.');
+    const { containers, arrayEnvelope, paging } = resolvePaging(view, segments);
 
     if (!paging) {
       if (isDetailPath) return;
       if (isArrayView(view)) {
-        report(`Collection response must be an object with a '${pagingPropertyName}' property, not a top-level array`, view.path);
+        report(`Collection response must be an object with a '${label}' property, not a top-level array`, view.path);
         return;
       }
-      const collectionProperty = findCollectionProperty(view);
-      if (collectionProperty) {
-        report(`Response with collection property '${collectionProperty}' must include '${pagingPropertyName}' property for pagination`, view.path);
+      if (arrayEnvelope) {
+        report(`'${arrayEnvelope.name}' must be an object with a '${arrayEnvelope.rest}' property, not an array`, typePath(arrayEnvelope.view));
+        return;
+      }
+      const owner = containers.map((container) => ({ ...container, property: findCollectionProperty(container.view) })).find((container) => container.property);
+      if (owner) {
+        report(`Response with collection property '${owner.prefix}${owner.property}' must include '${label}' property for pagination`, owner.view.path);
       }
       return;
     }
 
     const pagingView = buildView(paging.schema, paging.path);
     if (!typeMatches('object', pagingView.types)) {
-      report(`'${pagingPropertyName}' must be of type object`, typePath(pagingView));
+      report(`'${label}' must be of type object`, typePath(pagingView));
       return;
     }
-    validateAgainstTemplate(pagingSchema, pagingView, pagingPropertyName, report);
+    validateAgainstTemplate(pagingSchema, pagingView, label, report);
   });
 
   return results;

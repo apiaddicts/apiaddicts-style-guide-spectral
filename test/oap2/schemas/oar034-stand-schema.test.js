@@ -8,16 +8,32 @@ const okRefs = require('./OAR034/ok-refs');
 const failCollectionWithoutPaging = require('./OAR034/fail-collection-without-paging');
 const failPagingStructure = require('./OAR034/fail-paging-structure');
 const failRefs = require('./OAR034/fail-refs');
+const failNestedPaging = require('./OAR034/fail-nested-paging');
+const okNestedPaging = require('./OAR034/ok-nested-paging');
 
 const at = (path, code, ...rest) => ['paths', path, 'get', 'responses', code, 'schema', ...rest];
 const NO_PAGING = (prop) => `OAR034: Response with collection property '${prop}' must include 'paging' property for pagination`;
 const TOP_LEVEL_ARRAY = "OAR034: Collection response must be an object with a 'paging' property, not a top-level array";
+const NESTED_NO_PAGING = (prop) => `OAR034: Response with collection property '${prop}' must include 'result.pagination' property for pagination`;
+const link = { type: 'object', properties: { href: { type: 'string' } } };
+const NESTED_OPTION = JSON.stringify({
+  type: 'object',
+  required: ['start', 'limit', 'links'],
+  properties: {
+    start: { type: 'integer' },
+    limit: { type: 'integer' },
+    total: { type: 'integer' },
+    numPages: { type: 'integer' },
+    links: { type: 'object', required: ['self', 'previous', 'next'], properties: { self: link, first: link, previous: link, next: link, last: link } },
+  },
+  pagingPropertyName: 'result.pagination',
+});
 
 const sorted = (entries) => [...entries].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
 
 let linter;
 
-const findings = async (document) => sorted((await linter.run(document))
+const findings = async (document, custom = linter) => sorted((await custom.run(document))
   .filter((r) => r.code === 'apiq:OAR034')
   .map((r) => [r.path, r.message]));
 
@@ -89,5 +105,35 @@ describe('apiq:OAR034 Swagger 2.0', () => {
 
   test('compliant paging through refs, allOf, x-nullable and recursive definitions reports nothing', async () => {
     expect(await findings(okRefs)).toEqual([]);
+  });
+});
+
+describe('apiq:OAR034 Swagger 2.0 nested paging path (result.pagination)', () => {
+  let nested;
+
+  beforeAll(async () => {
+    nested = await linterForRule('apiq:OAR034', { functionOptions: { 'paging-schema': NESTED_OPTION } });
+  });
+
+  test('envelopes, global responses, array results, allOf, x-nullable and detail paging blocks are evaluated', async () => {
+    expect(await findings(failNestedPaging, nested)).toEqual(sorted([
+      [at('/devices', '200'), "OAR034: Collection response must be an object with a 'result.pagination' property, not a top-level array"],
+      [at('/groups', '200', 'properties', 'result', 'properties', 'pagination'), "OAR034: 'result.pagination' must list as required: start, limit, links"],
+      [at('/notifications', '200', 'properties', 'result'), NESTED_NO_PAGING('result.records')],
+      [at('/organizations', '200', 'allOf', '0', 'properties', 'result', 'allOf', '0', 'properties', 'pagination', 'properties'), "OAR034: 'result.pagination' must include required properties: start"],
+      [at('/permissions', '206', 'properties', 'result', 'properties', 'pagination', 'properties', 'links', 'properties', 'next', 'properties', 'href', 'type'), "OAR034: 'result.pagination.links.next.href' must be of type string"],
+      [at('/roles', '200', 'properties', 'result', 'type'), "OAR034: 'result' must be an object with a 'pagination' property, not an array"],
+      [at('/settings/{settingId}', '200', 'properties', 'result', 'properties', 'pagination', 'type'), "OAR034: 'result.pagination' must be of type object"],
+      [at('/users/{userId}/sessions', '200', 'properties', 'result'), NESTED_NO_PAGING('result.data')],
+    ]));
+  });
+
+  test('the compliant directory, /users/me, detail endpoints, POST, errors and files report nothing', async () => {
+    expect(await findings(okNestedPaging, nested)).toEqual([]);
+  });
+
+  test('the shipped option keeps looking only at the root', async () => {
+    expect(await findings(failNestedPaging)).toEqual([[at('/devices', '200'), TOP_LEVEL_ARRAY]]);
+    expect(await findings(okNestedPaging)).toEqual([]);
   });
 });
