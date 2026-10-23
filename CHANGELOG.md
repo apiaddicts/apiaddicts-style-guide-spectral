@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - OAR038 - StandardCreateResponseCheck - New `allowed-properties` and `required-properties` options (array or comma-separated list) for the top-level properties of the POST 201 schema, defaulting to `[data-property, error]` and no required names, plus `paths`/`pathValidationStrategy`.
+- OAR034 - StandardPagedResponseSchema - New `paths` option (comma-separated patterns matched segment by segment, `*` one segment and `**` zero or more; default `/status,/health,/ping,**/me`) and `pathValidationStrategy` (`/exclude` by default, or `/include`). Nested paging such as `result.pagination` is now supported by setting `pagingPropertyName` to `result` and nesting the paging structure in `paging-schema`.
+
+### Changed
+
+- OAR034 - StandardPagedResponseSchema - Collections are now detected by path instead of by array properties such as `data`/`items`/`results`: GET responses with a 2xx/`2XX` status (except 204) are evaluated unless the last path segment starts with a path parameter (`/users/{id}`, `/files/{name}.json` and `/users/{id}:activate` are skipped). Only JSON media types are evaluated (`application/json`, `+json`, `*/*`, `application/*`); in Swagger 2.0 they come from the operation or root `produces`, and a response without `produces` is treated as JSON. An evaluated response with no schema, empty `content` or a top-level array schema is now reported.
 
 ## [1.6.1] - 2026-10-13
 
