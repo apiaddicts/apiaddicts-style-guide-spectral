@@ -500,14 +500,16 @@
       }
     },
     "apiq:OAR034": {
-      "description": "GET collection responses must include a paging block that complies with the standard paging schema (required start, limit and links with self/previous/next; optional numPages and total as integers).",
+      "description": "GET success JSON responses on collection paths must define an object schema with a paging block that complies with paging-schema (required start, limit and links with self/previous/next; optional numPages and total as integers).",
       "message": "{{error}}",
       "severity": "error",
       "given": "$.paths[*].get.responses[*]",
       "then": {
         "function": "apq-paged-response-check",
         "functionOptions": {
-          "paging-schema": "{\"type\":\"object\",\"properties\":{\"numPages\":{\"type\":\"integer\"},\"total\":{\"type\":\"integer\"},\"start\":{\"type\":\"integer\"},\"limit\":{\"type\":\"integer\"},\"links\":{\"type\":\"object\",\"properties\":{\"next\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"previous\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"last\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"self\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"first\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}}},\"required\":[\"self\",\"previous\",\"next\"]}},\"required\":[\"start\",\"limit\",\"links\"],\"pagingPropertyName\":\"paging\"}"
+          "paging-schema": "{\"type\":\"object\",\"properties\":{\"numPages\":{\"type\":\"integer\"},\"total\":{\"type\":\"integer\"},\"start\":{\"type\":\"integer\"},\"limit\":{\"type\":\"integer\"},\"links\":{\"type\":\"object\",\"properties\":{\"next\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"previous\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"last\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"self\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}},\"first\":{\"type\":\"object\",\"properties\":{\"href\":{\"type\":\"string\"}}}},\"required\":[\"self\",\"previous\",\"next\"]}},\"required\":[\"start\",\"limit\",\"links\"],\"pagingPropertyName\":\"paging\"}",
+          "paths": "/status,/health,/ping,**/me",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
@@ -550,14 +552,18 @@
       }
     },
     "apiq:OAR038": {
-      "description": "The 201 response schema of a POST operation must have properties named 'data' or 'error' with at least one sub-property.",
+      "description": "The 201 response schema of a POST operation must only have the allowed top-level properties ('data' or 'error' by default), each with at least one sub-property, and every required one.",
       "message": "{{error}}",
       "severity": "error",
       "given": "$.paths.*.post.responses['201']",
       "then": {
         "function": "apq-valid-response-schema",
         "functionOptions": {
-          "data-property": "data"
+          "data-property": "data",
+          "allowed-properties": "",
+          "required-properties": "",
+          "paths": "/me,/health,/ping,/status",
+          "pathValidationStrategy": "/exclude"
         }
       }
     },
