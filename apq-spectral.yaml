@@ -54,6 +54,9 @@ functions:
   - apq-response-content-required
   - apq-tags-consistency
   - apq-forbidden-title-pattern
+  - apq-security-flows-allowed
+  - apq-oauth-url-pattern
+  - apq-security-types-allowed
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -1232,3 +1235,53 @@ rules:
       function: apq-forbidden-title-pattern
       functionOptions:
         forbidden-pattern: "(?!)"
+  apiq:OAR118:
+    description: "OAuth2 security schemes must only declare the flows allowed by the organization (authorizationCode and clientCredentials by default)."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR118.md"
+    severity: error
+    given: "$"
+    then:
+      function: apq-security-flows-allowed
+      functionOptions:
+        allowed-flows: "authorizationCode,clientCredentials"
+        paths: "/me,/health,/ping,/status"
+        pathValidationStrategy: "/exclude"
+  apiq:OAR119:
+    description: "The authorizationUrl of every OAuth2 flow must match the pattern allowed by the organization (an HTTPS URL on a domain ending in /authorize by default)."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR119.md"
+    severity: error
+    given: "$"
+    then:
+      function: apq-oauth-url-pattern
+      functionOptions:
+        field: authorizationUrl
+        pattern: '^https://[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+(:[0-9]+)?(/[^/?#]+)*/authorize$'
+        paths: "/me,/health,/ping,/status"
+        pathValidationStrategy: "/exclude"
+  apiq:OAR120:
+    description: "The tokenUrl of every OAuth2 flow must match the pattern allowed by the organization (an HTTPS URL on a domain ending in /token by default)."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR120.md"
+    severity: error
+    given: "$"
+    then:
+      function: apq-oauth-url-pattern
+      functionOptions:
+        field: tokenUrl
+        pattern: '^https://[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+(:[0-9]+)?(/[^/?#]+)*/token$'
+        paths: "/me,/health,/ping,/status"
+        pathValidationStrategy: "/exclude"
+  apiq:OAR121:
+    description: "Security schemes must only use the types allowed by the organization (oauth2 and HTTP bearer by default)."
+    message: "{{error}}"
+    documentationUrl: "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR121.md"
+    severity: error
+    given: "$"
+    then:
+      function: apq-security-types-allowed
+      functionOptions:
+        allowed-security-types: "oauth2,bearer"
+        paths: "/me,/health,/ping,/status"
+        pathValidationStrategy: "/exclude"
