@@ -63,7 +63,7 @@
     "apiq:OAR001": {
       "description": "For security reasons and as a REST best practice, the HTTPS protocol is mandatory.",
       "message": "OAR001: HTTPS protocol is mandatory.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR001.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR001.md",
       "severity": "error",
       "given": "$.servers[*].url",
       "then": {
@@ -76,7 +76,7 @@
     "apiq:OAR002": {
       "description": "A wrong scope definition may cause problems to import the API definition into WSO2.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR002.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR002.md",
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes",
       "then": {
@@ -86,7 +86,7 @@
     "apiq:OAR003": {
       "description": "A description can help other developers to understand the correct use of the scope.",
       "message": "OAR003: Scope must define a 'description' attribute.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR003.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR003.md",
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*]",
       "then": [
@@ -100,7 +100,7 @@
     "apiq:OAR004": {
       "description": "A role with forbidden characters may cause problems in some applications.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR004.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR004.md",
       "severity": "error",
       "given": "$.x-wso2-security.apim.x-wso2-scopes[*].roles",
       "then": {
@@ -113,7 +113,7 @@
     "apiq:OAR005": {
       "description": "A wrong scope may cause problems to import the API definition into WSO2 or allow all users to call the endpoint.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR005.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR005.md",
       "severity": "error",
       "resolved": false,
       "given": "$",
@@ -125,7 +125,7 @@
       "description": "Routes must define request media types supported by the API.",
       "message": "OAR006: Specify at least one Media Type in the content of the request body.",
       "severity": "error",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR006.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR006.md",
       "given": "$.paths[*][post,put,patch]",
       "then": [
         {
@@ -141,7 +141,7 @@
     "apiq:OAR007": {
       "description": "Routes must define response media types supported by the API",
       "message": "OAR007: Specify at least one Media Type in the content of the response body.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR007.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR007.md",
       "severity": "error",
       "given": [
         "$.paths[*][post,put,patch]",
@@ -156,7 +156,7 @@
     "apiq:OAR008": {
       "description": "HTTP verbs not encouraged.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR008.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR008.md",
       "severity": "error",
       "given": "$.paths[*]",
       "then": {
@@ -199,7 +199,7 @@
     "apiq:OAR011": {
       "description": "URLs should follow the configured naming convention (default kebab-case): all literal path segments must comply.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR011.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR011.md",
       "severity": "error",
       "given": [
         "$.paths[*]~",
@@ -215,7 +215,7 @@
     "apiq:OAR012": {
       "description": "Path params, query params, object names and property names should follow the configured naming convention. You can configure snake_case (default), kebab-case, camelCase or UpperCamelCase",
       "message": "OAR012: Path params, query params, object names and property names must follow the configured naming convention.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR012.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR012.md",
       "severity": "warn",
       "given": [
         "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name",
@@ -244,7 +244,7 @@
     "apiq:OAR014": {
       "description": "Resources depth level should be below the non-suggested range.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR014.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR014.md",
       "severity": "warn",
       "given": "$.paths.*~",
       "then": {
@@ -276,7 +276,7 @@
     "apiq:OAR016": {
       "description": "Numeric types requires a valid format.",
       "message": "OAR016: Numeric types must use a valid format for their type.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR016.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR016.md",
       "severity": "error",
       "resolved": false,
       "given": "$..[?(@ && @.type)]",
@@ -287,7 +287,7 @@
     "apiq:OAR017": {
       "description": "Resource path should alternate static and parametrized parts.",
       "message": "OAR017: Resource path should alternate static and parametrized parts",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR017.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR017.md",
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -300,7 +300,7 @@
     "apiq:OAR018": {
       "description": "Operation not recommended for resource path depending on HTTP verb",
       "message": "OAR018: Operation not recommended for resource path: {{path}} ({{verb}})",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR018.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR018.md",
       "severity": "warn",
       "given": "$.paths",
       "then": {
@@ -353,7 +353,7 @@
     "apiq:OAR022": {
       "description": "$orderby must be defined as a query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR022.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR022.md",
       "severity": "warn",
       "given": "$.paths",
       "then": {
@@ -388,7 +388,7 @@
     "apiq:OAR025": {
       "description": "$limit must be defined as an integer query parameter in the collection GET operations selected by the configured paths.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR025.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR025.md",
       "severity": "error",
       "given": "$.paths",
       "then": {
@@ -573,7 +573,7 @@
     "apiq:OAR039": {
       "description": "Response codes must be defined according to the standard depending on the HTTP verb and resource path.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR039.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR039.md",
       "severity": "error",
       "given": "$.paths[*][*]",
       "then": {
@@ -601,7 +601,7 @@
     "apiq:OAR041": {
       "description": "A WSO2 x-scope on an operation always requires an x-auth-type definition.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR041.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR041.md",
       "severity": "error",
       "resolved": false,
       "given": "$",
@@ -627,7 +627,7 @@
     "apiq:OAR043": {
       "description": "OpenAPI definition contains structural errors that would be detected by a strict parser or validator.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR043.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR043.md",
       "severity": "error",
       "given": [
         "$.paths.*.*.parameters.*.in",
@@ -715,7 +715,7 @@
     "apiq:OAR048": {
       "description": "APIs must define at most one body parameter.",
       "message": "OAR048: An operation can have at most one body parameter",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR048.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR048.md",
       "severity": "error",
       "given": "$.paths[*][*]",
       "then": {
@@ -760,7 +760,7 @@
     "apiq:OAR052": {
       "description": "Numeric schema types must define a format.",
       "message": "OAR052: Numeric types requires a format",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR052.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR052.md",
       "severity": "warn",
       "resolved": false,
       "given": "$..[?(@ && @.type)]",
@@ -771,7 +771,7 @@
     "apiq:OAR053": {
       "description": "Response headers for API observability and tracing must be defined (excluding 204 responses and health endpoints).",
       "message": "OAR053: Response must include mandatory headers and exclude forbidden headers.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR053.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR053.md",
       "severity": "error",
       "given": "$.paths[*][*].responses[*]",
       "then": [
@@ -1030,7 +1030,7 @@
     "apiq:OAR076": {
       "description": "Schema should use well-defined type and format.",
       "message": "OAR076: Schema should use well-defined type and format.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR076.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR076.md",
       "severity": "error",
       "resolved": false,
       "given": "$..[?(@ && @.type)]",
@@ -1057,7 +1057,7 @@
     "apiq:OAR078": {
       "description": "All API methods must have security defined.",
       "message": "OAR078: Operation must have security defined.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR078.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR078.md",
       "severity": "error",
       "given": "$",
       "then": {
@@ -1067,7 +1067,7 @@
     "apiq:OAR079": {
       "description": "Operations with path parameters should include a 404 Not Found response.",
       "message": "OAR079: Path parameter present, but missing 404 Not Found response.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR079.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR079.md",
       "severity": "warn",
       "given": "$.paths[*][get,post,put,patch,delete]",
       "then": {
@@ -1222,7 +1222,7 @@
     "apiq:OAR091": {
       "description": "Parameters must contain only $ref references.",
       "message": "OAR091: Parameters must contain only $ref references.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR091.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR091.md",
       "severity": "error",
       "resolved": false,
       "given": "$.paths[*][get,post,put,patch,delete].parameters[*]",
@@ -1437,7 +1437,7 @@
     "apiq:OAR113": {
       "description": "Field or extension must be at the assigned location",
       "message": "OAR113: Field or extension x-custom-example must be at the assigned location",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR113.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR113.md",
       "severity": "warn",
       "given": "$",
       "then": {
@@ -1451,7 +1451,7 @@
     "apiq:OAR114": {
       "description": "Response headers for API security and key management must be defined (excluding 204 responses).",
       "message": "OAR114: Response must include mandatory headers and exclude forbidden headers.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR114.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR114.md",
       "severity": "error",
       "given": "$.paths[*][*].responses[*]",
       "then": [
@@ -1469,7 +1469,7 @@
     "apiq:OAR115": {
       "description": "All fields listed in the required array must be defined in the schema properties.",
       "message": "OAR115: All fields in the required array must be defined in schema properties.",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR115.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR115.md",
       "severity": "warn",
       "resolved": false,
       "given": "$..[?(@ && @.required)]",
@@ -1480,7 +1480,7 @@
     "apiq:OAR116": {
       "description": "Every API path must match the configured regular expression.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR116.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR116.md",
       "severity": "error",
       "given": "$.paths.*~",
       "then": {
@@ -1493,7 +1493,7 @@
     "apiq:OAR117": {
       "description": "The API title must not match the configured forbidden regular expression.",
       "message": "{{error}}",
-      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR117.md",
+      "documentationUrl": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR117.md",
       "severity": "error",
       "given": "$.info.title",
       "then": {
