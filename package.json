@@ -22,7 +22,7 @@
   "license": "GNU AGPLv3",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apiaddicts/apquality-spectral"
+    "url": "https://github.com/apiaddicts/apiaddicts-style-guide-spectral"
   },
   "devDependencies": {
     "@stoplight/spectral-core": "1.23.0",

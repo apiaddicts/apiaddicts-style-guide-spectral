@@ -1,6 +1,6 @@
 <!-- README.md -->
 
-[![Node.js CI](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml/badge.svg)](https://github.com/apiaddicts/apquality-spectral/actions/workflows/node.js.yml) ![Coverage](./coverage/badges.svg)
+[![Node.js CI](https://github.com/apiaddicts/apiaddicts-style-guide-spectral/actions/workflows/node.js.yml/badge.svg)](https://github.com/apiaddicts/apiaddicts-style-guide-spectral/actions/workflows/node.js.yml) ![Coverage](./coverage/badges.svg)
 
 # APIAddicts Style Guide Spectral
 
@@ -26,19 +26,19 @@ The Spectral Ruleset requires Node version 14 or later.
 
 You can specify the ruleset directly on the command line:
 
-`spectral lint -r https://raw.githubusercontent.com/apiaddicts/apquality-spectral/refs/heads/main/apq-spectral.yaml <api definition file>`
+`spectral lint -r https://raw.githubusercontent.com/apiaddicts/apiaddicts-style-guide-spectral/refs/heads/main/apq-spectral.yaml <api definition file>`
 
 Or you can create a Spectral configuration file (`.spectral.yaml`) that references the ruleset:
 
 ```yaml
 extends:
-  - https://raw.githubusercontent.com/apiaddicts/apquality-spectral/refs/heads/main/apq-spectral.yaml
+  - https://raw.githubusercontent.com/apiaddicts/apiaddicts-style-guide-spectral/refs/heads/main/apq-spectral.yaml
 ```
 
 ### Example
 
 ```bash
-spectral lint -r https://raw.githubusercontent.com/apiaddicts/apquality-spectral/refs/heads/main/apq-spectral.yaml petstore.yaml
+spectral lint -r https://raw.githubusercontent.com/apiaddicts/apiaddicts-style-guide-spectral/refs/heads/main/apq-spectral.yaml petstore.yaml
 ```
 
 ### Using the Spectral VSCode extension
