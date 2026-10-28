@@ -1,3 +1,5 @@
+const { pathsIncludeExclude } = require('./paths-include-exclude.js');
+
 const DEFAULT_PAGING_SCHEMA = {
   type: 'object',
   properties: {
@@ -189,35 +191,6 @@ const isJsonMediaType = (mediaType) => {
   return subtype.endsWith('+json');
 };
 
-const pathPatterns = (raw) => {
-  let items = [];
-  if (raw === undefined) items = DEFAULT_PATHS.split(',');
-  else if (typeof raw === 'string') items = raw.split(',');
-  else if (Array.isArray(raw)) items = raw;
-  return items
-    .filter((item) => typeof item === 'string')
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .map((pattern) => pattern.split('/'));
-};
-
-const isIncludeStrategy = (value) => typeof value === 'string' && value.trim().replace(/^\//, '').toLowerCase() === 'include';
-
-const matchesPattern = (pattern, segments) => {
-  const match = (patternIndex, segmentIndex) => {
-    if (patternIndex === pattern.length) return segmentIndex === segments.length;
-    if (pattern[patternIndex] === '**') {
-      for (let next = segmentIndex; next <= segments.length; next += 1) {
-        if (match(patternIndex + 1, next)) return true;
-      }
-      return false;
-    }
-    if (segmentIndex === segments.length) return false;
-    return (pattern[patternIndex] === '*' || pattern[patternIndex] === segments[segmentIndex]) && match(patternIndex + 1, segmentIndex + 1);
-  };
-  return match(0, 0);
-};
-
 const isDetailPath = (pathKey) => pathKey.slice(pathKey.lastIndexOf('/') + 1).startsWith('{');
 
 const isUnresolvedRef = (value) => isObject(value) && typeof value.$ref === 'string';
@@ -273,9 +246,7 @@ module.exports = (response, options = {}, context) => {
 
   const pathKey = typeof responsePath[1] === 'string' ? responsePath[1] : '';
   if (isDetailPath(pathKey)) return [];
-  const segments = pathKey.split('/');
-  const isListed = pathPatterns(opts.paths).some((pattern) => matchesPattern(pattern, segments));
-  if (isIncludeStrategy(opts.pathValidationStrategy) ? !isListed : isListed) return [];
+  if (!pathsIncludeExclude(opts, DEFAULT_PATHS).isEvaluatedPath(pathKey)) return [];
 
   const pagingSchema = parsePagingSchema(opts['paging-schema']);
   const pagingPropertyName = typeof pagingSchema.pagingPropertyName === 'string' && pagingSchema.pagingPropertyName.trim() !== ''

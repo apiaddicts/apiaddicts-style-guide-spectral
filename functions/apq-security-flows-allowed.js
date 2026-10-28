@@ -1,3 +1,5 @@
+const { pathsIncludeExclude } = require('./paths-include-exclude.js');
+
 const DEFAULT_ALLOWED_FLOWS = 'authorizationCode,clientCredentials';
 const DEFAULT_PATHS = '/me,/health,/ping,/status';
 const FLOW_ALIASES = { accesscode: 'authorizationcode', application: 'clientcredentials' };
@@ -32,35 +34,6 @@ const allowedFlows = (raw) => {
     if (!names.has(flowKey(item))) names.set(flowKey(item), item);
   });
   return names.size > 0 ? names : allowedFlows(DEFAULT_ALLOWED_FLOWS);
-};
-
-const pathPatterns = (raw) => {
-  let items = [];
-  if (raw === undefined) items = DEFAULT_PATHS.split(',');
-  else if (typeof raw === 'string') items = raw.split(',');
-  else if (Array.isArray(raw)) items = raw;
-  return items
-    .filter((item) => typeof item === 'string')
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .map((pattern) => pattern.split('/'));
-};
-
-const isIncludeStrategy = (value) => typeof value === 'string' && value.trim().replace(/^\//, '').toLowerCase() === 'include';
-
-const matchesPattern = (pattern, segments) => {
-  const match = (patternIndex, segmentIndex) => {
-    if (patternIndex === pattern.length) return segmentIndex === segments.length;
-    if (pattern[patternIndex] === '**') {
-      for (let next = segmentIndex; next <= segments.length; next += 1) {
-        if (match(patternIndex + 1, next)) return true;
-      }
-      return false;
-    }
-    if (segmentIndex === segments.length) return false;
-    return (pattern[patternIndex] === '*' || pattern[patternIndex] === segments[segmentIndex]) && match(patternIndex + 1, segmentIndex + 1);
-  };
-  return match(0, 0);
 };
 
 const pointerTarget = (root, ref) => {
@@ -135,13 +108,7 @@ module.exports = (root, options, context) => {
   const opts = options || {};
   const allowed = allowedFlows(opts['allowed-flows']);
   const allowedText = [...allowed.values()].join(', ');
-  const include = isIncludeStrategy(opts.pathValidationStrategy);
-  const patterns = pathPatterns(opts.paths);
-  const isEvaluatedPath = (pathKey) => {
-    const segments = pathKey.split('/');
-    const isListed = patterns.some((pattern) => matchesPattern(pattern, segments));
-    return include ? isListed : !isListed;
-  };
+  const { include, isEvaluatedPath } = pathsIncludeExclude(opts, DEFAULT_PATHS);
 
   const base = definitionsBase(version);
   const definitions = lookup(root, base);
