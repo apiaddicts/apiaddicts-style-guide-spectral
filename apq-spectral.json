@@ -41,7 +41,7 @@
     "apq-numeric-invalid-format",
     "apq-numeric-missing-format",
     "apq-numeric-well-defined-format",
-    "apq-string-parameter-integrity",
+    "apq-string-parameter-schema-integrity",
     "apq-example-schema-types",
     "apq-standard-response-schema",
     "apq-allowed-http-verbs",
@@ -1003,8 +1003,8 @@
       }
     },
     "apiq:OAR075": {
-      "description": "String parameters should have minLength, maxLength, pattern (regular expression), or enum restriction.",
-      "message": "OAR075: String parameters should have minLength, maxLength, pattern, or enum restriction.",
+      "description": "String parameter schemas should have minLength, maxLength, pattern (regular expression), or enum restriction.",
+      "message": "OAR075: String parameter schemas should have minLength, maxLength, pattern, or enum restriction.",
       "severity": "error",
       "resolved": false,
       "given": [
@@ -1018,7 +1018,7 @@
         "$.parameters[*]"
       ],
       "then": {
-        "function": "apq-string-parameter-integrity",
+        "function": "apq-string-parameter-schema-integrity",
         "functionOptions": {
           "parameter_integrity": "minLength,maxLength,pattern,enum"
         }
