@@ -7,6 +7,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.8.0] - 2026-11-04
+
+### Added
+
+- OAR118 - SecurityFlowsAllowed - New rule: `oauth2` security schemes must only declare the flows listed in `allowed-flows` (array or comma-separated list, case-insensitive; default `authorizationCode,clientCredentials`). OpenAPI 2 names are treated as their OpenAPI 3 equivalents (`accessCode` = `authorizationCode`, `application` = `clientCredentials`) and OpenAPI 3.2 `deviceAuthorization` is supported. Backed by the new `apq-security-flows-allowed` function.
+- OAR119 - OAuthAuthorizationUrlPattern - New rule: the `authorizationUrl` of every OAuth2 flow must match the configurable regex `pattern` (default: an HTTPS URL on a domain whose path ends in `/authorize`, without query string or fragment; a leading `(?i)` ignores case). Backed by the new `apq-oauth-url-pattern` function.
+- OAR120 - OAuthTokenUrlPattern - New rule: the `tokenUrl` of every OAuth2 flow (including OpenAPI 3.2 `deviceAuthorization`) must match the configurable regex `pattern` (default: an HTTPS URL on a domain whose path ends in `/token`). Shares the `apq-oauth-url-pattern` function with OAR119 through its `field` option.
+- OAR121 - SecurityTypesAllowed - New rule: security schemes must only use the types listed in `allowed-security-types` (`apiKey`, `http`, `oauth2`, `openIdConnect`, `mutualTLS` or an HTTP scheme such as `basic`/`bearer`/`digest`; default `oauth2,bearer`). An HTTP scheme allows only that scheme of the `http` type, while `http` allows all of them. Backed by the new `apq-security-types-allowed` function.
+- OAR118, OAR119, OAR120 and OAR121 all support `paths` (default `/me,/health,/ping,/status`) and `pathValidationStrategy` (`/exclude` by default, or `/include`). A scheme counts as applied by an operation through the operation's `security` or, if the operation has none, the root `security`. With `/exclude` a scheme is skipped only when every operation that applies it is under a listed path. Schemes reached through `$ref` are reported once, on the referenced definition.
+
+### Changed
+
+- OAR075 - Renamed to StringParameterSchemaIntegrity, and its function `apq-string-parameter-integrity` renamed to `apq-string-parameter-schema-integrity`. Custom rulesets that reference the old function name must be updated. The description and message now refer to "string parameter schemas".
+
 ## [1.7.0] - 2026-10-26
 
 ### Added
