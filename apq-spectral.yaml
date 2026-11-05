@@ -57,6 +57,7 @@ functions:
   - apq-security-flows-allowed
   - apq-oauth-url-pattern
   - apq-security-types-allowed
+  - apq-non-ok-response-stack-trace
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -824,15 +825,13 @@ rules:
       - field: "$[?(@.name == 'param3')]"
         function: truthy
   apiq:OAR072:
-    description: "Responses with status codes other than 200 must not include 'stacktrace'."
-    message: "The response with status code {{property}} must not include 'stacktrace'."
+    description: "Responses with status codes other than 200 must not include a stack trace property, whatever its casing or separators (stackTrace, stack_trace, stack-trace)."
+    message: "{{error}}"
     severity: error
-    given: "$.paths[*][get,post,put,patch,delete].responses[?(@property != '200')]"
+    resolved: false
+    given: "$"
     then:
-      field: "content.application/json.schema.properties"
-      function: pattern
-      functionOptions:
-        notMatch: "stacktrace"
+      function: apq-non-ok-response-stack-trace
   apiq:OAR073:
     description: "API should include a 429 response to indicate rate limiting, except for health check paths like /status, /health, /health-check, /ping, /liveness, /readiness."
     message: "OAR073: API should include a 429 response to indicate rate limiting."

@@ -57,7 +57,8 @@
     "apq-forbidden-title-pattern",
     "apq-security-flows-allowed",
     "apq-oauth-url-pattern",
-    "apq-security-types-allowed"
+    "apq-security-types-allowed",
+    "apq-non-ok-response-stack-trace"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -969,16 +970,13 @@
       ]
     },
     "apiq:OAR072": {
-      "description": "Responses with status codes other than 200 must not include 'stacktrace'.",
-      "message": "The response with status code {{property}} must not include 'stacktrace'.",
+      "description": "Responses with status codes other than 200 must not include a stack trace property, whatever its casing or separators (stackTrace, stack_trace, stack-trace).",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].responses[?(@property != '200')]",
+      "resolved": false,
+      "given": "$",
       "then": {
-        "field": "content.application/json.schema.properties",
-        "function": "pattern",
-        "functionOptions": {
-          "notMatch": "stacktrace"
-        }
+        "function": "apq-non-ok-response-stack-trace"
       }
     },
     "apiq:OAR073": {
