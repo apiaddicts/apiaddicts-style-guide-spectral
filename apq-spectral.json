@@ -58,7 +58,8 @@
     "apq-security-flows-allowed",
     "apq-oauth-url-pattern",
     "apq-security-types-allowed",
-    "apq-non-ok-response-stack-trace"
+    "apq-non-ok-response-stack-trace",
+    "apq-security-schemes-defined"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -1079,16 +1080,13 @@
       }
     },
     "apiq:OAR080": {
-      "description": "The security scheme must be among those allowed by the organization and must be complete.",
-      "message": "OAR080: The security scheme '{{property}}' must be among those allowed by the organization and must be complete.",
+      "description": "Security requirements, global or per operation, must only use the security schemes defined in securityDefinitions or components.securitySchemes.",
+      "message": "{{error}}",
       "severity": "error",
-      "given": "$.paths[*][get,post,put,patch,delete].security[*]",
+      "resolved": false,
+      "given": "$",
       "then": {
-        "field": "@key",
-        "function": "pattern",
-        "functionOptions": {
-          "match": "^(apiKey|oauth2)$"
-        }
+        "function": "apq-security-schemes-defined"
       }
     },
     "apiq:OAR081": {
