@@ -183,16 +183,12 @@ rules:
     message: "OAR012: Path params, query params, object names and property names must follow the configured naming convention."
     documentationUrl: "https://github.com/apiaddicts/apiaddicts-style-guide-spectral/blob/main/docs/resources/OAR012.md"
     severity: warn
-    given:
-      - "$.paths[*][*].parameters[?(@.in == 'path' || @.in == 'query')].name"
-      - "$.paths[*][*].parameters[*].schema.properties.*~"
-      - "$.paths[*][*].requestBody..schema.properties.*~"
-      - "$.paths[*][*].responses..schema.properties.*~"
-      - "$.components.schemas.*~"
+    resolved: false
+    given: "$"
     then:
       function: apq-parameter-naming-convention
       functionOptions:
-        namingConvention: "snake_case"
+        naming-convention: "snake_case"
   apiq:OAR013:
     description: "Default response is required for all operations."
     message: "OAR013: Default response is required."
