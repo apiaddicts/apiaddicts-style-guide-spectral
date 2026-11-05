@@ -1045,13 +1045,22 @@
       "severity": "warn",
       "given": [
         "$.paths[*][*].parameters[?(@.in == 'query')]",
-        "$.paths[*].parameters[?(@.in == 'query')]"
+        "$.paths[*].parameters[?(@.in == 'query')]",
+        "$.paths[*].additionalOperations[*].parameters[?(@.in == 'query')]",
+        "$.paths[*][*].callbacks[*][*][*].parameters[?(@.in == 'query')]",
+        "$.paths[*][*].callbacks[*][*].parameters[?(@.in == 'query')]",
+        "$.paths[*][*].callbacks[*][*].additionalOperations[*].parameters[?(@.in == 'query')]",
+        "$.paths[*].additionalOperations[*].callbacks[*][*][*].parameters[?(@.in == 'query')]",
+        "$.paths[*].additionalOperations[*].callbacks[*][*].parameters[?(@.in == 'query')]",
+        "$.webhooks[*][*].parameters[?(@.in == 'query')]",
+        "$.webhooks[*].parameters[?(@.in == 'query')]",
+        "$.webhooks[*].additionalOperations[*].parameters[?(@.in == 'query')]"
       ],
       "then": {
         "field": "name",
         "function": "pattern",
         "functionOptions": {
-          "match": "^\\$?_?[a-z]+(_[a-z]+)*$"
+          "match": "^\\$?_?[a-z][a-z0-9]*(_[a-z0-9]+)*$"
         }
       }
     },
