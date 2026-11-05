@@ -6,9 +6,14 @@ const oar077fail = require('./OAR077/fail-snake-param');
 const oar077ok = require('./OAR077/ok-snake-param');
 const oar077failSharedPathItem = require('./OAR077/fail-shared-path-item-query-param');
 const oar077okSharedPathItem = require('./OAR077/ok-shared-path-item-query-param');
-const oar077failDigitInName = require('./OAR077/fail-digit-in-name');
+const oar077okDigitInName = require('./OAR077/ok-digit-in-name');
+const oar077failDigitPlacement = require('./OAR077/fail-digit-placement');
+const oar077okReportedCase = require('./OAR077/ok-reported-case');
 const oar077failLargeMultiPath = require('./OAR077/fail-large-multi-path');
 const oar077failRefQueryParam = require('./OAR077/fail-ref-query-param');
+const oar077failRefs = require('./OAR077/fail-refs');
+
+const paths = (results) => results.map((r) => r.path.join('.')).sort();
 
 beforeAll(async () => {
   linter = await linterForRule('apiq:OAR077');
@@ -43,9 +48,22 @@ test('apiq:OAR077 accepts a snake_case shared path-item-level query parameter', 
   });
 });
 
-test('apiq:OAR077 flags a query parameter name containing a digit (default regex has no digit support)', () => {
-  return linter.run(oar077failDigitInName).then((results) => {
-    expect(results.length).toBe(1);
+test('apiq:OAR077 accepts digits in any word after the first letter', () => {
+  return linter.run(oar077okDigitInName).then((results) => {
+    expect(results).toEqual([]);
+  });
+});
+
+test('apiq:OAR077 flags names with digits that are not snake_case', () => {
+  return linter.run(oar077failDigitPlacement).then((results) => {
+    expect(paths(results)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `paths./customers.get.parameters.${i}.name`).sort());
+    expect(results[0].message).toBe('OAR077: All parameters in query must be snake_case.');
+  });
+});
+
+test('apiq:OAR077 accepts the reported onboarding_status1 parameter reached through $ref', () => {
+  return linter.run(oar077okReportedCase).then((results) => {
+    expect(results).toEqual([]);
   });
 });
 
@@ -58,5 +76,11 @@ test('apiq:OAR077 flags bad names across shared and operation-level query parame
 test('apiq:OAR077 flags a bad name reached only through a $ref query parameter', () => {
   return linter.run(oar077failRefQueryParam).then((results) => {
     expect(results.length).toBe(1);
+  });
+});
+
+test('apiq:OAR077 checks referenced query parameters only, ignoring path parameters and unused definitions', () => {
+  return linter.run(oar077failRefs).then((results) => {
+    expect(paths(results)).toEqual(['paths./customers.get.parameters.1.name', 'paths./customers.parameters.0.name']);
   });
 });
