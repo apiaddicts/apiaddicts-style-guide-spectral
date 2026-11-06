@@ -59,7 +59,8 @@
     "apq-oauth-url-pattern",
     "apq-security-types-allowed",
     "apq-non-ok-response-stack-trace",
-    "apq-security-schemes-defined"
+    "apq-security-schemes-defined",
+    "apq-parameter-ref-suffix"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -1184,14 +1185,15 @@
       }
     },
     "apiq:OAR088": {
-      "description": "The $ref of a parameter must end with the suffix Param.",
-      "message": "OAR088: The $ref of a parameter must end with the suffix Param.",
+      "description": "The $ref of a parameter must end with the configured suffix (Param by default).",
+      "message": "{{error}}",
       "severity": "warn",
-      "given": "$..parameters[*].$ref",
+      "resolved": false,
+      "given": "$",
       "then": {
-        "function": "pattern",
+        "function": "apq-parameter-ref-suffix",
         "functionOptions": {
-          "match": "Param$"
+          "default-suffix": "Param"
         }
       }
     },

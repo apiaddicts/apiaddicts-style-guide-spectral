@@ -59,6 +59,7 @@ functions:
   - apq-security-types-allowed
   - apq-non-ok-response-stack-trace
   - apq-security-schemes-defined
+  - apq-parameter-ref-suffix
 rules:
   apiq:OAR001:
     description: "For security reasons and as a REST best practice, the HTTPS protocol is mandatory."
@@ -993,14 +994,15 @@ rules:
       functionOptions:
         match: "^[A-Z][\\s\\S]*\\.$"
   apiq:OAR088:
-    description: "The $ref of a parameter must end with the suffix Param."
-    message: "OAR088: The $ref of a parameter must end with the suffix Param."
+    description: "The $ref of a parameter must end with the configured suffix (Param by default)."
+    message: "{{error}}"
     severity: "warn"
-    given: "$..parameters[*].$ref"
+    resolved: false
+    given: "$"
     then:
-      function: pattern
+      function: apq-parameter-ref-suffix
       functionOptions:
-        match: "Param$"
+        default-suffix: "Param"
   apiq:OAR089:
     description: "The $ref of a request body must end with the suffix Body."
     message: "OAR089: The $ref of a request body must end with the suffix Body."
