@@ -60,7 +60,8 @@
     "apq-security-types-allowed",
     "apq-non-ok-response-stack-trace",
     "apq-security-schemes-defined",
-    "apq-parameter-ref-suffix"
+    "apq-parameter-ref-suffix",
+    "apq-schema-property-casing"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -908,11 +909,12 @@
       "description": "RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
       "message": "OAR067: RequestBody and Responses schema property names must be compliant with the camelCase naming convention.",
       "severity": "warn",
-      "given": "$.paths.*.*[responses,requestBody]..content..schema..properties.*~",
+      "resolved": false,
+      "given": "$",
       "then": {
-        "function": "casing",
+        "function": "apq-schema-property-casing",
         "functionOptions": {
-          "type": "camel"
+          "naming-convention": "camelCase"
         }
       }
     },
