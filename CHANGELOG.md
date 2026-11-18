@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.8.2] - 2026-11-19
+
+### Fixed
+
+- OAR011 - UrlNamingConvention - The naming convention is now checked per literal URL segment, version segments are accepted, and server URLs and the Swagger 2.0 `basePath` are also checked. Path items reached through `$ref` are now evaluated too.
+- OAR012 - Names are now checked in every schema (including `$ref` and `allOf`/`oneOf`/`anyOf` compositions), and the configured naming convention is now applied. The option was renamed from `namingConvention` to `naming-convention`, so custom rulesets that set the old name must be updated.
+- OAR067 - The rule now uses the new `apq-schema-property-casing` function (option `naming-convention`, default `camelCase`) instead of the core `casing` function. When a property's value is a `$ref`, the issue is reported on the property name. Request body and response schemas are checked in every operation, callback and webhook, as are Swagger 2.0 `in: body` parameters.
+- OAR072 - Stack trace properties in non-200 responses are now reported whatever their casing or separators (`stackTrace`, `stack_trace`, `stack-trace`), including schemas reached through `$ref`, in OpenAPI 2 and 3.x. Backed by the new `apq-non-ok-response-stack-trace` function.
+- OAR077 - QueryParameterCasing - Digits are now allowed in snake_case query parameters (`page_size2`, `sha256_checksum`), and query parameters in callbacks, webhooks and OpenAPI 3.2 `additionalOperations` are now checked.
+- OAR080 - Global and per-operation security requirements must now use only the security schemes defined in `securityDefinitions` (OpenAPI 2) or `components.securitySchemes` (OpenAPI 3). This replaces the previous check against a fixed `apiKey|oauth2` pattern. Backed by the new `apq-security-schemes-defined` function.
+- OAR088 - Parameter `$ref`s that do not end with the configured suffix are now reported. The suffix is set with the new `default-suffix` option (default `Param`). Backed by the new `apq-parameter-ref-suffix` function.
+
 ## [1.8.0] - 2026-11-04
 
 ### Added
