@@ -61,7 +61,8 @@
     "apq-non-ok-response-stack-trace",
     "apq-security-schemes-defined",
     "apq-parameter-ref-suffix",
-    "apq-schema-property-casing"
+    "apq-schema-property-casing",
+    "apq-servers-defined"
   ],
   "rules": {
     "apiq:OAR001": {
@@ -1569,6 +1570,16 @@
           "paths": "/me,/health,/ping,/status",
           "pathValidationStrategy": "/exclude"
         }
+      }
+    },
+    "apiq:OAR122": {
+      "description": "The API must define its servers with absolute http or https URLs, so the API gateway knows where to route the traffic (OpenAPI 2: host, schemes and basePath).",
+      "message": "{{error}}",
+      "documentationUrl": "https://github.com/apiaddicts/apquality-spectral/blob/main/docs/resources/OAR122.md",
+      "severity": "error",
+      "given": "$",
+      "then": {
+        "function": "apq-servers-defined"
       }
     }
   }
