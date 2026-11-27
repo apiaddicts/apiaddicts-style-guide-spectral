@@ -1307,13 +1307,12 @@
       "severity": "error",
       "given": [
         "$.servers[*].url",
-        "$.paths[*]~",
         "$.basePath"
       ],
       "then": {
         "function": "pattern",
         "functionOptions": {
-          "match": ".*?/api-[^/]+/v[0-9]+"
+          "match": "^(?:[^:/?#]*:?//[^/?#]*)?/api-[^/?#]+"
         }
       }
     },

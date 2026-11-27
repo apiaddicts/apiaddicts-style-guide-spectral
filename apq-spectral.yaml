@@ -1090,12 +1090,11 @@ rules:
     severity: "error"
     given:
       - "$.servers[*].url"
-      - "$.paths[*]~"
       - "$.basePath"
     then:
       function: pattern
       functionOptions:
-        match: ".*?/api-[^/]+/v[0-9]+"
+        match: "^(?:[^:/?#]*:?//[^/?#]*)?/api-[^/?#]+"
   apiq:OAR100:
     description: "Last path part must be the API version, indicated with the prefix 'v' and the version number as integer."
     message: "OAR100: Last path part must be the API version, indicated with the prefix 'v' and the version number as integer."
